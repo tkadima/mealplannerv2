@@ -1,17 +1,23 @@
 import { parseIngredient } from "parse-ingredient";
+var convert = require('convert-units')
 
 const createShoppingList = (recipe, fridgeItems) => {
     let ingredientList = parseIngredient(recipe)
     let shoppingList = ingredientList.filter(ingredient =>  { 
-        return !fridgeItems.some( f => { 
-            if (f.name === ingredient.description) 
-                console.log(`${ingredient.description} - ${f.unit} vs ${ingredient.unitOfMeasure}
-                => ${f.unit === ingredient.unitOfMeasure}`)
-            f.name === ingredient.description 
-            && f.quantity >= ingredient.quantity && f.unit === ingredient.unitOfMeasure
-        })
+        return !fridgeItems.some( f =>  f.name === ingredient.description 
+            && haveEnoughItemInFridge(ingredient, f))
     });
     return shoppingList.map(s => s.description);
+}
+
+const haveEnoughItemInFridge = (ingredient, fridgeItem) => {
+    if (ingredient.unitOfMeasure === fridgeItem.unit) {
+        return fridgeItem.quantity >= ingredient.quantity;
+    }
+    else {
+        let ingredientQuantity = convert(ingredient.quantity).from(ingredient.unitOfMeasure).to(fridgeItem.unit);
+        return fridgeItem.quantity >= ingredientQuantity;
+    }
 }
 
 export default createShoppingList;

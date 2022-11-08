@@ -16,7 +16,6 @@ const ShoppingList = () => {
         setShoppingList(list);
     }
 
-
     return(<Layout>
         <div>
             <h1>Generate Shopping List</h1>
