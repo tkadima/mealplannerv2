@@ -2,12 +2,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Layout from '../../components/layout';
 import data from '../../data.json'
-
+import Link from 'next/link'
 
 const Recipes = () => {
     return (
         <Layout>
-            <h1>Recipes</h1>
+            <h3>Recipes</h3>
             <ListGroup>
                 { data.recipes.map(r => {
                     return <ListGroup.Item key={r.id}>{r.name}</ListGroup.Item>
@@ -15,7 +15,9 @@ const Recipes = () => {
                 }
             </ListGroup>
             <div className="col text-center padding-md">
-                <Button>Add New</Button>
+                <Link href="/recipes/new">
+                    <Button>Add New</Button>
+                </Link>
             </div>
         </Layout>
 
