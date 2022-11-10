@@ -32,31 +32,32 @@ const NewRecipe = () => {
     return (
         <Layout>
             <h3>Create New Recipe</h3>
-            <div className='col-8'>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Copy and paste a recipe</Form.Label>
-                        <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe}/>
-                        <div className="col text-center padding-md">
-                            <Button as="input" type="btn" value="Submit" onClick={handleSubmitRecipe} />{' '}
-                        </div>
-                    </Form.Group>
-                </Form>
+            <div className="new recipe" style={{ padding: '10px 0px'}}>
+                <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
+                    <Form>
+                        <Form.Group>
+                            <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe}/>
+                            <div className="col text-center">
+                                <Button as="input" type="btn" value="Submit" onClick={handleSubmitRecipe} />{' '}
+                            </div>
+                        </Form.Group>
+                    </Form>
+                </div>
+                {
+                    suggestions.length !== 0 && 
+                    (<div style={{ width:'40%', float:'right',  paddingTop: '30px'}}>
+                        <h5>Would you like to add the following to your shopping list?</h5>
+                        <ListGroup>
+                        {
+                            suggestions.map(s => {
+                            return <ListSuggestion key={s} item={s} onClick={handleListSuggestionAction}/>
+                            })
+                        }
+                        </ListGroup>
+                    
+                    </div>)
+                }
             </div>
-            {
-                suggestions.length !== 0 && 
-                (<div className='col-4 margin-top-md'>
-                    <h4>Would you like to add the following to your shopping list?</h4>
-                    <ListGroup>
-                    {
-                        suggestions.map(s => {
-                         return <ListSuggestion key={s} item={s} onClick={handleListSuggestionAction}/>
-                        })
-                    }
-                    </ListGroup>
-                   
-            </div>)}
-           
         </Layout>
     )
 }
