@@ -8,9 +8,10 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import createSuggestionList from "../../helpers/shopping-list";
 import Layout from "../../components/layout";
 import data from '../../data.json'
-import ListSuggestion from '../../components/list-suggestion';
+import SuggestionListItem from '../../components/suggestion-list-item';
 import { addItem, removeItem } from '../../redux/shopping-list-slice';
 import { addRecipe } from '../../redux/recipe-slice'
+import { addFood } from '../../redux/fridge-slice'
 import Link from 'next/link'
 
 
@@ -41,7 +42,9 @@ const NewRecipe = () => {
         if (response === "yes" && !shoppingList.includes(listItem)) {
             dispatch(addItem(listItem))
         }
-        if (response === "already-have") {}// add to fridge
+        if (response === "already-have") {
+
+        }
     }
 
     const handleUndoSelection = (listItem) => {
@@ -123,7 +126,7 @@ const NewRecipe = () => {
                         <ListGroup>
                         {
                             suggestions.map(s => {
-                            return <ListSuggestion 
+                            return <SuggestionListItem 
                                 key={s} 
                                 item={s} 
                                 onAnswerSuggestion={handleListSuggestionAction}

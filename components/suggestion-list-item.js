@@ -3,7 +3,7 @@ import  ButtonGroup  from 'react-bootstrap/ButtonGroup';
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 
-const ListSuggestion = (props) => {
+const SuggestionListItem = (props) => {
 
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [ answered, setAnswered] = useState(false)
@@ -56,4 +56,4 @@ const ListSuggestion = (props) => {
     );
 }
 
-export default ListSuggestion;
+export default SuggestionListItem;
