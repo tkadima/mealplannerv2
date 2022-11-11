@@ -62,8 +62,53 @@ const NewRecipe = () => {
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
                     <Form onSubmit={handleSubmitRecipe}>
                         <Form.Group>
-                            <Form.Control as="input" name="name" value={recipe.name} onChange={handleChangeForm} style={{margin: '30px'}}/>
-                            <Form.Control as="textarea" name="ingredients" rows={7} value={recipe.ingredients} onChange={handleChangeForm}/>
+                            <Form.Control 
+                                as="input" 
+                                name="name" 
+                                value={recipe.name} 
+                                onChange={handleChangeForm} 
+                                style={{marginBottom: '30px'}}
+                                placeholder="Enter recipe title"
+                            />
+                            <Form.Control 
+                                as="textarea" 
+                                name="ingredients" 
+                                rows={7} 
+                                placeholder="Enter recipe ingredients e.g. 1 cup vegetable broth"
+                                value={recipe.ingredients} 
+                                onChange={handleChangeForm}
+                                style={{marginBottom: '30px'}}
+                            />
+
+                            <Form.Control
+                                as="textarea"
+                                name="instructions"
+                                rows={7}
+                                placeholder="Enter cooking instructions as a list. e.g. 1. Chop onions"
+                                value={recipe.instructions}
+                                onChange={handleChangeForm}
+                                style={{marginBottom: '30px'}}
+                            />
+                            
+                            <div>
+                                <Form.Control
+                                    style={{ width: '50%', float: "left", paddingRight: "40px"}}
+                                    as="input"
+                                    name="prepTime"
+                                    placeholder="Enter prep time in minutes"
+                                    type="number"
+                                    value={recipe.prepTime}
+                                    onChange={handleChangeForm}
+                                />
+                                <Form.Control
+                                    style={{ width: '50%', float: "right"}}
+                                    as="input" 
+                                    name="cookTime" 
+                                    placeholder="Enter cooking time in minutes"
+                                    value={recipe.cookTime}
+                                    onChange={handleChangeForm}
+                                />
+                            </div>
                             <div className="col text-center" style={{ paddingTop: '10px'}}  value={recipe.ingredients}>
                                 <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
                                 <Button onClick={handleReset} variant="danger" type="reset" defaultValue="Reset" style={{ marginLeft: '20px'}}>Reset</Button>

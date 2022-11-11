@@ -12,14 +12,18 @@
     {"id": 12, "name": "oat milk", "quantity": 5, "unit": "cup"}],
    "recipes": [
       {   
-          "id" : 1, "name": "peanut butter and banana breakfast bowl", "ingredients": [
+          "id" : 1,
+          "name": "peanut butter and banana breakfast bowl", 
+          "ingredients": [
           {"quantity": 2, "unit": null, "ingredient":"bananas", "article": null, "minQty": 2, "maxQty": 2},
           {"quantity": 2, "unit": "tbsp", "ingredient":"peanut butter", "article": null, "minQty": 2, "maxQty": 2},
           {"quantity": 2, "unit": "tbsp", "ingredient":"flaxseed", "article": null, "minQty": 2, "maxQty": 2},
           {"quantity": 0.5, "unit": "tsp", "ingredient":"vanilla extract", "article": null, "minQty": 0.5, "maxQty": 0.5},
           {"quantity": 0.25, "unit": "cup", "ingredient":"oat milk", "article": null, "minQty": 0.25, "maxQty": 0.25}
       ], 
-      "instruction": "Put ingredients into blender. Add toppings"
+      "instructions": "Put ingredients into blender. Add toppings",
+      "prepTime": 30,
+      "cookTime": 20
       },
       {   
           "id" : 2, "name": "chocolate rawnola", "ingredients": [
@@ -30,7 +34,7 @@
           {"quantity": 0.75, "unit": "cup", "ingredient":"almonds, raw", "article": null, "minQty": 0.75, "maxQty": 0.75},
           {"quantity": 0.5, "unit": "cup", "ingredient":"coconut flakes", "article": null, "minQty": 0.75, "maxQty": 0.75}
       ], 
-      "instruction": "Put ingredients into food processor. process ingredients until an evenly crumbled mixture forms. Place in mason jar"
+      "instructions": "Put ingredients into food processor. process ingredients until an evenly crumbled mixture forms. Place in mason jar"
       }
   ]
  }
