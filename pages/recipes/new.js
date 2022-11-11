@@ -31,7 +31,7 @@ const NewRecipe = () => {
 
     const handleListSuggestionAction = (response, listItem) => {
         if (response === "yes" && !shoppingList.includes(listItem)) {
-            dispatch(addItem(listItem))
+            //dispatch(addItem(listItem))
         }
         if (response === "no") {} // do nothing 
         if (response === "already-have") {}// add to fridge
@@ -46,7 +46,7 @@ const NewRecipe = () => {
                         <Form.Group>
                             <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe}/>
                             <div className="col text-center">
-                                <Button as="input" type="btn" value="Submit" onClick={handleSubmitRecipe} />{' '}
+                                <Button onClick={handleSubmitRecipe}>Submit</Button>
                             </div>
                         </Form.Group>
                     </Form>
