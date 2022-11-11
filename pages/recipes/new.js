@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -9,21 +9,17 @@ import createSuggestionList from "../../helpers/shopping-list";
 import Layout from "../../components/layout";
 import data from '../../data.json'
 import SuggestionListItem from '../../components/suggestion-list-item';
-import { addItem, removeItem } from '../../redux/shopping-list-slice';
 import { addRecipe } from '../../redux/recipe-slice'
-import { addFood } from '../../redux/fridge-slice'
 import Link from 'next/link'
 
 
 const NewRecipe = () => {
 
     const dispatch = useDispatch();
-    const { shoppingList } = useSelector(state => state.shoppingList);
 
     const [recipe, setRecipe] = useState({})
     const [suggestions, setSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false)
-
 
     const handleChangeForm = (e) => {
         e.preventDefault();
@@ -38,25 +34,11 @@ const NewRecipe = () => {
         setSubmitted(true);
     }
 
-    const handleListSuggestionAction = (response, listItem) => {
-        if (response === "yes" && !shoppingList.includes(listItem)) {
-            dispatch(addItem(listItem))
-        }
-        if (response === "already-have") {
-
-        }
-    }
-
-    const handleUndoSelection = (listItem) => {
-        dispatch(removeItem(listItem))
-    }
-
     const handleReset = () => {
         setRecipe('')
         setSuggestions([])
         setSubmitted(false)
     }
-
 
     return (
         <Layout>
@@ -129,8 +111,6 @@ const NewRecipe = () => {
                             return <SuggestionListItem 
                                 key={s} 
                                 item={s} 
-                                onAnswerSuggestion={handleListSuggestionAction}
-                                onUndoAnswer={handleUndoSelection}
                                 />
                             })
                         }
