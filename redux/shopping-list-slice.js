@@ -10,12 +10,16 @@ export const shoppingListSlice = createSlice({
             state.shoppingList =  [...state.shoppingList, action.payload]
         }, 
         removeItem: (state, action) => {
-            [...state.shoppingList.slice(0, action.payload)],
-            [...state.shoppingList.slice(action.payload + 1)]
+            let index = state.shoppingList.indexOf(action.payload);
+            state.shoppingList = [...state.shoppingList.slice(0, index),
+            ...state.shoppingList.slice(index + 1)]
+        },
+        clearList: (state) => {
+            state.shoppingList = []
         }
     }
 })
 
 
-export const { addItem, removeItem } = shoppingListSlice.actions; 
+export const { addItem, removeItem, clearList } = shoppingListSlice.actions; 
 export default shoppingListSlice.reducer;

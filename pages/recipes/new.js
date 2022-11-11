@@ -9,7 +9,7 @@ import createShoppingList from "../../helpers/shopping-list";
 import Layout from "../../components/layout";
 import data from '../../data.json'
 import ListSuggestion from '../../components/list-suggestion';
-import { addItem } from '../../redux/shopping-list-slice';
+import { addItem, removeItem } from '../../redux/shopping-list-slice';
 
 
 const NewRecipe = () => {
@@ -31,10 +31,14 @@ const NewRecipe = () => {
 
     const handleListSuggestionAction = (response, listItem) => {
         if (response === "yes" && !shoppingList.includes(listItem)) {
-            //dispatch(addItem(listItem))
+            dispatch(addItem(listItem))
         }
         if (response === "no") {} // do nothing 
         if (response === "already-have") {}// add to fridge
+    }
+
+    const handleUndoSelection = (listItem) => {
+        dispatch(removeItem(listItem))
     }
 
     return (
@@ -45,7 +49,7 @@ const NewRecipe = () => {
                     <Form>
                         <Form.Group>
                             <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe}/>
-                            <div className="col text-center">
+                            <div className="col text-center" style={{ paddingTop: '10px'}}>
                                 <Button onClick={handleSubmitRecipe}>Submit</Button>
                             </div>
                         </Form.Group>
@@ -58,7 +62,12 @@ const NewRecipe = () => {
                         <ListGroup>
                         {
                             suggestions.map(s => {
-                            return <ListSuggestion key={s} item={s} onClick={handleListSuggestionAction}/>
+                            return <ListSuggestion 
+                                key={s} 
+                                item={s} 
+                                onAnswerSuggestion={handleListSuggestionAction}
+                                onUndoAnswer={handleUndoSelection}
+                                />
                             })
                         }
                         </ListGroup>

@@ -11,12 +11,13 @@ const ListSuggestion = (props) => {
     const handleClickButton = (e) => {
         setSelectedAnswer(e.target.value);
         setAnswered(true);
-        props.onClick(e.target.value, props.item);
+        props.onAnswerSuggestion(e.target.value, props.item);
     }
 
-    const handleUndo = (e) => {
+    const handleUndo = () => {
         setAnswered(false);
         setSelectedAnswer(null);
+        props.onUndoAnswer(props.item)
     }
 
     const answers = [
