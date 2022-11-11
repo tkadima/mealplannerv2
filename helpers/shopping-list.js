@@ -2,7 +2,7 @@ import { parseIngredient } from "parse-ingredient";
 var convert = require('convert-units')
 
 const createShoppingList = (recipe, fridgeItems) => {
-    let ingredientList = parseIngredient(recipe)
+    let ingredientList = parseIngredient(recipe.ingredients)
     let shoppingList = ingredientList.filter(ingredient =>  { 
         return !fridgeItems.some( f =>  f.name === ingredient.description 
             && haveEnoughItemInFridge(ingredient, f))
