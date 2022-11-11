@@ -6,6 +6,6 @@ import recipeReducer from './redux/recipe-slice'
 export default configureStore({
     reducer: {
         shoppingList: shoppingListReducer,
-        recipe: recipeReducer
+        recipes: recipeReducer
     },
 })
