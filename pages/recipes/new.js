@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -8,9 +9,14 @@ import createShoppingList from "../../helpers/shopping-list";
 import Layout from "../../components/layout";
 import data from '../../data.json'
 import ListSuggestion from '../../components/list-suggestion';
+import { addItem } from '../../redux/shopping-list-slice';
 
 
 const NewRecipe = () => {
+
+    const dispatch = useDispatch();
+    const { shoppingList } = useSelector(state => state.shoppingList)
+
     const [recipe, setRecipe] = useState(null)
     const [suggestions, setSuggestions] = useState([]); 
 
@@ -23,8 +29,10 @@ const NewRecipe = () => {
         setSuggestions(list);
     }
 
-    const handleListSuggestionAction = (response) => {
-        if (response === "yes") {}// add to shopping list in data store 
+    const handleListSuggestionAction = (response, listItem) => {
+        if (response === "yes" && !shoppingList.includes(listItem)) {
+            dispatch(addItem(listItem))
+        }
         if (response === "no") {} // do nothing 
         if (response === "already-have") {}// add to fridge
     }

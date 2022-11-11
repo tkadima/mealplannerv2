@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 const ListSuggestion = (props) => {
 
     const handleClickButton = (e) => {
-        props.onClick(e.target.value);
+        props.onClick(e.target.value, props.item);
     }
 
     return (
