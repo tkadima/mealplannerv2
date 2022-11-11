@@ -17,8 +17,9 @@ const NewRecipe = () => {
     const dispatch = useDispatch();
     const { shoppingList } = useSelector(state => state.shoppingList)
 
-    const [recipe, setRecipe] = useState(null)
-    const [suggestions, setSuggestions] = useState([]); 
+    const [recipe, setRecipe] = useState('')
+    const [suggestions, setSuggestions] = useState([]);
+    const [submitted, setSubmitted] = useState(false)
 
     const handleChangeRecipe = (event) => {
         setRecipe(event.target.value);
@@ -27,18 +28,24 @@ const NewRecipe = () => {
     const handleSubmitRecipe = () => {
         let list = createShoppingList(recipe, data.fridge);
         setSuggestions(list);
+        setSubmitted(true);
     }
 
     const handleListSuggestionAction = (response, listItem) => {
         if (response === "yes" && !shoppingList.includes(listItem)) {
             dispatch(addItem(listItem))
         }
-        if (response === "no") {} // do nothing 
         if (response === "already-have") {}// add to fridge
     }
 
     const handleUndoSelection = (listItem) => {
         dispatch(removeItem(listItem))
+    }
+
+    const handleReset = () => {
+        setRecipe('')
+        setSuggestions([])
+        setSubmitted(false)
     }
 
     return (
@@ -48,9 +55,10 @@ const NewRecipe = () => {
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
                     <Form>
                         <Form.Group>
-                            <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe}/>
+                            <Form.Control as="textarea" rows={7} onChange={handleChangeRecipe} value={recipe}/>
                             <div className="col text-center" style={{ paddingTop: '10px'}}>
-                                <Button onClick={handleSubmitRecipe}>Submit</Button>
+                                <Button onClick={handleSubmitRecipe} disabled={submitted}>Submit</Button>
+                                <Button onClick={handleReset} variant="danger" type="reset" defaultValue="Reset" style={{ marginLeft: '20px'}}>Reset</Button>
                             </div>
                         </Form.Group>
                     </Form>
