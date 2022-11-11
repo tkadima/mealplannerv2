@@ -62,7 +62,7 @@ const NewRecipe = () => {
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
                     <Form onSubmit={handleSubmitRecipe}>
                         <Form.Group>
-                            <Form.Control as="input" name="name" value={recipe.name} onChange={handleChangeForm}/>
+                            <Form.Control as="input" name="name" value={recipe.name} onChange={handleChangeForm} style={{margin: '30px'}}/>
                             <Form.Control as="textarea" name="ingredients" rows={7} value={recipe.ingredients} onChange={handleChangeForm}/>
                             <div className="col text-center" style={{ paddingTop: '10px'}}  value={recipe.ingredients}>
                                 <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>

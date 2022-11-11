@@ -12,9 +12,8 @@ export const recipeSlice = createSlice({
             state.recipes =  [...state.recipes, action.payload]
         }, 
         removeRecipe: (state, action) => {
-            let index = state.recipes.indexOf(action.payload);
-            state.recipes = [...state.recipes.slice(0, index),
-            ...state.recipes.slice(index + 1)]
+            state.recipes = [...state.recipes.slice(0, action.payload),
+            ...state.recipes.slice(action.payload + 1)]
         },
         clearRecipeList: (state) => {
             state.recipes = []
