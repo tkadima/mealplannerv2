@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import shoppingListReducer from './redux/shopping-list-slice'
 import recipeReducer from './redux/recipe-slice'
-import fridgeReducer from '.redux/fridge-slice'
+import fridgeReducer from './redux/fridge-slice'
 
 
 export default configureStore({
