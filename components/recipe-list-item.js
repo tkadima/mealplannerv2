@@ -1,4 +1,5 @@
-import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs'
+import { BsFillTrashFill } from 'react-icons/bs'
+import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 const RecipeListItem = (props) => {
@@ -6,11 +7,9 @@ const RecipeListItem = (props) => {
         props.onDelete(props.name);
     }
     return (
-        <ListGroup.Item>{props.name}
+        <ListGroup.Item>
+            <Link href={`/recipes/${props.id}`}>{props.name}</Link>
         <div style={{float: "right"}}>
-            <span style={{margin: "20px"}}>
-                <BsFillPencilFill></BsFillPencilFill>
-            </span>
             <span style={{margin: "20px"}}>
                 <BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill>
             </span>

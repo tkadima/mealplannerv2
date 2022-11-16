@@ -39,7 +39,7 @@ const NewRecipe = () => {
             <h3>Create New Recipe</h3>
             <div style={{ padding: '10px 0px'}}>
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
-                    <RecipeForm recipe={recipe} onCreateRecipe={createRecipe} />
+                    <RecipeForm recipe={recipe} onCreateRecipe={createRecipe} type='add' />
                     <div className="col text-center" style={{ paddingTop: '60px'}}  value={recipe.ingredients}>
                         <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Next Step</Button>
                     </div>
