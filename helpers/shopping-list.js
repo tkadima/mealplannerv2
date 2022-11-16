@@ -7,7 +7,7 @@ const createShoppingList = (recipe, fridgeItems) => {
         return !fridgeItems.some( f =>  f.name === ingredient.description 
             && haveEnoughItemInFridge(ingredient, f))
     });
-    return shoppingList.map(s => s.description);
+    return shoppingList;
 }
 
 const haveEnoughItemInFridge = (ingredient, fridgeItem) => {

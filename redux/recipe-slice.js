@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 import data from '../data.json';
 
 export const recipeSlice = createSlice({
