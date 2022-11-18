@@ -11,8 +11,8 @@ import { store } from "../../store";
 
 
 const Recipe = ({recipe}) => {
-    const [changes, setChanges] = useState(null);
-    const [recipeToEdit, setRecipeToEdit] = useState(Object.freeze(recipe)); 
+
+    const [recipeToEdit, setRecipeToEdit] = useState({...recipe}); 
 
     const router = useRouter();
 
@@ -35,9 +35,8 @@ const Recipe = ({recipe}) => {
         
     }
 
-    const handleChangeRecipe = (recipeUpdates, newRecipe) => {
+    const handleChangeRecipe = (newRecipe) => {
         setRecipeToEdit(newRecipe);
-        setChanges(recipeUpdates);
     }
 
     return <Layout>
@@ -49,10 +48,6 @@ const Recipe = ({recipe}) => {
 }
 export default Recipe;
 
-
-// for now initial store with data.json 
-// data.json could become an api we fetch from - SSR to initialize data, get from store 
-// 
 export const getStaticPaths = () => {
     let recipes = store.getState().recipes.recipes;
     const paths = recipes.map(r => ({

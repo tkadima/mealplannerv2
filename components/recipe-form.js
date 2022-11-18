@@ -11,13 +11,9 @@ const RecipeForm = ({onCreateRecipe, recipe, op, onEditRecipe}) => {
         if (op === 'add')
             onCreateRecipe(newRecipe)
         else if (op === 'edit') {
-            let changedFields = {...recipeChanges, [e.target.name]: e.target.value}
-            setRecipeChanges(changedFields)
-            onEditRecipe(changedFields, newRecipe)
+            onEditRecipe(newRecipe)
         }
     }
-
-
 
     return (
         <Form>
