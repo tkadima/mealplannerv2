@@ -1,11 +1,23 @@
 import Form from 'react-bootstrap/Form';
+import { useState } from "react";
 
-const RecipeForm = ({onCreateRecipe, recipe}) => {
+const RecipeForm = ({onCreateRecipe, recipe, op, onEditRecipe}) => {
+
+    const [recipeChanges, setRecipeChanges] = useState({id: recipe.id })
 
     const handleChangeForm = (e) => {
+        let newRecipe = {...recipe, [e.target.name]: e.target.value}
         e.preventDefault();
-        onCreateRecipe({...recipe, [e.target.name]: e.target.value})
+        if (op === 'add')
+            onCreateRecipe(newRecipe)
+        else if (op === 'edit') {
+            let changedFields = {...recipeChanges, [e.target.name]: e.target.value}
+            setRecipeChanges(changedFields)
+            onEditRecipe(changedFields, newRecipe)
+        }
     }
+
+
 
     return (
         <Form>

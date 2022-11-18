@@ -1,7 +1,7 @@
 import { parseIngredient } from "parse-ingredient";
-var convert = require('convert-units')
+import { convert } from 'convert-units';
 
-const createShoppingList = (recipe, fridgeItems) => {
+export const createShoppingList = (recipe, fridgeItems) => {
     let ingredientList = parseIngredient(recipe.ingredients)
     let shoppingList = ingredientList.filter(ingredient =>  { 
         return !fridgeItems.some( f =>  f.name === ingredient.description 
@@ -20,4 +20,11 @@ const haveEnoughItemInFridge = (ingredient, fridgeItem) => {
     }
 }
 
-export default createShoppingList;
+export const normalizeIngredients = (ingredients) => {
+    let ingredientLines = ingredients.map(ingredient => {
+        let unit = ingredient.unitOfMeasure === null ? '' : ingredient.unitOfMeasure;
+        return`${ingredient.quantity} ${unit} ${ingredient.ingredient}\n`
+    })
+    return  ingredientLines.join('')
+}
+

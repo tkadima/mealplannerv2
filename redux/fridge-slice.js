@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import data from '../data.json';
 
 export const fridgeSlice = createSlice({
     name: 'fridge',
     initialState: {
-        fridge: data.fridge
+        fridge: []
     },
     reducers: {
         addFood: (state, action) => {
