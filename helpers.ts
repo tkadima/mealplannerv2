@@ -1,5 +1,5 @@
 import { parseIngredient, Ingredient } from 'parse-ingredient'
-import { SimpleRecipe, Item } from './types'
+import { SimpleRecipe, Item, Recipe } from './types'
 
 export const createSuggestionList = (recipe: SimpleRecipe, fridgeItems: Item[]) => {
   const ingredientList = parseIngredient(recipe.ingredients)
@@ -15,3 +15,6 @@ export const convertIngredientsToString = (ingredients: Ingredient[]) => {
   return ingredientLines.join('')
 }
 
+export const convertToRecipe = (simpleRecipe : SimpleRecipe) : Recipe =>  {
+  return {...simpleRecipe, ingredients: parseIngredient(simpleRecipe.ingredients)}
+} 

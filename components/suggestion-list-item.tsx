@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button'
 import { addItem, removeItem, ShoppingListState } from '../redux/shopping-list-slice'
 import { useDispatch, useSelector } from 'react-redux'
 import React from 'react'
+import { Item } from '../types'
 
 
 type PropTypes = {

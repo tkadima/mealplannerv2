@@ -6,7 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 
 import Link from 'next/link';
 
-import {createSuggestionList} from '../../helpers';
+import {convertToRecipe, createSuggestionList} from '../../helpers';
 import Layout from "../../components/layout";
 import data from '../../pages/api/data.json'
 import SuggestionListItem from '../../components/suggestion-list-item';
@@ -14,10 +14,12 @@ import { addRecipe } from '../../redux/recipe-slice'
 import RecipeForm from '../../components/recipe-form';
 import React from 'react';
 import { SimpleRecipe } from '../../types';
+import { useRouter } from 'next/router';
 
 const NewRecipe = () => {
 
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const [recipe, setRecipe] = useState<SimpleRecipe>(
         {id: 0, name: '', ingredients: '', instructions: '',  prepTime: '', cookTime: ''});
@@ -25,9 +27,11 @@ const NewRecipe = () => {
     const [submitted, setSubmitted] = useState(false);
 
 
-    const handleSubmitRecipe = (e) => {
-        e.preventDefault();
-        dispatch(addRecipe(recipe));
+    const handleSubmitRecipe = () => {
+        let newRecipe = convertToRecipe(recipe);
+        dispatch(addRecipe(newRecipe));
+        router.push('/recipes')
+
         if (recipe) {
             // need to figure out orm 
             // let list = createSuggestionList(recipe, data.fridge);
@@ -50,7 +54,7 @@ const NewRecipe = () => {
                         <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Next Step</Button>
                     </div>
                 </div>
-                {
+                {/* {
                     shoppingSuggestions.length > 0 && 
                     (<div style={{ width:'40%', float:'right',  paddingTop: '30px'}}>
                         <h5>Would you like to add the following to your shopping list?</h5>
@@ -66,7 +70,7 @@ const NewRecipe = () => {
                         </Link>
                     </div>)
                 }       
-           
+            */}
             </div>
 
         </Layout>

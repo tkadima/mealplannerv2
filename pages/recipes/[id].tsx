@@ -6,7 +6,7 @@ import { editRecipe } from '../../redux/recipe-slice'
 import { useState } from 'react'
 import { parseIngredient } from 'parse-ingredient'
 import { useRouter } from 'next/router'
-import { convertIngredientsToString } from '../../helpers'
+import { convertIngredientsToString, convertToRecipe } from '../../helpers'
 import { store } from '../../store'
 import { Recipe, SimpleRecipe } from '../../types'
 import React from 'react'
@@ -23,9 +23,6 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 
   const dispatch = useDispatch()
 
-  const convertToRecipe = (simpleRecipe : SimpleRecipe) : Recipe =>  {
-    return {...simpleRecipe, ingredients: parseIngredient(simpleRecipe.ingredients)}
-  } 
 
   const handleSubmitRecipe = () => {
     try {
