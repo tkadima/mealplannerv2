@@ -22,7 +22,7 @@ const NewRecipe = () => {
     const router = useRouter();
 
     const [recipe, setRecipe] = useState<SimpleRecipe>(
-        {id: 0, name: '', ingredients: '', instructions: '',  prepTime: '', cookTime: ''});
+        {id: 0, name: '', ingredients: '', instructions: '',  prepTime: '', cookTime: '', servingSize: ''});
     const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
@@ -51,7 +51,7 @@ const NewRecipe = () => {
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
                     <RecipeForm recipe={recipe} onRecipeChange={createRecipe}/>
                     <div className="col text-center" style={{ paddingTop: '60px'}} >
-                        <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Next Step</Button>
+                        <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
                     </div>
                 </div>
                 {/* {

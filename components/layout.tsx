@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
-// fix styling import * as styles from 'layout.module.css';
+import styles from './layout.module.css';
 import 'bootstrap/dist/css/bootstrap.css'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -21,7 +21,7 @@ export default function Layout({ children }) {
             </Nav>
           </Container>
         </Navbar>
-    <div> /
+    <div>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta
@@ -36,10 +36,10 @@ export default function Layout({ children }) {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       
-      <header>
+      <header className={styles.header}>
         
       </header>
-      <main>{children}</main>
+      <main className={styles.container}>{children}</main>
     </div></>
   );
 }

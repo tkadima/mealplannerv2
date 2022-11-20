@@ -18,7 +18,8 @@ export type SimpleRecipe = {
     ingredients: string, 
     instructions: string
     prepTime: string, 
-    cookTime: string
+    cookTime: string,
+    servingSize: string,
 }
   
 export type Item = {

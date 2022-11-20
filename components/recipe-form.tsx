@@ -1,4 +1,5 @@
 import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
 import React from 'react'
 import { SimpleRecipe } from '../types'
 
@@ -45,25 +46,33 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                 style={{ marginBottom: '30px' }}
             />
 
-            <div>
+            <InputGroup style={{ padding: '20px' }}>
                 <Form.Control
-                    style={{ width: '40%', float: 'left' }}
+                    style={{ margin: '20px' }}
                     as="input"
                     name="prepTime"
-                    placeholder="Enter prep time in minutes"
+                    placeholder="Add prep time (minutes)"
                     type="number"
                     value={recipe.prepTime}
                     onChange={handleChangeForm}
                 />
                 <Form.Control
-                    style={{ width: '40%', float: 'right' }}
+                    style={{ margin: '20px' }}
                     as="input"
                     name="cookTime"
-                    placeholder="Enter cooking time in minutes"
+                    placeholder="Add cooking time (minutes)"
                     value={recipe.cookTime}
                     onChange={handleChangeForm}
                 />
-            </div>
+                 <Form.Control
+                    style={{ margin: '20px' }}
+                    as="input"
+                    name="servingSize"
+                    placeholder="Add serving size"
+                    value={recipe.servingSize}
+                    onChange={handleChangeForm}
+                />
+            </InputGroup>
         </Form.Group>
     </Form>)
 }
