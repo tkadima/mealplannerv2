@@ -1,18 +1,23 @@
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
-import React from 'react'
-import { SimpleRecipe } from '../types'
+import React, { useState } from 'react'
+import { Recipe } from '../types'
+import { convertIngredientsToString } from '../helpers'
+import { parseIngredient } from 'parse-ingredient'
 
 type PropTypes = {
-    recipe: SimpleRecipe, 
+    recipe: Recipe, 
     onRecipeChange: Function 
+    op: string
 }
-const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
+const RecipeForm = ({ recipe, onRecipeChange, op }: PropTypes) => {
+  const [formRecipe, setFormRecipe] = useState({...recipe,
+    ingredients: recipe.ingredients ? convertIngredientsToString(recipe.ingredients) : ''})
 
-  const handleChangeForm = (e) => {
-    const newRecipe = { ...recipe, [e.target.name]: e.target.value }
-    e.preventDefault()
-    onRecipeChange(newRecipe)
+    const handleChangeForm = (e) => {
+    const newRecipe = { ...formRecipe, [e.target.name]: e.target.value }
+    setFormRecipe(newRecipe)
+    onRecipeChange({...newRecipe, ingredients: parseIngredient(newRecipe.ingredients)})
   }
 
   return (
@@ -21,7 +26,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
             <Form.Control
                 as="input"
                 name="name"
-                value={recipe.name}
+                value={formRecipe.name}
                 onChange={handleChangeForm}
                 style={{ marginBottom: '30px' }}
                 placeholder="Enter recipe title"
@@ -31,7 +36,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                 name="ingredients"
                 rows={7}
                 placeholder="Enter recipe ingredients e.g. 1 cup vegetable broth"
-                value={recipe.ingredients}
+                value={formRecipe.ingredients}
                 onChange={handleChangeForm}
                 style={{ marginBottom: '30px' }}
             />
@@ -41,7 +46,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                 name="instructions"
                 rows={7}
                 placeholder="Enter cooking instructions as a list. e.g. 1. Chop onions"
-                value={recipe.instructions}
+                value={formRecipe.instructions}
                 onChange={handleChangeForm}
                 style={{ marginBottom: '30px' }}
             />
@@ -53,7 +58,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                     name="prepTime"
                     placeholder="Add prep time (minutes)"
                     type="number"
-                    value={recipe.prepTime}
+                    value={formRecipe.prepTime}
                     onChange={handleChangeForm}
                 />
                 <Form.Control
@@ -61,7 +66,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                     as="input"
                     name="cookTime"
                     placeholder="Add cooking time (minutes)"
-                    value={recipe.cookTime}
+                    value={formRecipe.cookTime}
                     onChange={handleChangeForm}
                 />
                  <Form.Control
@@ -69,7 +74,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
                     as="input"
                     name="servingSize"
                     placeholder="Add serving size"
-                    value={recipe.servingSize}
+                    value={formRecipe.servingSize}
                     onChange={handleChangeForm}
                 />
             </InputGroup>

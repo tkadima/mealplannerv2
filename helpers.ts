@@ -1,9 +1,8 @@
-import { parseIngredient, Ingredient } from 'parse-ingredient'
-import { SimpleRecipe, Item, Recipe } from './types'
+import { Ingredient } from 'parse-ingredient'
+import { Item, Recipe } from './types'
 
-export const createSuggestionList = (recipe: SimpleRecipe, fridgeItems: Item[]) => {
-  const ingredientList = parseIngredient(recipe.ingredients)
-  const shoppingList = ingredientList.filter(i => !fridgeItems.some(f => f.name === i.description))
+export const createSuggestionList = (recipe: Recipe, fridgeItems: Item[]) => {
+  const shoppingList = recipe.ingredients.filter(i => !fridgeItems.some(f => f.name === i.description))
   return shoppingList
 }
 
@@ -15,6 +14,3 @@ export const convertIngredientsToString = (ingredients: Ingredient[]) => {
   return ingredientLines.join('')
 }
 
-export const convertToRecipe = (simpleRecipe : SimpleRecipe) : Recipe =>  {
-  return {...simpleRecipe, ingredients: parseIngredient(simpleRecipe.ingredients)}
-} 

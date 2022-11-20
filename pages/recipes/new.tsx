@@ -2,18 +2,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Button from 'react-bootstrap/Button';
-import ListGroup from 'react-bootstrap/ListGroup';
 
-import Link from 'next/link';
-
-import {convertToRecipe, createSuggestionList} from '../../helpers';
 import Layout from "../../components/layout";
-import data from '../../pages/api/data.json'
-import SuggestionListItem from '../../components/suggestion-list-item';
 import { addRecipe } from '../../redux/recipe-slice'
 import RecipeForm from '../../components/recipe-form';
 import React from 'react';
-import { SimpleRecipe } from '../../types';
+import { Recipe } from '../../types';
 import { useRouter } from 'next/router';
 
 const NewRecipe = () => {
@@ -21,15 +15,14 @@ const NewRecipe = () => {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const [recipe, setRecipe] = useState<SimpleRecipe>(
-        {id: 0, name: '', ingredients: '', instructions: '',  prepTime: '', cookTime: '', servingSize: ''});
+    const [recipe, setRecipe] = useState<Recipe>(
+        {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, servingSize: null});
     const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
 
     const handleSubmitRecipe = () => {
-        let newRecipe = convertToRecipe(recipe);
-        dispatch(addRecipe(newRecipe));
+        dispatch(addRecipe(recipe));
         router.push('/recipes')
 
         if (recipe) {
@@ -40,7 +33,7 @@ const NewRecipe = () => {
         setSubmitted(true);
     }
 
-    const createRecipe = (recipe) => {
+    const createRecipe = (recipe: Recipe) => {
         setRecipe(recipe);
     }
 
@@ -49,7 +42,7 @@ const NewRecipe = () => {
             <h3>Create New Recipe</h3>
             <div style={{ padding: '10px 0px'}}>
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
-                    <RecipeForm recipe={recipe} onRecipeChange={createRecipe}/>
+                    <RecipeForm recipe={recipe} onRecipeChange={createRecipe} op='add'/>
                     <div className="col text-center" style={{ paddingTop: '60px'}} >
                         <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
                     </div>
