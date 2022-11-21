@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 import Button from 'react-bootstrap/Button';
 
 import Layout from "../../components/layout";
-import { addRecipe } from '../../redux/recipe-slice'
 import RecipeForm from '../../components/recipe-form';
 import React from 'react';
 import { Recipe } from '../../types';
@@ -12,17 +10,15 @@ import { useRouter } from 'next/router';
 
 const NewRecipe = () => {
 
-    const dispatch = useDispatch();
     const router = useRouter();
 
     const [recipe, setRecipe] = useState<Recipe>(
-        {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, servingSize: null});
+        {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
     const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
 
     const handleSubmitRecipe = () => {
-        dispatch(addRecipe(recipe));
         router.push('/recipes')
 
         if (recipe) {

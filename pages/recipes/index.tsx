@@ -1,31 +1,30 @@
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
 
 import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe-list-item';
-import { RecipesSliceState, removeRecipe } from '../../redux/recipe-slice';
 import React from 'react';
+import { Recipe } from '../../types';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
+type PropTypes = {
+    recipes: Recipe[]
+}
+const Recipes = ({recipes, setRecipes}) => {
 
-const Recipes = () => {
-    const dispatch = useDispatch();
-    const recipes = useSelector((state: RecipesSliceState) => state.recipes);
-
-    const handleDelete = (recipeName: string) => {
-        let recipeIndex = recipes.findIndex(r => r.name === recipeName);
-        dispatch(removeRecipe(recipeIndex));
+    const handleDelete = (recipe: Recipe) => {
+        setRecipes(recipes.filter((r: { id: number; }) => r.id !== recipe.id));
     }
 
     return (
         <Layout>
             <h3>Recipes</h3>
             {
-                recipes.length >0 &&
+                recipes.length > 0 &&
                 <ListGroup>
-                    { recipes.map(r => {
-                        return <RecipeListItem key={`${r.id}-${r.name}`}id={r.id} name={r.name} onDelete={handleDelete}/>})
+                    { recipes.map((r: Recipe) => {
+                        return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>})
                     }
                 </ListGroup>
             }

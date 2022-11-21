@@ -1,34 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit'
-// import data from '../pages/api/data.json'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Recipe } from '../types'
+import { RootState } from './store'
 
-export type RecipesSliceState = {
-  recipes: Recipe[]
+interface RecipeState {
+  values: Recipe[]
 }
 
-const initialState: RecipesSliceState = { recipes: [] } // need ORM to get from data 
+const initialState = { values: []}
 
 export const recipeSlice = createSlice({
   name: 'recipes',
   initialState,
   reducers: {
-    addRecipe: (state, action) => {
-      state.recipes = [...state.recipes, action.payload]
+    addRecipe: (state, action: PayloadAction<Recipe>) => {
+      state.values = [...state.values, action.payload]
     },
-    removeRecipe: (state, action) => {
-      state.recipes = [...state.recipes.slice(0, action.payload),
-        ...state.recipes.slice(action.payload + 1)]
+    removeRecipe: (state, action: PayloadAction<number>) => {
+      state.values = [...state.values.slice(0, action.payload),
+        ...state.values.slice(action.payload + 1)]
     },
-    editRecipe: (state, action) => {
-      state.recipes = state.recipes.map(recipe => recipe.id === action.payload.id
+    editRecipe: (state, action: PayloadAction<Recipe>) => {
+      state.values = state.values.map(recipe => recipe.id === action.payload.id
         ? action.payload
         : recipe)
     },
     clearRecipeList: (state) => {
-      state.recipes = []
+      state.values = []
     }
   }
 })
 
 export const { addRecipe, removeRecipe, editRecipe, clearRecipeList } = recipeSlice.actions
+export const selectRecipes = (state: RootState) => state.recipes.values
 export default recipeSlice.reducer

@@ -7,7 +7,7 @@ export class Recipe {
     instructions: string;
     prepTime?: number;
     cookTime?: number;
-    servingSize?: number; 
+    yields?: number; 
 
     constructor(init?:Partial<Recipe>) {
         Object.assign(this, init);

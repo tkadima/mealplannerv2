@@ -2,19 +2,19 @@ import { BsFillTrashFill } from 'react-icons/bs'
 import Link from 'next/link'
 import ListGroup from 'react-bootstrap/ListGroup'
 import React from 'react'
+import { Recipe } from '../types'
 
 type PropTypes = {
-    id: Number,
-    name: string
+    recipeItem: Recipe,
     onDelete: Function
 }
-const RecipeListItem = ({ name, id, onDelete} : PropTypes) => {
+const RecipeListItem = ({ recipeItem, onDelete} : PropTypes) => {
   const handleDeleteRecipe = () => {
-    onDelete(name)
+    onDelete(recipeItem)
   }
   return (
         <ListGroup.Item>
-            <Link href={`/recipes/${id}`}>{name}</Link>
+            <Link href={`/recipes/${recipeItem.id}`}>{recipeItem.name}</Link>
         <div style={{ float: 'right' }}>
             <span style={{ margin: '20px' }}>
                 <BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill>

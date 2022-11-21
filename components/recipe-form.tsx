@@ -14,10 +14,10 @@ const RecipeForm = ({ recipe, onRecipeChange, op }: PropTypes) => {
   const [formRecipe, setFormRecipe] = useState({...recipe,
     ingredients: recipe.ingredients ? convertIngredientsToString(recipe.ingredients) : ''})
 
-    const handleChangeForm = (e) => {
+const handleChangeForm = (e: { target: { name: any; value: any } }) => {
     const newRecipe = { ...formRecipe, [e.target.name]: e.target.value }
-    setFormRecipe(newRecipe)
-    onRecipeChange({...newRecipe, ingredients: parseIngredient(newRecipe.ingredients)})
+    setFormRecipe(newRecipe);
+    onRecipeChange({...newRecipe, ingredients: parseIngredient(newRecipe.ingredients)});
   }
 
   return (
@@ -72,9 +72,9 @@ const RecipeForm = ({ recipe, onRecipeChange, op }: PropTypes) => {
                  <Form.Control
                     style={{ margin: '20px' }}
                     as="input"
-                    name="servingSize"
-                    placeholder="Add serving size"
-                    value={formRecipe.servingSize}
+                    name="yields"
+                    placeholder="Add yield amount"
+                    value={formRecipe.yields}
                     onChange={handleChangeForm}
                 />
             </InputGroup>

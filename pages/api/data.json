@@ -17,26 +17,107 @@
           "id" : 1,
           "name": "peanut butter and banana breakfast bowl", 
           "ingredients": [
-          {"quantity": 2, "unitOfMeasure": null, "ingredient":"bananas", "article": null, "minQty": 2, "maxQty": 2},
-          {"quantity": 2, "unitOfMeasure": "tbsp", "ingredient":"peanut butter", "article": null, "minQty": 2, "maxQty": 2},
-          {"quantity": 2, "unitOfMeasure": "tbsp", "ingredient":"flaxseed", "article": null, "minQty": 2, "maxQty": 2},
-          {"quantity": 0.5, "unitOfMeasure": "tsp", "ingredient":"vanilla extract", "article": null, "minQty": 0.5, "maxQty": 0.5},
-          {"quantity": 0.25, "unitOfMeasure": "cup", "ingredient":"oat milk", "article": null, "minQty": 0.25, "maxQty": 0.25}
-        ], 
+            {
+              "quantity": 2,
+              "quantity2": null,
+              "unitOfMeasureID": null,
+              "unitOfMeasure": null,
+              "description": "ripe bananas, peeled and frozen",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 2,
+              "quantity2": null,
+              "unitOfMeasureID": "tablespoon",
+              "unitOfMeasure": "tbsp",
+              "description": "creamy peanut butter",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 2,
+              "quantity2": null,
+              "unitOfMeasureID": "tablespoon",
+              "unitOfMeasure": "tbsp",
+              "description": "flaxseed meal (optional)",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 0.5,
+              "quantity2": null,
+              "unitOfMeasureID": "teaspoon",
+              "unitOfMeasure": "tsp",
+              "description": "vanilla extract (optional)",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 0.25,
+              "quantity2": null,
+              "unitOfMeasureID": "cup",
+              "unitOfMeasure": "cup",
+              "description": "nondairy milk (such as almond or coconut)",
+              "isGroupHeader": false
+            }
+          ], 
       "instructions": "Put ingredients into blender. Add toppings",
-      "prepTime": 30,
-      "cookTime": 20
+      "prepTime": 5,
+      "cookTime": 5,
+      "yields": 1
       },
       {   
           "id" : 2, "name": "chocolate rawnola", "ingredients": [
-          {"quantity": 12, "unitOfMeasure": null, "ingredient":"medjool dates, large pitted", "article": null, "minQty": 12, "maxQty": 12},
-          {"quantity": 0.75, "unitOfMeasure": "cup", "ingredient":"rolled oats", "article": null, "minQty": 0.75, "maxQty": 0.75},
-          {"quantity": 2, "unitOfMeasure": "tbsp", "ingredient":"cocoa powder", "article": null, "minQty": 2, "maxQty": 2},
-          {"quantity": 0.25, "unitOfMeasure": "tsp", "ingredient":"salt", "article": null, "minQty": 0.25, "maxQty": 0.25},
-          {"quantity": 0.75, "unitOfMeasure": "cup", "ingredient":"almonds, raw", "article": null, "minQty": 0.75, "maxQty": 0.75},
-          {"quantity": 0.5, "unitOfMeasure": "cup", "ingredient":"coconut flakes", "article": null, "minQty": 0.75, "maxQty": 0.75}
-      ], 
-      "instructions": "Put ingredients into food processor. process ingredients until an evenly crumbled mixture forms. Place in mason jar"
+            {
+              "quantity": 0.75,
+              "quantity2": null,
+              "unitOfMeasureID": "cup",
+              "unitOfMeasure": "cup",
+              "description": "rolled oats",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 0.75,
+              "quantity2": null,
+              "unitOfMeasureID": "cup",
+              "unitOfMeasure": "cup",
+              "description": "raw almonds",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 0.5,
+              "quantity2": null,
+              "unitOfMeasureID": "cup",
+              "unitOfMeasure": "cup",
+              "description": "coconut flakes",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 12,
+              "quantity2": null,
+              "unitOfMeasureID": "large",
+              "unitOfMeasure": "large",
+              "description": "medjool dates, pitted",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 2,
+              "quantity2": null,
+              "unitOfMeasureID": "tablespoon",
+              "unitOfMeasure": "tbsp",
+              "description": "cocoa powder (or cacao powder)",
+              "isGroupHeader": false
+            },
+            {
+              "quantity": 0.25,
+              "quantity2": null,
+              "unitOfMeasureID": "teaspoon",
+              "unitOfMeasure": "tsp",
+              "description": "salt",
+              "isGroupHeader": false
+            }
+        ],
+      "instructions": "Put ingredients into food processor. process ingredients until an evenly crumbled mixture forms. Place in mason jar",
+      "cookTime": 5,
+      "prepTime": 5, 
+      "yields": 2.5
       }
   ]
  }

@@ -1,28 +1,27 @@
 import { Button } from 'react-bootstrap'
 import Layout from '../../components/layout'
 import RecipeForm from '../../components/recipe-form'
-import { useDispatch } from 'react-redux'
-import { editRecipe } from '../../redux/recipe-slice'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { store } from '../../store'
 import { Recipe } from '../../types'
-import React from 'react'
-
+import React from 'react';
+import data from '../api/data.json';
 
 type PropTypes = {
-  recipe: Recipe
+  recipe: Recipe,
+  recipes: Recipe[],
+  setRecipes: Function,
 }
-export const RecipePage = ({ recipe } : PropTypes) => {
+export const RecipePage = ({ recipe, recipes, setRecipes } : PropTypes) => {
   const [recipeToEdit, setRecipeToEdit] = useState({ ...recipe })
 
   const router = useRouter()
 
-  const dispatch = useDispatch()
-
   const handleSubmitRecipe = () => {
     try {
-      dispatch(editRecipe(recipeToEdit))
+      let updatedRecipeList = recipes.map(r => r.id === recipeToEdit.id ? recipeToEdit : r)
+      console.log('u', updatedRecipeList)
+      setRecipes(updatedRecipeList)
     } catch (error) {
       console.error("Didn't work b/c ", error)
     } finally {
@@ -42,10 +41,10 @@ export const RecipePage = ({ recipe } : PropTypes) => {
          </div>
     </Layout>
 }
-export default Recipe
+export default RecipePage
 
 export const getStaticPaths = () => {
-  const recipes = store.getState().recipes.recipes
+  const recipes = data.recipes;
   const paths = recipes.map(r => ({
     params: { id: r.id.toString() }
   }))
@@ -56,8 +55,7 @@ export const getStaticPaths = () => {
 }
 
 export const getStaticProps = ({ params }) => {
-  const recipeData = store.getState().recipes.recipes.filter(r => r.id.toString() === params.id)[0]
-  const recipe = { ...recipeData } // do I need this 
+  const recipe = data.recipes.filter(r => r.id.toString() === params.id)[0]
   return {
     props: {
       recipe
