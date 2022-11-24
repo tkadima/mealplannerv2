@@ -7,26 +7,35 @@ import RecipeForm from '../../components/recipe-form';
 import React from 'react';
 import { Recipe } from '../../types';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
-const NewRecipe = () => {
+
+type PropTypes = {
+    recipes: Recipe[],
+    setRecipes: Function
+}
+
+const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 
     const router = useRouter();
 
     const [recipe, setRecipe] = useState<Recipe>(
         {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
-    const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
+   // const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
 
-    const handleSubmitRecipe = () => {
-        router.push('/recipes')
-
-        if (recipe) {
-            // need to figure out orm 
-            // let list = createSuggestionList(recipe, data.fridge);
-            // setShoppingSuggestions(list);
-        }
-        setSubmitted(true);
+    const handleSubmitRecipe = async() => {
+        axios.post('/api/recipes', recipe)
+            .then(res => {
+                setRecipes([...recipes, recipe])
+                setSubmitted(true);
+                if (res.status === 200) router.push('/recipes')
+            })
+            .catch(error => {
+                console.error(error)
+            })
+       
     }
 
     const createRecipe = (recipe: Recipe) => {

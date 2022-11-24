@@ -6,12 +6,12 @@ import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe-list-item';
 import React from 'react';
 import { Recipe } from '../../types';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 type PropTypes = {
-    recipes: Recipe[]
+    recipes: Recipe[],
+    setRecipes: Function
 }
-const Recipes = ({recipes, setRecipes}) => {
+const Recipes = ({recipes, setRecipes} : PropTypes) => {
 
     const handleDelete = (recipe: Recipe) => {
         setRecipes(recipes.filter((r: { id: number; }) => r.id !== recipe.id));
