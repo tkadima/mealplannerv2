@@ -4,14 +4,14 @@ import { Recipe } from '../types';
 import axios from 'axios';
 
 const App = ({ Component,  pageProps}) => {
-    const [recipes, setRecipes] = useState([]); 
+    const [recipes, setRecipes] = useState<Recipe[]>([]); 
 
     const getRecipes = async() => {
-        let convertedRecipes;
+        let convertedRecipes : Recipe[];
          axios.get('/api/recipes')
             .then(res => {
                 let dbRecipes = res.data;
-                convertedRecipes = dbRecipes.map(r => { 
+                convertedRecipes = dbRecipes.map((r: any) => { 
                     return Object.assign(new Recipe, r )
                 })
                 setRecipes(convertedRecipes);

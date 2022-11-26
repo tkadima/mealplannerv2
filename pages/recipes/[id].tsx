@@ -22,7 +22,6 @@ export const RecipePage = ({ recipe, recipes, setRecipes } : PropTypes) => {
   const handleSubmitRecipe = () => {
     try {
       let updatedRecipeList = recipes.map(r => r.id === recipeToEdit.id ? recipeToEdit : r)
-      console.log('u', updatedRecipeList)
       setRecipes(updatedRecipeList)
     } catch (error) {
       console.error("Didn't work b/c ", error)
@@ -56,9 +55,7 @@ export const getStaticPaths: GetStaticPaths = async() => {
 }
 
 export const getStaticProps = async ({ params }) => {
-  console.log('id', params.id)
   let data  = await fetch(`http:localhost:3000/api/recipes/${params.id}`);
-  console.log('data', data)
   const recipe = await data.json()
 
   return {
