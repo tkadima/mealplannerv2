@@ -20,7 +20,7 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
     const router = useRouter();
 
     const [recipe, setRecipe] = useState<Recipe>(
-        {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
+        {name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
     const [submitted, setSubmitted] = useState(false);
 
 

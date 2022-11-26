@@ -7,24 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ingredients {
-  recipe_id          Int
-  quantity           Decimal? @db.Decimal(5, 2)
-  quantity_2         Decimal? @db.Decimal(5, 2)
-  unit_of_measure_id String?  @db.VarChar(50)
-  unit_of_measure    String?  @db.VarChar(50)
+model ingredient {
+  id                 Int          @id @default(autoincrement())
+  recipeId           Int          @map("recipe_id")
+  quantity           Decimal?     @db.Decimal(5, 2)
+  quantity2          Decimal?     @db.Decimal(5, 2)  @map("quantity_2")
+  unitOfMeasureId    String?      @db.VarChar(50)    @map("unit_of_measure_id")
+  unitOfMeasure      String?      @db.VarChar(50)    @map("unit_of_measure")
   description        String
-  isgroupheader      Boolean  @default(false)
-  id                 Int      @id @default(autoincrement())
-  recipes            recipes  @relation(fields: [recipe_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  isGroupHeader      Boolean                         @map("is_group_header")
+  recipe             recipe   @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model recipes {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique @db.VarChar(50)
-  instructions String?
-  prep_time    Int?
-  cook_time    Int?
+model recipe {
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(50)
+  instructions String? 
+  prepTime     Int?          @map("prep_time")
+  cookTime     Int?          @map("cook_time")
   yields       Decimal?      @db.Decimal(10, 2)
-  ingredients  ingredients[]
+  ingredient   ingredient[]
 }

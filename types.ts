@@ -1,7 +1,7 @@
 import { Ingredient } from "parse-ingredient/dist/types";
 
 export class Recipe {  
-    id: number;  
+    id?: number;  
     name: string; 
     ingredients?: Ingredient[];
     instructions: string;

@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 
 export default async function handler (req, res) {
     if (req.method === 'GET') {
-        let recipes = await prisma.recipes.findMany()
+        let recipes = await prisma.recipe.findMany()
         return res.status(200).json(recipes)
     }
     else if (req.method === 'POST') {
@@ -34,21 +34,16 @@ const createRecipe = async(req, res) => {
     } )
     
     try { 
-        const newRecipe = await prisma.recipes.create({
+        const newRecipe = await prisma.recipe.create({
             data: {
                 id: body.id, 
                 name: body.name, 
                 instructions: body.instructions,
-                prep_time: body.prepTime,
-                cook_time: body.cookTime, 
+                prepTime: body.prepTime,
+                cookTime: body.cookTime, 
                 yields: body.yields,
-                ingredients: {
-                    createMany: {data: ingredients} 
-                }
             },
-            include:{
-                ingredients: true
-            }
+           
         })
 
         return res.status(200).json(newRecipe, { success: true })
