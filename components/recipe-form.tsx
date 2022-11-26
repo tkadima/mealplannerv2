@@ -17,8 +17,17 @@ const RecipeForm = ({ recipe, onRecipeChange, op }: PropTypes) => {
 const handleChangeForm = (e: { target: { name: any; value: any } }) => {
     const newRecipe = { ...formRecipe, [e.target.name]: e.target.value }
     setFormRecipe(newRecipe);
-    onRecipeChange({...newRecipe, ingredients: parseIngredient(newRecipe.ingredients)});
+    const convertedRecipe = convertFormRecipe(newRecipe);
+    onRecipeChange(convertedRecipe);
   }
+const convertFormRecipe = (formRecipe: any) => {
+    return {...formRecipe,
+         ingredients: parseIngredient(formRecipe.ingredients),
+         prepTime: parseInt(formRecipe.prepTime),
+         cookTime: parseInt(formRecipe.cookTime),
+         yields: parseFloat(formRecipe.yields)
+    }
+}
 
   return (
         <Form>
@@ -58,7 +67,7 @@ const handleChangeForm = (e: { target: { name: any; value: any } }) => {
                     name="prepTime"
                     placeholder="Add prep time (minutes)"
                     type="number"
-                    value={formRecipe.prepTime}
+                    value={formRecipe.prepTime || ''}
                     onChange={handleChangeForm}
                 />
                 <Form.Control
@@ -66,7 +75,7 @@ const handleChangeForm = (e: { target: { name: any; value: any } }) => {
                     as="input"
                     name="cookTime"
                     placeholder="Add cooking time (minutes)"
-                    value={formRecipe.cookTime}
+                    value={formRecipe.cookTime || ''}
                     onChange={handleChangeForm}
                 />
                  <Form.Control
@@ -74,7 +83,7 @@ const handleChangeForm = (e: { target: { name: any; value: any } }) => {
                     as="input"
                     name="yields"
                     placeholder="Add yield amount"
-                    value={formRecipe.yields}
+                    value={formRecipe.yields || ''} 
                     onChange={handleChangeForm}
                 />
             </InputGroup>

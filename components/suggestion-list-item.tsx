@@ -2,8 +2,6 @@ import { useState } from 'react'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button'
-import { addItem, removeItem, ShoppingListState } from '../redux/shopping-list-slice'
-import { useDispatch, useSelector } from 'react-redux'
 import React from 'react'
 import { Item } from '../types'
 
@@ -14,14 +12,14 @@ type PropTypes = {
 }
 
 const SuggestionListItem = ({item, type: listType}: PropTypes) => {
-  const dispatch = useDispatch()
-  const shoppingList  = useSelector((state : ShoppingListState) => state.shoppingList)
+  //const dispatch = useDispatch()
+  //const shoppingList  = useSelector((state : ShoppingListState) => state.shoppingList)
 
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [answered, setAnswered] = useState(false)
 
   const handleUndo = () => {
-    if (selectedAnswer === 'yes') { dispatch(removeItem(item)) }
+    //if (selectedAnswer === 'yes') { dispatch(removeItem(item)) }
 
     setAnswered(false)
     setSelectedAnswer(null)
@@ -30,9 +28,9 @@ const SuggestionListItem = ({item, type: listType}: PropTypes) => {
   const handleListSuggestionAction = (e) => {
     const response = e.target.value
     if (listType === 'shopping-list') {
-      if (response === 'yes' && !shoppingList.includes(item)) {
-        dispatch(addItem(item))
-      }
+      // if (response === 'yes' && !shoppingList.includes(item)) {
+      //   dispatch(addItem(item))
+      // }
 
       setAnswered(true)
       setSelectedAnswer(response)

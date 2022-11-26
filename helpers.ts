@@ -13,4 +13,3 @@ export const convertIngredientsToString = (ingredients: Ingredient[]) => {
   })
   return ingredientLines.join('')
 }
-

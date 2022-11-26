@@ -21,11 +21,11 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 
     const [recipe, setRecipe] = useState<Recipe>(
         {id: 0, name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
-   // const [shoppingSuggestions, setShoppingSuggestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
 
     const handleSubmitRecipe = async() => {
+        console.log('submitting', recipe)
         axios.post('/api/recipes', recipe)
             .then(res => {
                 setRecipes([...recipes, recipe])
@@ -52,23 +52,6 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
                         <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
                     </div>
                 </div>
-                {/* {
-                    shoppingSuggestions.length > 0 && 
-                    (<div style={{ width:'40%', float:'right',  paddingTop: '30px'}}>
-                        <h5>Would you like to add the following to your shopping list?</h5>
-                        <ListGroup>
-                        {
-                            shoppingSuggestions.map(s => {
-                            return <SuggestionListItem key={s} item={s} type="shopping-list" />
-                            })
-                        }
-                        </ListGroup>
-                        <Link href="/recipes">
-                            <Button>Finish</Button>
-                        </Link>
-                    </div>)
-                }       
-            */}
             </div>
 
         </Layout>

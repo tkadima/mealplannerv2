@@ -1,4 +1,4 @@
-import { Ingredient } from "parse-ingredient";
+import { Ingredient } from "parse-ingredient/dist/types";
 
 export class Recipe {  
     id: number;  
@@ -13,6 +13,17 @@ export class Recipe {
         Object.assign(this, init);
     }
 }
+
+// export type Ingredient = {
+//     id: number, 
+//     recipeId: number, 
+//     quantity: number, 
+//     quantity2: number,
+//     unitOfMeasureID: string, 
+//     unitOfMeasure: string, 
+//     description: string, 
+//     isGroupHeader: string
+// }
   
 export type Item = {
     unit: any;
