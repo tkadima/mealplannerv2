@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { Ingredient } from 'parse-ingredient/dist/types'
 
 // POST: creating a new recipe
@@ -6,7 +7,7 @@ import { Ingredient } from 'parse-ingredient/dist/types'
 // all other methods return 405 - method not allowed 
 const prisma = new PrismaClient()
 
-export default async function handler (req, res) {
+export default async function handler (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
         let recipes = await prisma.recipe.findMany()
         return res.status(200).json(recipes)
@@ -19,34 +20,36 @@ export default async function handler (req, res) {
     }
 }
 
-const createRecipe = async(req, res) => {
-    
+const createRecipe = async(req: NextApiRequest, res: NextApiResponse) => {
     const body = req.body;
-    const ingredients = body.ingredients.map((ingredient: Ingredient) => {
+    const ingredients= body.ingredients.map((ingredient: Ingredient) => {
+        
         return {        
+            recipeId: body.id,
             quantity: ingredient.quantity, 
-            quantity_2: ingredient.quantity2, 
-            unit_of_measure_id: ingredient.unitOfMeasureID,
-            unit_of_measure: ingredient.unitOfMeasure,
+            quantity2: ingredient.quantity2, 
+            unitOfMeasureID: ingredient.unitOfMeasureID,
+            unitOfMeasure: ingredient.unitOfMeasure,
             description: ingredient.description, 
-            isgroupheader: ingredient.isGroupHeader
+            isGroupHeader: ingredient.isGroupHeader
         }
-    } )
+    } ) as Ingredient[];
     
     try { 
         const newRecipe = await prisma.recipe.create({
+            include: {ingredients: true},
             data: {
-                id: body.id, 
                 name: body.name, 
                 instructions: body.instructions,
                 prepTime: body.prepTime,
                 cookTime: body.cookTime, 
                 yields: body.yields,
+                ingredients: { create: ingredients}
             },
            
         })
 
-        return res.status(200).json(newRecipe, { success: true })
+        return res.status(200).json(newRecipe)
     } catch(err) {
         console.log('error', err)
         res.status(500).json({ error: `Error creating recipe: ${err}`, success: false })
