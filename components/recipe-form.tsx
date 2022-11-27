@@ -8,9 +8,8 @@ import { parseIngredient } from 'parse-ingredient'
 type PropTypes = {
     recipe: Recipe, 
     onRecipeChange: Function 
-    op: string
 }
-const RecipeForm = ({ recipe, onRecipeChange, op }: PropTypes) => {
+const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
   const [formRecipe, setFormRecipe] = useState({...recipe,
     ingredients: recipe.ingredients ? convertIngredientsToString(recipe.ingredients) : ''})
 
@@ -20,6 +19,8 @@ const handleChangeForm = (e: { target: { name: any; value: any } }) => {
     const convertedRecipe = convertFormRecipe(newRecipe);
     onRecipeChange(convertedRecipe);
   }
+
+// parse properties   
 const convertFormRecipe = (formRecipe: any) => {
     return {...formRecipe,
          ingredients: parseIngredient(formRecipe.ingredients),

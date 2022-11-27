@@ -25,7 +25,6 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 
 
     const handleSubmitRecipe = async() => {
-        console.log('submitting', recipe)
         axios.post('/api/recipes', recipe)
             .then(res => {
                 setRecipes([...recipes, recipe])
@@ -47,7 +46,7 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
             <h3>Create New Recipe</h3>
             <div style={{ padding: '10px 0px'}}>
                 <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
-                    <RecipeForm recipe={recipe} onRecipeChange={createRecipe} op='add'/>
+                    <RecipeForm recipe={recipe} onRecipeChange={createRecipe}/>
                     <div className="col text-center" style={{ paddingTop: '60px'}} >
                         <Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
                     </div>

@@ -14,29 +14,29 @@ type PropTypes = {
   recipes: Recipe[],
   setRecipes: Function,
 }
-export const RecipePage = ({ recipe, recipes, setRecipes } : PropTypes) => {
-  const [recipeToEdit, setRecipeToEdit] = useState({ ...recipe })
+export const RecipePage = ({ recipe } : PropTypes) => {
+  const [recipeChanges, setRecipeChanges] = useState({ ...recipe })
 
   const router = useRouter()
 
   const handleSubmitRecipe = () => {
-    try {
-      let updatedRecipeList = recipes.map(r => r.id === recipeToEdit.id ? recipeToEdit : r)
-      setRecipes(updatedRecipeList)
-    } catch (error) {
-      console.error("Didn't work b/c ", error)
-    } finally {
-      // if result is 200
-      router.push('/recipes')
-    }
-  }
+    axios.put(`/api/recipes/${recipe.id}`, recipeChanges)
+      .then(res => {
+        if (res.status === 200) router.push('/recipes')
 
-  const handleChangeRecipe = (newRecipe: Recipe) => {
-    setRecipeToEdit(newRecipe)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  
+}
+
+  const handleChangeRecipe = (newRecipe) => {
+    setRecipeChanges(newRecipe)
   }
 
   return <Layout>
-        <RecipeForm recipe={recipeToEdit} onRecipeChange={handleChangeRecipe} op='edit'/>
+        <RecipeForm recipe={recipe} onRecipeChange={handleChangeRecipe} />
         <div className="col text-center" style={{ paddingTop: '100px' }} >
             <Button onClick={handleSubmitRecipe} type="submit">Submit</Button>
          </div>
@@ -56,7 +56,7 @@ export const getStaticPaths: GetStaticPaths = async() => {
 
 export const getStaticProps = async ({ params }) => {
   let data  = await fetch(`http:localhost:3000/api/recipes/${params.id}`);
-  const recipe = await data.json()
+  const recipe = await data.json() as Recipe 
 
   return {
     props: {

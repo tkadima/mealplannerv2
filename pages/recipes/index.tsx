@@ -6,15 +6,25 @@ import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe-list-item';
 import React from 'react';
 import { Recipe } from '../../types';
+import axios from 'axios';
+
 
 type PropTypes = {
     recipes: Recipe[],
     setRecipes: Function
 }
-const Recipes = ({recipes, setRecipes} : PropTypes) => {
+
+const Recipes = ({ recipes } : PropTypes) => {
 
     const handleDelete = (recipe: Recipe) => {
-        setRecipes(recipes.filter((r: { id: number; }) => r.id !== recipe.id));
+        console.log('deleting', recipe)
+        axios.delete(`/api/recipes/${recipe.id}`)
+            .then(res => {
+                console.log('Successfully deleted')
+            })
+            .catch(err => {
+                console.error('Error occured while deleted', err)
+            })
     }
 
     return (
