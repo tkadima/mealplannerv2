@@ -24,7 +24,7 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
     const [submitted, setSubmitted] = useState(false);
 
 
-    const handleSubmitRecipe = async() => {
+    const handleSubmitRecipe = () => {
         axios.post('/api/recipes', recipe)
             .then(res => {
                 setRecipes([...recipes, recipe])

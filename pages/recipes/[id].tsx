@@ -6,13 +6,10 @@ import { useRouter } from 'next/router'
 import { Recipe } from '../../types'
 import React from 'react';
 import axios from 'axios'
-import recipes from '.'
 import { GetStaticPaths } from 'next'
 
 type PropTypes = {
   recipe: Recipe,
-  recipes: Recipe[],
-  setRecipes: Function,
 }
 export const RecipePage = ({ recipe } : PropTypes) => {
   const [recipeChanges, setRecipeChanges] = useState({ ...recipe })
