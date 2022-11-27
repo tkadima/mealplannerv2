@@ -2,9 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Ingredient } from 'parse-ingredient/dist/types'
 
-// POST: creating a new recipe
-// GET: fetch all recipes 
-// all other methods return 405 - method not allowed 
 const prisma = new PrismaClient()
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {

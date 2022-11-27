@@ -14,13 +14,16 @@ type PropTypes = {
     setRecipes: Function
 }
 
-const Recipes = ({ recipes } : PropTypes) => {
+const Recipes = ({ recipes, setRecipes } : PropTypes) => {
 
     const handleDelete = (recipe: Recipe) => {
         console.log('deleting', recipe)
         axios.delete(`/api/recipes/${recipe.id}`)
             .then(res => {
-                console.log('Successfully deleted')
+                if (res.status === 200) {
+                    const newRecipeList = recipes.filter(r => r.id !== recipe.id)
+                    setRecipes(newRecipeList)
+                }
             })
             .catch(err => {
                 console.error('Error occured while deleted', err)

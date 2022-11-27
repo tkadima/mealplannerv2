@@ -1,12 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { ingredient, PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Ingredient } from 'parse-ingredient/dist/types';
 import prisma from '../../../db'
 import { Recipe } from '../../../types';
-
-// PUT : edit recipe at id 
-// DELETE: delete recipe at id 
-// GET: simple fetch 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const prisma = new PrismaClient()
@@ -21,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(200).json(recipe)
     }
     else if (req.method === 'PUT') {
-       // return await updateRecipe(req, res, index)
+        return await updateRecipe(req, res, index)
     }
     else if (req.method === 'DELETE') {
         deleteRecipe(res, index)
@@ -31,29 +27,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 }
 const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: number) => {
-    const body = req.body as Recipe
-    const { name, instructions, prepTime, cookTime, yields } = req.body; 
-
-    const ingredients = body.ingredients as Ingredient[];
-
+    const body = req.body
+    console.log('body', body.ingredients)
     try {
         const updateRecipe = await prisma.recipe.update({
             where: {
                 id: index
             },
-            data: {
-                name, 
-                instructions, 
-                prepTime, 
-                cookTime, 
-                yields,
+            data: { 
+                name: body.name, 
+                instructions: body.instructions, 
+                prepTime: body.prepTime, 
+                cookTime: body.cookTime, 
+                yields: body.yields, 
                 ingredients: {
-                    upsert: {
-                        update: { ingredients },
-                        create: { ingredients }
-                    }
                 }
-            }
+             }
         })
         return res.status(200).json(updateRecipe)
 
@@ -64,7 +53,6 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
 }
 
     const deleteRecipe = async(res: NextApiResponse, index: number) => {
-        console.log('index', index)
         try {
             await prisma.ingredient.deleteMany({
                 where: {
@@ -83,4 +71,3 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
             res.status(500).json({ error: `Error deleting recipe: ${err}`, success: false })
         }
     }
-    

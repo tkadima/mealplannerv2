@@ -10,24 +10,31 @@ type PropTypes = {
     onRecipeChange: Function 
 }
 const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
-  const [formRecipe, setFormRecipe] = useState({...recipe,
+
+  const [formRecipe, setFormRecipe] = useState({name: recipe.name, instructions: recipe.instructions, prepTime: recipe.prepTime, 
+    cookTime: recipe.cookTime, yields: recipe.yields,
     ingredients: recipe.ingredients ? convertIngredientsToString(recipe.ingredients) : ''})
+
+    const [changes, setChanges] = useState({})
 
 const handleChangeForm = (e: { target: { name: any; value: any } }) => {
     const newRecipe = { ...formRecipe, [e.target.name]: e.target.value }
     setFormRecipe(newRecipe);
-    const convertedRecipe = convertFormRecipe(newRecipe);
-    onRecipeChange(convertedRecipe);
+    const newChanges = {...changes, [e.target.name]: e.target.value}
+    setChanges(convertChanges(newChanges))
+    onRecipeChange(changes);
   }
 
-// parse properties   
-const convertFormRecipe = (formRecipe: any) => {
-    return {...formRecipe,
-         ingredients: parseIngredient(formRecipe.ingredients),
-         prepTime: parseInt(formRecipe.prepTime),
-         cookTime: parseInt(formRecipe.cookTime),
-         yields: parseFloat(formRecipe.yields)
+const convertChanges = (recipeChanges: any) => {
+    for (let key in recipeChanges) { 
+        if (key === 'prepTime' || key === 'cookTime' || key === 'yields') {
+            recipeChanges[key] = parseInt(recipeChanges[key])
+        }
+        else if (key === 'ingredients') {
+            recipeChanges[key] = parseIngredient(recipeChanges[key])
+        }
     }
+    return recipeChanges; 
 }
 
   return (
