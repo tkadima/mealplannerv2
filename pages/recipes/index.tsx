@@ -17,7 +17,6 @@ type PropTypes = {
 const Recipes = ({ recipes, setRecipes } : PropTypes) => {
 
     const handleDelete = (recipe: Recipe) => {
-        console.log('deleting', recipe)
         axios.delete(`/api/recipes/${recipe.id}`)
             .then(res => {
                 if (res.status === 200) {

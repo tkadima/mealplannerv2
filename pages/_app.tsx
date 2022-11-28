@@ -3,9 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Recipe } from '../types';
 import axios from 'axios';
 
-import prisma  from '../db';
-
-
 
 const App = ({Component,  pageProps}) => {
     const [recipes, setRecipes] = useState<Recipe[]>([]); 

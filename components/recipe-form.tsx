@@ -1,7 +1,7 @@
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import React, { useState } from 'react'
-import { Ingredient, Recipe } from '../types'
+import { Recipe } from '../types'
 import { convertIngredientToString } from '../helpers'
 import { parseIngredient } from 'parse-ingredient'
 
@@ -11,45 +11,34 @@ type PropTypes = {
 }
 const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 
-    const createIngredientDict = (ingredientsList: Ingredient[]): Map<string, Ingredient> => {
-        const ingredientMap = new Map( 
-            ingredientsList.map(ingredient => {
-                return [convertIngredientToString(ingredient), ingredient];
-            })
-        )
-        return ingredientMap;
-    } 
   const [formRecipe, setFormRecipe] = useState({name: recipe.name, 
     instructions: recipe.instructions, prepTime: recipe.prepTime, 
     cookTime: recipe.cookTime, yields: recipe.yields})
 
-    const [ingredientText, setIngredientText] = useState(recipe.ingredients.map(r => convertIngredientToString(r)).join('\n'))
+    const [ingredientText, setIngredientText] = useState(recipe.ingredients ? 
+        recipe.ingredients.map(r => convertIngredientToString(r)).join('\n') : '')
+    
     const [changes, setChanges] = useState({})
 
 const handleChangeForm = (e: any) => {
     const newRecipe = { ...formRecipe, [e.target.name]: e.target.value }
+    let newChanges = {...changes}; 
     setFormRecipe(newRecipe);
-    const newChanges = {...changes, [e.target.name]: e.target.value}
+    let name = e.target.name; 
 
-    if (e.target.name === 'ingredients') {
+    if (name === 'prepTime' || name === 'cookTime' || name === 'yields') {
+        newChanges = {...changes, [name]: parseInt(e.target.value)}
+    }
+    else if (name === 'ingredients') {
         setIngredientText(e.target.value);
+        newChanges = {...changes, ingredients: parseIngredient(e.target.value)}
     }
-
-    setChanges(convertChanges(newChanges))
-    onRecipeChange(changes);
+    else {
+        newChanges = {...changes, [e.target.name]: e.target.value}
+    }
+    setChanges(newChanges)
+    onRecipeChange(newChanges);
   }
-
-const convertChanges = (recipeChanges: any) => {
-    for (let key in recipeChanges) { 
-        if (key === 'prepTime' || key === 'cookTime' || key === 'yields') {
-            recipeChanges[key] = parseInt(recipeChanges[key])
-        }
-        else if (key === 'ingredients') {
-            recipeChanges[key] = parseIngredient(recipeChanges[key])
-        }
-    }
-    return recipeChanges; 
-}
 
   return (
         <Form>
