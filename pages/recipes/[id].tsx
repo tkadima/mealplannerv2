@@ -28,7 +28,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
   
 	};
 
-	const handleChangeRecipe = (changes: any) => {
+	const handleChangeRecipe = (changes: never) => {
 		setRecipeChanges(changes);
 	};
 

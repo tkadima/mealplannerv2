@@ -17,10 +17,3 @@ export class Recipe {
 
 export type Ingredient = ingredient; 
   
-export type Item = {
-    unit: any;
-    quantity: any;
-    name: string,
-    description: string,
-  
-  }
