@@ -1,18 +1,18 @@
-import { ingredient } from "@prisma/client";
+import { ingredient } from '@prisma/client';
 
 
 export class Recipe {  
-    id?: number;  
-    name: string; 
-    ingredients?: ingredient[];
-    instructions: string;
-    prepTime?: number;
-    cookTime?: number;
-    yields?: number; 
+	id?: number;  
+	name: string; 
+	ingredients?: ingredient[];
+	instructions: string;
+	prepTime?: number;
+	cookTime?: number;
+	yields?: number; 
 
-    constructor(init?:Partial<Recipe>) {
-        Object.assign(this, init);
-    }
+	constructor(init?:Partial<Recipe>) {
+		Object.assign(this, init);
+	}
 }
 
 export type Ingredient = ingredient; 
