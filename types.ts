@@ -1,9 +1,10 @@
-import { Ingredient } from "parse-ingredient/dist/types";
+import { ingredient } from "@prisma/client";
+
 
 export class Recipe {  
     id?: number;  
     name: string; 
-    ingredients?: Ingredient[];
+    ingredients?: ingredient[];
     instructions: string;
     prepTime?: number;
     cookTime?: number;
@@ -14,16 +15,7 @@ export class Recipe {
     }
 }
 
-// export type Ingredient = {
-//     id: number, 
-//     recipeId: number, 
-//     quantity: number, 
-//     quantity2: number,
-//     unitOfMeasureID: string, 
-//     unitOfMeasure: string, 
-//     description: string, 
-//     isGroupHeader: string
-// }
+export type Ingredient = ingredient; 
   
 export type Item = {
     unit: any;

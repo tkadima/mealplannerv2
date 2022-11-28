@@ -1,8 +1,7 @@
-import { ingredient, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Ingredient } from 'parse-ingredient/dist/types';
 import prisma from '../../../db'
-import { Recipe } from '../../../types';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const prisma = new PrismaClient()
@@ -28,8 +27,31 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 }
 const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: number) => {
     const body = req.body
-    console.log('body', body.ingredients)
+    const ingredients = body.ingredients.map((ingredient: Ingredient) => {
+        
+        return {        
+            recipeId: body.id,
+            quantity: ingredient.quantity, 
+            quantity2: ingredient.quantity2, 
+            unitOfMeasureID: ingredient.unitOfMeasureID,
+            unitOfMeasure: ingredient.unitOfMeasure,
+            description: ingredient.description, 
+            isGroupHeader: ingredient.isGroupHeader
+        }
+    } ) as Ingredient[];
+    
     try {
+
+        if (body.ingredients) {
+
+            await prisma.ingredient.deleteMany({
+                where: {
+                    recipeId: index
+                }
+            })
+    
+        }
+      
         const updateRecipe = await prisma.recipe.update({
             where: {
                 id: index
@@ -41,6 +63,7 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
                 cookTime: body.cookTime, 
                 yields: body.yields, 
                 ingredients: {
+                    create: ingredients
                 }
              }
         })
