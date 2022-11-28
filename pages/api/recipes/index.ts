@@ -18,15 +18,9 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 const createRecipe = async(req: NextApiRequest, res: NextApiResponse) => {
     const body = req.body;
     const ingredients= body.ingredients.map((ingredient: Ingredient) => {
-        
         return {        
             recipeId: body.id,
-            quantity: ingredient.quantity, 
-            quantity2: ingredient.quantity2, 
-            unitOfMeasureID: ingredient.unitOfMeasureID,
-            unitOfMeasure: ingredient.unitOfMeasure,
-            description: ingredient.description, 
-            isGroupHeader: ingredient.isGroupHeader
+            ...ingredient
         }
     } ) as Ingredient[];
     
@@ -46,7 +40,7 @@ const createRecipe = async(req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json(newRecipe)
     } catch(err) {
-        console.log('error', err)
+        console.error(err)
         res.status(500).json({ error: `Error creating recipe: ${err}`, success: false })
     }
 } 

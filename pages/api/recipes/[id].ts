@@ -29,12 +29,7 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
         
         return {        
             recipeId: body.id,
-            quantity: ingredient.quantity, 
-            quantity2: ingredient.quantity2, 
-            unitOfMeasureID: ingredient.unitOfMeasureID,
-            unitOfMeasure: ingredient.unitOfMeasure,
-            description: ingredient.description, 
-            isGroupHeader: ingredient.isGroupHeader
+            ...ingredient
         }
     } ) as Ingredient[] : [];
 
@@ -67,7 +62,7 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
         return res.status(200).json(updateRecipe)
 
     } catch (err) {
-        console.log('error', err)
+        console.error('error', err)
         res.status(500).json({ error: `Error updating recipe: ${err}`, success: false })
     }
 }
@@ -87,7 +82,7 @@ const updateRecipe = async(req: NextApiRequest, res: NextApiResponse, index: num
             return res.status(200).json({message: `Recipe with id ${index} was deleted`, success: true})
         }
         catch(err) {
-            console.log(err)
+            console.error(err)
             res.status(500).json({ error: `Error deleting recipe: ${err}`, success: false })
         }
     }

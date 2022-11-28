@@ -33,9 +33,11 @@ export const RecipePage = ({ recipe } : PropTypes) => {
   }
 
   return <Layout>
-        <RecipeForm recipe={recipe} onRecipeChange={handleChangeRecipe} />
-        <div className="col text-center" style={{ paddingTop: '100px' }} >
-            <Button onClick={handleSubmitRecipe} type="submit">Submit</Button>
+        <div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
+          <RecipeForm recipe={recipe} onRecipeChange={handleChangeRecipe} />
+          <div className="col text-center" style={{ paddingTop: '10px' }} >
+              <Button onClick={handleSubmitRecipe} type="submit">Submit</Button>
+          </div>
          </div>
     </Layout>
 }
