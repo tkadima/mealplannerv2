@@ -1,6 +1,6 @@
 import '../styles/global.css';
 import React, { useEffect, useState } from 'react';
-import { Recipe } from '../types';
+import { Recipe } from './recipes/types';
 import axios from 'axios';
 import { AppProps } from 'next/app';
 

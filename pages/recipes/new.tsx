@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe-form';
 import React from 'react';
-import { Recipe } from '../../types';
+import { Recipe } from './types';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 

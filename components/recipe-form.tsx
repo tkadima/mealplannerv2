@@ -1,8 +1,8 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import React, { useState } from 'react';
-import { Recipe } from '../types';
-import { convertIngredientToString } from '../helpers';
+import { Recipe } from '../pages/recipes/types';
+import { convertIngredientToString } from '../pages/recipes/helpers';
 import { parseIngredient } from 'parse-ingredient';
 
 type PropTypes = {

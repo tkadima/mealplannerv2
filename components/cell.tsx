@@ -20,7 +20,6 @@ const Cell = ({onSelectCell, dayOfWeek, meal }: PropTypes) => {
 	};
     
 	return (<td style={{ padding: '30px'}} onClick={selectCell} onMouseOver={hoverCell} onMouseLeave={unHoverCell}>
-        Just testing
 	</td>);
 };
 
