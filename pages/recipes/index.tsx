@@ -35,8 +35,10 @@ const Recipes = ({ recipes, setRecipes } : PropTypes) => {
 			<h3>Recipes</h3>
 			{
 				recipes.length > 0 &&
-                <ListGroup>{ recipes.map((r: Recipe) => {
-                	return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})}
+                <ListGroup>
+                	{ recipes.map((r: Recipe) => {
+                		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})
+                	}
                 </ListGroup>
 			}
 			<div className="col text-center padding-md">
