@@ -1,4 +1,4 @@
-import { ingredient } from '@prisma/client';
+import { ingredient, food } from '@prisma/client';
 
 
 export class Recipe {  
@@ -16,4 +16,6 @@ export class Recipe {
 }
 
 export type Ingredient = ingredient; 
+
+export type Food = food; 
   

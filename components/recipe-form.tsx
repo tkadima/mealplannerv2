@@ -1,7 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import React, { useState } from 'react';
-import { Recipe } from '../pages/recipes/types';
+import { Recipe } from '../pages/types';
 import { convertIngredientToString } from '../pages/recipes/helpers';
 import { parseIngredient } from 'parse-ingredient';
 

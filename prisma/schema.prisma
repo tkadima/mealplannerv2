@@ -28,3 +28,9 @@ model recipe {
   yields       Decimal?     @db.Decimal(10, 2)
   ingredients  ingredient[]
 }
+
+model food {
+  id      Int      @id @default(autoincrement())
+  name    String   @db.VarChar(50)
+  aliases String[]
+}

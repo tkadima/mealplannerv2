@@ -1,14 +1,15 @@
 import '../styles/global.css';
 import React, { useEffect, useState } from 'react';
-import { Recipe } from './recipes/types';
+import { Food, Recipe } from './types';
 import axios from 'axios';
 import { AppProps } from 'next/app';
 
 
 const App = ({Component,  pageProps}: AppProps) => {
 	const [recipes, setRecipes] = useState<Recipe[]>([]); 
+	const [food, setFood] = useState<Food[]>([]);
 
-	const getRecipes = async() => {
+	const getRecipes = () => {
 		let convertedRecipes : Recipe[];
 		axios.get('/api/recipes')
 			.then(res => {
@@ -23,10 +24,21 @@ const App = ({Component,  pageProps}: AppProps) => {
 			});
 	};
 
+	const getFood = () => {
+		axios.get('/api/food')
+			.then(res => {
+				console.log(res);
+			})
+			.catch(err => {
+				console.error('error fetching food', err);
+			});
+	};
+
 	useEffect(() => {
 		getRecipes();
+		getFood();
 	}, []);
 
-	return (<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes}/>);
+	return (<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes} foodList={food} setFood={setFood}/>);
 };
 export default App;

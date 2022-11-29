@@ -3,7 +3,7 @@ import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe-form';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Recipe } from './types';
+import { Recipe } from '../types';
 import React from 'react';
 import axios from 'axios';
 import { GetStaticPaths } from 'next';
