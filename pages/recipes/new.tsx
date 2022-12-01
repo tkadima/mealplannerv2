@@ -1,14 +1,11 @@
 import { useState } from 'react';
-
 import Button from 'react-bootstrap/Button';
-
-import Layout from '../../components/layout';
-import RecipeForm from '../../components/recipe-form';
 import React from 'react';
 import { Recipe } from '../types';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-
+import Layout from '../../components/layout';
+import RecipeForm from '../../components/recipe-form';
 
 type PropTypes = {
     recipes: Recipe[],
@@ -21,14 +18,11 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 
 	const [recipe, setRecipe] = useState<Recipe>(
 		{name: '', ingredients: null, instructions: '',  prepTime: null, cookTime: null, yields: null});
-	const [submitted, setSubmitted] = useState(false);
-
 
 	const handleSubmitRecipe = () => {
 		axios.post('/api/recipes', recipe)
 			.then(res => {
 				setRecipes([...recipes, res.data]);
-				setSubmitted(true);
 				if (res.status === 200) router.push('/recipes');
 			})
 			.catch(error => {
@@ -48,7 +42,7 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 				<div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
 					<RecipeForm recipe={recipe} onRecipeChange={createRecipe}/>
 					<div className="col text-center" style={{ paddingTop: '60px'}} >
-						<Button onClick={handleSubmitRecipe} disabled={submitted} type="submit">Submit</Button>
+						<Button onClick={handleSubmitRecipe} type="submit">Submit</Button>
 					</div>
 				</div>
 			</div>

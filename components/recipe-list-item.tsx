@@ -6,7 +6,7 @@ import { Recipe } from '../pages/types';
 
 type PropTypes = {
     recipeItem: Recipe,
-    onDelete: (item: unknown) => void
+    onDelete: (item: Recipe) => void
 }
 const RecipeListItem = ({ recipeItem, onDelete} : PropTypes) => {
 	const handleDeleteRecipe = () => {

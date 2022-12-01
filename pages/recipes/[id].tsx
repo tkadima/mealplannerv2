@@ -19,13 +19,11 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	const handleSubmitRecipe = () => {
 		axios.put(`/api/recipes/${recipe.id}`, recipeChanges)
 			.then(res => {
-				if (res.status === 200) router.push('/recipes');
-
+				if (res.status === 200)  { router.push('/recipes');}
 			})
 			.catch(err => {
 				console.error(err);
 			});
-  
 	};
 
 	const handleChangeRecipe = (changes: never) => {

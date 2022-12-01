@@ -8,7 +8,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method === 'PUT') {
 		try {
 			const body = req.body; 
-			console.log('body', body);
 			const updateFood = await prisma.food.update({
 				where: {
 					id: index
@@ -17,7 +16,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 					name: body.name
 				}
 			});
-			console.log('returns', updateFood);
 			return res.status(200).json(updateFood);
 		}
 		catch (err) {
@@ -26,7 +24,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		}
 	}
 	else if (req.method === 'DELETE') {
-		return res.status(200).json({message: 'Recipe with id was deleted', success: true});
+		try {
+			await prisma.food.delete({
+				where: {
+					id: index
+				}
+			});
+			return res.status(200).json({message: 'Recipe with id was deleted', success: true});
+		}
+		catch (err) {
+			console.error(err);
+			res.status(500).json({ error: `Error deleting recipe: ${err}`, success: false });
+		}
 	}
 	else {
 		return res.status(405).json({ message: 'Method not allowed', success: false });

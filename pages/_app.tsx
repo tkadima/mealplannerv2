@@ -9,14 +9,9 @@ const App = ({Component,  pageProps}: AppProps) => {
 	const [food, setFood] = useState<Food[]>([]);
 
 	const getRecipes = () => {
-		let convertedRecipes : Recipe[];
 		axios.get('/api/recipes')
-			.then(res => {
-				const dbRecipes = res.data;
-				convertedRecipes = dbRecipes.map((r: Recipe) => { 
-					return Object.assign(new Recipe, r );
-				});
-				setRecipes(convertedRecipes);
+			.then(res => {			
+				setRecipes(res.data);
 			})
 			.catch(err => {
 				console.error('fetching recipes resulted in error: ', err);

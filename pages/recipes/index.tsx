@@ -2,13 +2,11 @@
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-
-import Layout from '../../components/layout';
-import RecipeListItem from '../../components/recipe-list-item';
 import React from 'react';
 import { Recipe } from '../types';
 import axios from 'axios';
-
+import Layout from '../../components/layout';
+import RecipeListItem from '../../components/recipe-list-item';
 
 type PropTypes = {
     recipes: Recipe[],

@@ -120,7 +120,8 @@ const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
 								{f.name}
 								<div style={{ float: 'right' }}>
 									<span style={{ margin: '20px' }}>
-										<BsFillPencilFill onClick={() => handleEditFood(f.id)}></BsFillPencilFill>
+										<BsFillPencilFill style={{margin: '10px'}} onClick={() => handleEditFood(f.id)}>
+										</BsFillPencilFill>
 										<BsFillTrashFill onClick={() => handleDeleteFood(f.id)}></BsFillTrashFill>
 									</span>
 								</div>
