@@ -1,9 +1,8 @@
-import '../styles/global.css';
 import React, { useEffect, useState } from 'react';
 import { Food, Recipe } from './types';
 import axios from 'axios';
 import { AppProps } from 'next/app';
-
+import '../styles/global.css';
 
 const App = ({Component,  pageProps}: AppProps) => {
 	const [recipes, setRecipes] = useState<Recipe[]>([]); 
@@ -14,7 +13,7 @@ const App = ({Component,  pageProps}: AppProps) => {
 		axios.get('/api/recipes')
 			.then(res => {
 				const dbRecipes = res.data;
-				convertedRecipes = dbRecipes.map((r: any) => { 
+				convertedRecipes = dbRecipes.map((r: Recipe) => { 
 					return Object.assign(new Recipe, r );
 				});
 				setRecipes(convertedRecipes);
@@ -27,7 +26,7 @@ const App = ({Component,  pageProps}: AppProps) => {
 	const getFood = () => {
 		axios.get('/api/food')
 			.then(res => {
-				console.log(res);
+				setFood(res.data);
 			})
 			.catch(err => {
 				console.error('error fetching food', err);
@@ -39,6 +38,6 @@ const App = ({Component,  pageProps}: AppProps) => {
 		getFood();
 	}, []);
 
-	return (<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes} foodList={food} setFood={setFood}/>);
+	return (<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes} foodList={food} setFoodList={setFood}/>);
 };
 export default App;

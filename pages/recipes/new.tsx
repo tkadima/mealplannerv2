@@ -27,7 +27,7 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 	const handleSubmitRecipe = () => {
 		axios.post('/api/recipes', recipe)
 			.then(res => {
-				setRecipes([...recipes, recipe]);
+				setRecipes([...recipes, res.data]);
 				setSubmitted(true);
 				if (res.status === 200) router.push('/recipes');
 			})
