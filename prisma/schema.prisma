@@ -10,6 +10,7 @@ datasource db {
 model ingredient {
   id              Int      @id @default(autoincrement())
   recipeId        Int      @map("recipe_id")
+  foodId          Int      @map("food_id")
   quantity        Decimal? @db.Decimal(5, 2)
   quantity2       Decimal? @map("quantity_2") @db.Decimal(5, 2)
   unitOfMeasureID String?  @map("unit_of_measure_id") @db.VarChar(50)
@@ -17,6 +18,7 @@ model ingredient {
   description     String
   isGroupHeader   Boolean  @map("is_group_header")
   recipe          recipe   @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  food            food     @relation(fields: [foodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model recipe {
@@ -30,7 +32,8 @@ model recipe {
 }
 
 model food {
-  id      Int      @id @default(autoincrement())
-  name    String   @db.VarChar(50)
-  aliases String[]
+  id            Int           @id @default(autoincrement())
+  name          String        @db.VarChar(50)
+  aliases       String[]
+  ingredients   ingredient[]  @ignore
 }
