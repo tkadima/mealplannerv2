@@ -1,4 +1,4 @@
-import  prisma  from '../../../db';
+import  prisma  from '../../../prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

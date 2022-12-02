@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Ingredient } from 'parse-ingredient/dist/types';
-import prisma from '../../../db';
+import prisma from '../../../prisma';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
 	const { query: {id} } = req; 

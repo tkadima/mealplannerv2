@@ -16,7 +16,7 @@ model ingredient {
   unitOfMeasureID String?  @map("unit_of_measure_id") @db.VarChar(50)
   unitOfMeasure   String?  @map("unit_of_measure") @db.VarChar(50)
   description     String
-  isGroupHeader   Boolean  @map("is_group_header")
+  isGroupHeader   Boolean  @map("is_group_header") @default(false)
   recipe          recipe   @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   food            food     @relation(fields: [foodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
