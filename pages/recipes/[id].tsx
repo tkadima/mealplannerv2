@@ -7,12 +7,14 @@ import { Recipe } from '../types';
 import React from 'react';
 import axios from 'axios';
 import { GetStaticPaths } from 'next';
+import ErrorAlert from '../../components/error-alert';
 
 type PropTypes = {
   recipe: Recipe,
 }
 export const RecipePage = ({ recipe } : PropTypes) => {
 	const [recipeChanges, setRecipeChanges] = useState({ ...recipe });
+	const [error, setError] = useState(null); 
 
 	const router = useRouter();
 
@@ -22,6 +24,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 				if (res.status === 200)  { router.push('/recipes');}
 			})
 			.catch(err => {
+				setError(err.message);
 				console.error(err);
 			});
 	};
@@ -31,6 +34,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	};
 
 	return <Layout>
+		{error && <ErrorAlert errorMessage={error}/>}
 		<div className='recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
 			<RecipeForm recipe={recipe} onRecipeChange={handleChangeRecipe} />
 			<div className="col text-center" style={{ paddingTop: '10px' }} >
