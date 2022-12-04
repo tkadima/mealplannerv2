@@ -1,6 +1,6 @@
 import { Button } from 'react-bootstrap';
 import Layout from '../../components/layout';
-import RecipeForm from '../../components/recipe-form';
+import RecipeForm from '../../components/recipe/recipe-form';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Recipe } from '../types';

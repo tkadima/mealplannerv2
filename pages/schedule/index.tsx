@@ -2,7 +2,7 @@ import Layout from '../../components/layout';
 import React, { useState } from 'react'; 
 import { Table } from 'react-bootstrap';
 import Cell from '../../components/cell';
-import ScheduleModal from '../../components/schedule-modal';
+import ScheduleModal from '../../components/schedule/schedule-modal';
 
 const Schedule = () => {
 	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 

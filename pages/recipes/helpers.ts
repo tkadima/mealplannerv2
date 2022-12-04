@@ -1,6 +1,6 @@
 import { Ingredient } from '../types';
 
-export const convertIngredientToString = (ingredient: Ingredient) => {
-	const unit = ingredient.unitOfMeasure === null ? '' : ingredient.unitOfMeasure;
-	return `${ingredient.quantity} ${unit} ${ingredient.description}`;
+export const convertIngredientToStringObject = (ingredient: Ingredient) => {
+	const unit = ingredient.unitOfMeasureID === null ? '' : ingredient.unitOfMeasureID;
+	return {id: ingredient.id, quantity: ingredient.quantity?.toString(), unit: unit, description: ingredient.description};
 };

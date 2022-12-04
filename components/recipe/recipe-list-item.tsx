@@ -2,7 +2,7 @@ import { BsFillTrashFill } from 'react-icons/bs';
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import React from 'react';
-import { Recipe } from '../pages/types';
+import { Recipe } from '../../pages/types';
 
 type PropTypes = {
     recipeItem: Recipe,

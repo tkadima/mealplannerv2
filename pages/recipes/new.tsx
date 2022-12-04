@@ -5,7 +5,7 @@ import { Recipe } from '../types';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Layout from '../../components/layout';
-import RecipeForm from '../../components/recipe-form';
+import RecipeForm from '../../components/recipe/recipe-form';
 import ErrorAlert from '../../components/error-alert';
 
 type PropTypes = {

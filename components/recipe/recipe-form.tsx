@@ -1,43 +1,56 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import React, { useState } from 'react';
-import { Recipe } from '../pages/types';
-import { convertIngredientToString } from '../pages/recipes/helpers';
-import { parseIngredient } from 'parse-ingredient';
+import { Recipe } from '../../pages/types';
+import { convertIngredientToStringObject } from '../../pages/recipes/helpers';
+//import { parseIngredient } from 'parse-ingredient';
+import IngredientInput from './ingredient-input';
+import Button from 'react-bootstrap/Button';
 
 type PropTypes = {
     recipe: Recipe, 
     onRecipeChange: (change: unknown) => void 
 }
-const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
+export type formIngredient = {
+	id: number, 
+	quantity: string, 
+	unit: string, 
+	description: string
+}; 
 
+const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 	const [formRecipe, setFormRecipe] = useState({name: recipe.name, 
 		instructions: recipe.instructions, prepTime: recipe.prepTime, 
 		cookTime: recipe.cookTime, yields: recipe.yields});
 
 	const [ingredientText, setIngredientText] = useState(recipe.ingredients ? 
-		recipe.ingredients.map(r => convertIngredientToString(r)).join('\n') : '');
+		recipe.ingredients.map(r => convertIngredientToStringObject(r)) : []);
     
 	const [changes, setChanges] = useState({});
 
-	const handleChangeForm = (e: { target: {name: string, value: string}}) => {
+	const [addingIngredient, setAddingIngredient] = useState(false);
+
+	const handleChangeForm = (e: { target: {name: string, value: string, id: string}}) => {
+		console.log('change', [e.target.name], e.target.value);
 		const newRecipe = { ...formRecipe, [e.target.name]: e.target.value };
-		let newChanges = {...changes}; 
+		let newChanges: object; 
 		setFormRecipe(newRecipe);
 		const name = e.target.name; 
 
 		if (name === 'prepTime' || name === 'cookTime' || name === 'yields') {
 			newChanges = {...changes, [name]: parseInt(e.target.value)};
 		}
-		else if (name === 'ingredients') {
-			setIngredientText(e.target.value);
-			newChanges = {...changes, ingredients: parseIngredient(e.target.value)};
-		}
+		
 		else {
 			newChanges = {...changes, [e.target.name]: e.target.value};
 		}
 		setChanges(newChanges);
 		onRecipeChange(newChanges);
+	};
+
+	const handleAddIngredient = (ingredient: formIngredient) => {
+		setIngredientText([...ingredientText, ingredient]);
+		setAddingIngredient(false);
 	};
 
 	return (
@@ -51,15 +64,32 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 					style={{ marginBottom: '30px' }}
 					placeholder="Enter recipe title"
 				/>
-				<Form.Control
-					as="textarea"
-					name="ingredients"
-					rows={7}
-					placeholder="Enter recipe ingredients e.g. 1 cup vegetable broth"
-					value={ingredientText}
-					onChange={handleChangeForm}
-					style={{ marginBottom: '30px' }}
-				/>
+				{
+					ingredientText.map((ingredient, i) => {
+						return <IngredientInput key={i} 
+							ingredient={ingredient} 
+							onChangeIngredient={handleChangeForm} 
+							isNew={false}
+							disabled={addingIngredient}
+						/>;
+					})
+				}
+				{
+					addingIngredient && 
+					<IngredientInput 
+						ingredient={{id: null, quantity: '', unit: '', description: ''}} 
+						onChangeIngredient={handleChangeForm} 
+						isNew 
+						disabled={false}
+						onAddIngredient={handleAddIngredient}
+					/>
+				}
+				{
+					!addingIngredient &&
+					<Button style={{ marginLeft: '100px', marginBottom: '30px'}} onClick={() => {
+						return setAddingIngredient(true);
+					}}>Add Ingredient</Button>
+				}
 
 				<Form.Control
 					as="textarea"
@@ -86,6 +116,7 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 						as="input"
 						name="cookTime"
 						placeholder="Add cooking time (minutes)"
+						type="number"
 						value={formRecipe.cookTime || ''}
 						onChange={handleChangeForm}
 					/>
