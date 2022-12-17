@@ -1,7 +1,7 @@
 import Layout from '../../components/layout';
 import React, { useState } from 'react'; 
 import { Table } from 'react-bootstrap';
-import Cell from '../../components/cell';
+import Cell from '../../components/schedule/cell';
 import ScheduleModal from '../../components/schedule/schedule-modal';
 
 const Schedule = () => {
