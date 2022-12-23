@@ -1,4 +1,4 @@
-import prisma from './index';
+import prisma from '../lib/prisma';
 import { recipes, ingredients, food } from './data'; 
 
 const main = async() => {
