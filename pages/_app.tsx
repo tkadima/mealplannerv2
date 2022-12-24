@@ -3,10 +3,11 @@ import { Food, Recipe } from './types';
 import axios from 'axios';
 import { AppProps } from 'next/app';
 import '../styles/global.css';
+import apolloClient from '../lib/apollo';
+import { ApolloProvider } from '@apollo/client';
 
 const App = ({Component,  pageProps}: AppProps) => {
 	const [recipes, setRecipes] = useState<Recipe[]>([]); 
-	const [food, setFood] = useState<Food[]>([]);
 
 	const getRecipes = () => {
 		axios.get('/api/recipes')
@@ -18,21 +19,13 @@ const App = ({Component,  pageProps}: AppProps) => {
 			});
 	};
 
-	const getFood = () => {
-		axios.get('/api/food')
-			.then(res => {
-				setFood(res.data);
-			})
-			.catch(err => {
-				console.error('error fetching food', err);
-			});
-	};
 
 	useEffect(() => {
 		getRecipes();
-		getFood();
 	}, []);
 
-	return (<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes} foodList={food} setFoodList={setFood}/>);
+	return (<ApolloProvider client={apolloClient}>
+		<Component {...pageProps}  recipes={recipes} setRecipes={setRecipes} />
+	</ApolloProvider>);
 };
 export default App;

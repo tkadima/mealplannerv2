@@ -1,21 +1,64 @@
 import ListGroup from 'react-bootstrap/ListGroup';
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import { ButtonGroup, Form, FormGroup, ListGroupItem } from 'react-bootstrap';
-import { Food } from '../types';
 import Layout from '../../components/layout';
 import Button from 'react-bootstrap/Button';
-import axios from 'axios';
 import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs';
+import { gql, useMutation } from '@apollo/client';
+import prisma  from '../../lib/prisma';
+
+
+
+const CreateFoodMutation = gql` 
+	mutation ($name: String!) {
+		createFood(name: $name) {
+			id 
+			name
+		}
+	}
+`;
+
+const DeleteFoodMutation = gql`
+	mutation ($foodId: Int!) { 
+		deleteFood(foodId: $foodId) {
+			id
+			name
+		}
+	}
+`;
 
 type PropTypes = {
-    foodList: Food[],
-	setFoodList: (foodList: Food[]) => void;
+	foodList: [];
 }
 
-const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
+const FoodListPage = ({ foodList }: PropTypes) => {
+
+	const [createFood, { error }] = useMutation(CreateFoodMutation, {
+		onCompleted: (data) => {
+			const createdFood = data.createFood;
+			setAllFood([...allFood, {id: createdFood.id, name: createdFood.name}]);
+			setNewFood({name: ''});
+			setAdding(false);
+		}
+	});
+
+	const [deleteFood] = useMutation(DeleteFoodMutation, {
+		onCompleted: (data) => {	
+			const res = data.deleteFood; 
+			console.log('res', res); 
+			const newFoodList = allFood.filter(food => food.id !== res.id);
+			setAllFood(newFoodList);
+		}
+	}); 
+
 	const [newFood, setNewFood] = useState({name: ''}); 
 	const [adding, setAdding] = useState(false); 
 	const [editFood, setEditFood] = useState({id: null, name: ''});
+	const [ allFood, setAllFood ] = useState([]);
+
+	useEffect(()=> {
+		setAllFood(foodList);
+	}, []); 
 
 	const handleAddingFood = () => {
 		setAdding(true); 
@@ -32,45 +75,14 @@ const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
 	};
 
 	const handleSubmitFood = () => {
-		if (adding) { 
-			axios.post('/api/food', newFood)
-				.then(res => {
-					if (res.status === 200) {
-						setFoodList([...foodList, res.data]); 
-						setNewFood({name: ''});
-						setAdding(false);
-					}
-				})
-				.catch(err => {
-					console.error('Error submitting', err); 
-				});
-		}
-		else {
-			axios.put(`/api/food/${editFood.id}`, editFood)
-				.then(res => {
-					if (res.status === 200) {
-						const updatedFoodList = foodList.map(food => {
-							const value = {...food};
-							if (food.id === res.data.id) {
-								value.name = res.data.name;
-							}
-							
-							return value; 
-						});
-						setFoodList(updatedFoodList);
-						setEditFood({id: null, name: ''});
-					} 
-				})
-				.catch(err => {
-					console.error('error occured while updating', err);
-				});
-		}
+		if (error) console.error(error.message); 
+		createFood({ variables: { name: newFood.name }});
 	};  
 
-	const handleEditFood = (id: number) => {
-		setAdding(false);
-		setEditFood(foodList.find(food => food.id === id));
-	};
+	// const handleEditFood = (id: number) => {
+	// 	setAdding(false);
+	// 	setEditFood(foodList.find(food => food.id === id));
+	// };
 
 	const handleCancelEditting = () => {
 		setEditFood({id: null, name: ''});
@@ -78,25 +90,16 @@ const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
 	};
 
 	const handleDeleteFood = (id: number) => {
-		axios.delete(`/api/food/${id}`)
-			.then(res => {
-				if (res.status === 200) {
-					const newFoodList = foodList.filter(f => f.id !== id);
-					setFoodList(newFoodList);
-				}
-			})
-			.catch(err => {
-				console.error('Error deleting food', err);
-			});
+		deleteFood({ variables: { foodId: id}}); 
 	};
 
 	return(
 		<Layout>
 			<h3>Fridge Contents</h3>
 			{
-				foodList.length > 0 && 
+				allFood.length > 0 && 
 				<ListGroup>
-					{foodList.map((f, i) => {
+					{allFood.map((f: { id: number, name: string}, i) => {
 						return f.id === editFood.id ? 
 							(
 								<ListGroupItem key={i}>
@@ -116,12 +119,13 @@ const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
 									</FormGroup>
 								</ListGroupItem>
 							) : 
+
 							(<ListGroupItem key={i}>
 								{f.name}
 								<div style={{ float: 'right' }}>
 									<span style={{ margin: '20px' }}>
-										<BsFillPencilFill style={{margin: '10px'}} onClick={() => handleEditFood(f.id)}>
-										</BsFillPencilFill>
+										{/* <BsFillPencilFill style={{margin: '10px'}} onClick={() => handleEditFood(f.id)}> */}
+										{/* </BsFillPencilFill> */}
 										<BsFillTrashFill onClick={() => handleDeleteFood(f.id)}></BsFillTrashFill>
 									</span>
 								</div>
@@ -158,3 +162,10 @@ const FoodListPage = ({foodList, setFoodList}: PropTypes) => {
 };
 
 export default FoodListPage;
+
+export const getServerSideProps = async() => {
+	const foodList = await prisma.food.findMany(); 
+	return { 
+		props: { foodList }
+	};
+};

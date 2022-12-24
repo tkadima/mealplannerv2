@@ -22,6 +22,11 @@ type Ingredient {
   unitOfMeasureID: String
 }
 
+type Mutation {
+  createFood(name: String!): Food!
+  deleteFood(foodId: Int!): Food!
+}
+
 type Query {
   food: [Food]
 }
