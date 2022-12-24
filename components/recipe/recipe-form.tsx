@@ -3,7 +3,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import React, { useState } from 'react';
 import { Recipe } from '../../pages/types';
 import { convertIngredientToStringObject } from '../../pages/recipes/helpers';
-//import { parseIngredient } from 'parse-ingredient';
 import IngredientInput from './ingredient-input';
 import Button from 'react-bootstrap/Button';
 
@@ -31,7 +30,6 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 	const [addingIngredient, setAddingIngredient] = useState(false);
 
 	const handleChangeForm = (e: { target: {name: string, value: string, id: string}}) => {
-		console.log('change', [e.target.name], e.target.value);
 		const newRecipe = { ...formRecipe, [e.target.name]: e.target.value };
 		let newChanges: object; 
 		setFormRecipe(newRecipe);

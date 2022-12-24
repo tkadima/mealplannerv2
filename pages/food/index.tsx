@@ -1,44 +1,18 @@
 import ListGroup from 'react-bootstrap/ListGroup';
 import React, { useEffect, useState } from 'react'; 
-import { ButtonGroup, Form, FormGroup, ListGroupItem } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Layout from '../../components/layout';
 import Button from 'react-bootstrap/Button';
-import { BsFillPencilFill, BsFillTrashFill } from 'react-icons/bs';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import prisma  from '../../lib/prisma';
+import { CreateFoodMutation, UpdateFoodMutation, DeleteFoodMutation } from '../../graphql/mutations/food-mutations'; 
+import FoodListItem from '../../components/food/food-list-item';
+import FoodButtonGroup from '../../components/food/food-button-group';
 
-
-const CreateFoodMutation = gql` 
-	mutation ($name: String!) {
-		createFood(name: $name) {
-			id 
-			name
-		}
-	}
-`;
-
-const UpdateFoodMutation = gql`
-	mutation ($foodId: Int!, $newName: String!) {
-		updateFood(foodId: $foodId, newName: $newName) {
-			id
-			name
-		}
-	}
-`;
-
-const DeleteFoodMutation = gql`
-	mutation ($foodId: Int!) { 
-		deleteFood(foodId: $foodId) {
-			id
-			name
-		}
-	}
-`;
 
 type PropTypes = {
 	foodList: [];
 }
-
 const FoodListPage = ({ foodList }: PropTypes) => {
 
 	const [createFood] = useMutation(CreateFoodMutation, {
@@ -73,7 +47,6 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 		}
 	}); 
 
-
 	const [newFood, setNewFood] = useState({name: ''}); 
 	const [adding, setAdding] = useState(false); 
 	const [editFood, setEditFood] = useState({id: null, name: ''});
@@ -87,14 +60,19 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 		setAdding(true); 
 	};
 
-	const handleCancelAddingFood = () => {
-		setAdding(false);
-		setNewFood({name: ''});
+	const handleCancel = () => {
+		if (adding) { 
+			setAdding(false);
+			setNewFood({name: ''});
+		}
+		else { 
+			setEditFood({id: null, name: ''});
+			setNewFood({name: ''});
+		}
 	};
 
-	const handleChangeFoodName = (e : { target: { value: string }}) => {
-		if (adding) setNewFood({'name': e.target.value});
-		else setEditFood({...editFood, 'name': e.target.value});
+	const handleChangeFoodName = (newName: string) => {
+		setEditFood({...editFood, 'name': newName});
 	};
 
 	const handleSubmitFood = () => {
@@ -109,10 +87,6 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 		setEditFood(foodList.find((food: {id: number}) => food.id === id));
 	};
 
-	const handleCancelEditting = () => {
-		setEditFood({id: null, name: ''});
-		setNewFood({name: ''});
-	};
 
 	const handleDeleteFood = (id: number) => {
 		deleteFood({ variables: { foodId: id}}); 
@@ -126,35 +100,26 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 				<ListGroup>
 					{allFood.map((f: { id: number, name: string}, i) => {
 						return editFood && f.id === editFood.id ? 
-							(
-								<ListGroupItem key={i}>
-									<FormGroup >
-										<Form.Control
-											as="input"
-											name="name"
-											value={adding ? newFood.name : editFood.name}
-											onChange={handleChangeFoodName}
-											style={{ marginBottom: '30px', width: '50%' }}
-											placeholder="Enter recipe title"
-										/>
-										<ButtonGroup style={{ float: 'right' }}>
-											<Button variant='secondary' onClick={handleCancelEditting}>Cancel</Button>
-											<Button onClick={handleSubmitFood}>Submit</Button>
-										</ButtonGroup>
-									</FormGroup>
-								</ListGroupItem>
-							) : 
+							<>
+								<FoodListItem 
+									key={i} 
+									foodName={editFood.name} 
+									id={f.id} 
+									isEdit={true} 
+									onCancel={handleCancel}
+									onSubmit={handleSubmitFood}
+									onChangeFood={e => handleChangeFoodName(e)}
+								/>
+							</>
+							: 
 
-							(<ListGroupItem key={i}>
-								{f.name}
-								<div style={{ float: 'right' }}>
-									<span style={{ margin: '20px' }}>
-										<BsFillPencilFill style={{margin: '10px'}} onClick={() => handleClickEditButton(f.id)}> 
-										</BsFillPencilFill>
-										<BsFillTrashFill onClick={() => handleDeleteFood(f.id)}></BsFillTrashFill>
-									</span>
-								</div>
-							</ListGroupItem>);
+							<FoodListItem
+								key={i} 
+								foodName={f.name} 
+								id={f.id} 
+								onClickEditButton={handleClickEditButton} 
+								onClickDelete={handleDeleteFood}
+								isEdit={false}/>;
 					})}
 				</ListGroup>
 			}
@@ -165,7 +130,7 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 							as="input"
 							name="name"
 							value={newFood.name}
-							onChange={handleChangeFoodName}
+							onChange={(e) => setNewFood({'name': e.target.value})}
 							style={{ marginBottom: '30px' }}
 							placeholder="Enter recipe title"
 						/>
@@ -173,10 +138,7 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 			}
 			<div className="col text-center padding-md">
 				{
-					adding ? <ButtonGroup>
-						<Button variant="secondary" onClick={handleCancelAddingFood}>Cancel</Button>
-						<Button variant="primary" onClick={handleSubmitFood}>Submit</Button>
-					</ButtonGroup>
+					adding ? <FoodButtonGroup onClickCancel={handleCancel} onClickSubmit={handleSubmitFood}/>
 						:
 						<Button onClick={handleAddingFood}>Add New</Button>
 				}
