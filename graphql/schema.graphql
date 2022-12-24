@@ -25,6 +25,7 @@ type Ingredient {
 type Mutation {
   createFood(name: String!): Food!
   deleteFood(foodId: Int!): Food!
+  updateFood(foodId: Int!, newName: String!): Food!
 }
 
 type Query {

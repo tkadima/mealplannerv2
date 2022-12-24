@@ -8,11 +8,19 @@ import { gql, useMutation } from '@apollo/client';
 import prisma  from '../../lib/prisma';
 
 
-
 const CreateFoodMutation = gql` 
 	mutation ($name: String!) {
 		createFood(name: $name) {
 			id 
+			name
+		}
+	}
+`;
+
+const UpdateFoodMutation = gql`
+	mutation ($foodId: Int!, $newName: String!) {
+		updateFood(foodId: $foodId, newName: $newName) {
+			id
 			name
 		}
 	}
@@ -33,7 +41,7 @@ type PropTypes = {
 
 const FoodListPage = ({ foodList }: PropTypes) => {
 
-	const [createFood, { error }] = useMutation(CreateFoodMutation, {
+	const [createFood] = useMutation(CreateFoodMutation, {
 		onCompleted: (data) => {
 			const createdFood = data.createFood;
 			setAllFood([...allFood, {id: createdFood.id, name: createdFood.name}]);
@@ -42,14 +50,29 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 		}
 	});
 
+	const [updateFood] = useMutation(UpdateFoodMutation, {
+		onCompleted: (data) => {
+			const res = data.updateFood; 
+			const updatedFoodList = allFood.map(food =>  {
+				const value = {...food};
+				if (res.id === food.id) {
+					value.name = res.name;
+				}
+				return value;
+			}); 
+			setAllFood(updatedFoodList);
+			setEditFood({id: null, name: ''});
+		}
+	});
+
 	const [deleteFood] = useMutation(DeleteFoodMutation, {
 		onCompleted: (data) => {	
 			const res = data.deleteFood; 
-			console.log('res', res); 
 			const newFoodList = allFood.filter(food => food.id !== res.id);
 			setAllFood(newFoodList);
 		}
 	}); 
+
 
 	const [newFood, setNewFood] = useState({name: ''}); 
 	const [adding, setAdding] = useState(false); 
@@ -75,14 +98,16 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 	};
 
 	const handleSubmitFood = () => {
-		if (error) console.error(error.message); 
-		createFood({ variables: { name: newFood.name }});
+		if (adding)
+			createFood({ variables: { name: newFood.name }});
+		else 
+			updateFood({ variables: { foodId: editFood.id, newName: editFood.name}});
 	};  
 
-	// const handleEditFood = (id: number) => {
-	// 	setAdding(false);
-	// 	setEditFood(foodList.find(food => food.id === id));
-	// };
+	const handleClickEditButton = (id: number) => {
+		setAdding(false);
+		setEditFood(foodList.find((food: {id: number}) => food.id === id));
+	};
 
 	const handleCancelEditting = () => {
 		setEditFood({id: null, name: ''});
@@ -100,7 +125,7 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 				allFood.length > 0 && 
 				<ListGroup>
 					{allFood.map((f: { id: number, name: string}, i) => {
-						return f.id === editFood.id ? 
+						return editFood && f.id === editFood.id ? 
 							(
 								<ListGroupItem key={i}>
 									<FormGroup >
@@ -124,8 +149,8 @@ const FoodListPage = ({ foodList }: PropTypes) => {
 								{f.name}
 								<div style={{ float: 'right' }}>
 									<span style={{ margin: '20px' }}>
-										{/* <BsFillPencilFill style={{margin: '10px'}} onClick={() => handleEditFood(f.id)}> */}
-										{/* </BsFillPencilFill> */}
+										<BsFillPencilFill style={{margin: '10px'}} onClick={() => handleClickEditButton(f.id)}> 
+										</BsFillPencilFill>
 										<BsFillTrashFill onClick={() => handleDeleteFood(f.id)}></BsFillTrashFill>
 									</span>
 								</div>
