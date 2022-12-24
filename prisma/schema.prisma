@@ -35,5 +35,5 @@ model food {
   id            Int           @id @default(autoincrement())
   name          String        @db.VarChar(50)
   aliases       String[]
-  ingredients   ingredient[]  @ignore
+  ingredients   ingredient[] 
 }

@@ -10,20 +10,20 @@ type Food {
 
 type Ingredient {
   description: String!
-  food: Food
+  food: Food!
   foodId: Int!
   id: Int!
   isGroupHeader: Boolean!
   quantity: Float
   quantity2: Float
-  recipe: Recipe
+  recipe: Recipe!
   recipeId: Int!
   unitOfMeasure: String
   unitOfMeasureID: String
 }
 
 type Query {
-  ok: Boolean!
+  food: [Food]
 }
 
 type Recipe {

@@ -15,11 +15,11 @@ export const Ingredient =  objectType({
 		t.string('unitOfMeasure'),
 		t.nonNull.string('description'),
 		t.nonNull.boolean('isGroupHeader'),
-		t.field('recipe', { 
+		t.nonNull.field('recipe', { 
 			type: Recipe
 		}
 		),
-		t.field('food', { 
+		t.nonNull.field('food', { 
 			type: Food
 		});
 	}

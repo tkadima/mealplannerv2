@@ -1,4 +1,4 @@
-import { objectType } from 'nexus'; 
+import { extendType, objectType } from 'nexus'; 
 
 export const Food = objectType({
 	name: 'Food',
@@ -6,5 +6,17 @@ export const Food = objectType({
 		t.nonNull.int('id'), 
 		t.nonNull.string('name'),
 		t.list.string('aliases');
+	}
+});
+
+export const FoodQuery = extendType({ 
+	type: 'Query', 
+	definition(t) {
+		t.list.field('food', {
+			type: 'Food',
+			resolve: (_parent, args, ctx) => {
+				return ctx.prisma.food.findMany();
+			}
+		});
 	}
 });
