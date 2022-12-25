@@ -11,13 +11,11 @@ type Food {
 type Ingredient {
   description: String!
   food: Food!
-  foodId: Int!
   id: Int!
   isGroupHeader: Boolean!
   quantity: Float
   quantity2: Float
   recipe: Recipe!
-  recipeId: Int!
   unitOfMeasure: String
   unitOfMeasureID: String
 }
@@ -30,12 +28,13 @@ type Mutation {
 
 type Query {
   food: [Food]
+  recipe: [Recipe]
 }
 
 type Recipe {
   cookTime: Int
   id: Int!
-  ingredients: [Ingredient]!
+  ingredients: [Ingredient!]!
   instructions: String
   name: String!
   prepTime: Int
