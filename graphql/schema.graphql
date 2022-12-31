@@ -2,33 +2,19 @@
 ### Do not make changes to this file directly
 
 
-type Food {
-  aliases: [String]
-  id: Int!
-  name: String!
-}
-
 type Ingredient {
   description: String!
-  food: Food!
   id: Int!
-  isGroupHeader: Boolean!
   quantity: Float
-  quantity2: Float
   recipe: Recipe!
   unitOfMeasure: String
-  unitOfMeasureID: String
 }
 
 type Mutation {
-  createFood(name: String!): Food!
-  createRecipe(createRecipeInput: createRecipeInput!): Recipe!
-  deleteFood(foodId: Int!): Food!
-  updateFood(foodId: Int!, newName: String!): Food!
+  createRecipe(cookTime: Int, instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
 }
 
 type Query {
-  food: [Food]
   recipe: [Recipe]
 }
 
@@ -39,28 +25,5 @@ type Recipe {
   instructions: String
   name: String!
   prepTime: Int
-  yields: Float
-}
-
-input createFoodInputType {
-  name: String
-}
-
-input createIngredientInputType {
-  description: String!
-  food: createFoodInputType!
-  isGroupHeader: Boolean!
-  quantity: Float
-  quantity2: Float
-  unitOfMeasure: String
-  unitOfMeasureID: String
-}
-
-input createRecipeInput {
-  cookTime: Int
-  ingredients: [createIngredientInputType!]
-  instructions: String
-  name: String!
-  prepTime: Int
-  yields: Float
+  serves: Float
 }

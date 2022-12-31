@@ -6,10 +6,10 @@ import React from 'react';
 import { Recipe } from '../types';
 import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
+import prisma from '../../lib/prisma';
 
 type PropTypes = {
     recipes: Recipe[],
-    setRecipes: (recipes: Recipe[]) => void
 }
 
 const Recipes = ({ recipes } : PropTypes) => {
@@ -35,9 +35,9 @@ const Recipes = ({ recipes } : PropTypes) => {
 			{
 				recipes?.length > 0 &&
                 <ListGroup>
-                	{/* { recipes.map((r: Recipe) => {
-                		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})
-                	} */}
+                	{ recipes.map((r: Recipe) => {
+                		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} />;})
+                	}
                 </ListGroup>
 			}
 			<div className="col text-center padding-md">
@@ -53,3 +53,9 @@ const Recipes = ({ recipes } : PropTypes) => {
 export default Recipes;
 
 // TODO: server side rendering for recipes 
+export const getServerSideProps = async() => {
+	const recipes = await prisma.recipe.findMany(); 
+	return { 
+		props: { recipes }
+	};
+};

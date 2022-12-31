@@ -1,17 +1,13 @@
 import prisma from '../lib/prisma';
-import { recipes, ingredients, food } from './data'; 
+import { recipes, ingredients } from './data'; 
 
 const main = async() => {
-	await prisma.food.createMany({
-		data: food
+	await prisma.recipe.createMany({
+		data: recipes
 	});
 
 	await prisma.ingredient.createMany({
 		data: ingredients
-	});
-
-	await prisma.recipe.createMany({
-		data: recipes
 	});
 };
 

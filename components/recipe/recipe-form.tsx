@@ -1,102 +1,49 @@
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from 'react-bootstrap';
 import { Recipe } from '../../pages/types';
-import { convertIngredientToStringObject } from '../../pages/recipes/helpers';
-import IngredientInput from './ingredient-input';
-import Button from 'react-bootstrap/Button';
+
 
 type PropTypes = {
-    recipe: Recipe, 
-    onRecipeChange: (change: unknown) => void 
+	onSubmitRecipe: (data: Recipe) => void;
 }
-export type formIngredient = {
-	id: number, 
-	quantity: string, 
-	unit: string, 
-	description: string
-}; 
+const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
+	
 
-const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
-	const [formRecipe, setFormRecipe] = useState({name: recipe.name, 
-		instructions: recipe.instructions, prepTime: recipe.prepTime, 
-		cookTime: recipe.cookTime, yields: recipe.yields});
-
-	const [ingredientText, setIngredientText] = useState(recipe.ingredients ? 
-		recipe.ingredients.map(r => convertIngredientToStringObject(r)) : []);
-    
-	const [changes, setChanges] = useState({});
-
-	const [addingIngredient, setAddingIngredient] = useState(false);
-
-	const handleChangeForm = (e: { target: {name: string, value: string, id: string}}) => {
-		const newRecipe = { ...formRecipe, [e.target.name]: e.target.value };
-		let newChanges: object; 
-		setFormRecipe(newRecipe);
-		const name = e.target.name; 
-
-		if (name === 'prepTime' || name === 'cookTime' || name === 'yields') {
-			newChanges = {...changes, [name]: parseInt(e.target.value)};
+	const { register, handleSubmit } = useForm({
+		defaultValues: { 
+			name: '', 
+			instructions: '', 
+			prepTime: 0, 
+			cookTime: 0, 
+			serves: 0
 		}
-		
-		else {
-			newChanges = {...changes, [e.target.name]: e.target.value};
-		}
-		setChanges(newChanges);
-		onRecipeChange(newChanges);
+	});
+
+	const handleSubmitRecipe = (recipe: Recipe )=> {
+		onSubmitRecipe(recipe);
 	};
 
-	const handleAddIngredient = (ingredient: formIngredient) => {
-		setIngredientText([...ingredientText, ingredient]);
-		setAddingIngredient(false);
-	};
-
+	
 	return (
-		<Form>
+		<Form onSubmit={handleSubmit(handleSubmitRecipe)}>
 			<Form.Group>
 				<Form.Control
 					as="input"
 					name="name"
-					value={formRecipe.name}
-					onChange={handleChangeForm}
-					style={{ marginBottom: '30px' }}
 					placeholder="Enter recipe title"
+					style={{ marginBottom: '30px' }}
+					{...register('name', { required: true })}
 				/>
-				{
-					ingredientText.map((ingredient, i) => {
-						return <IngredientInput key={i} 
-							ingredient={ingredient} 
-							onChangeIngredient={handleChangeForm} 
-							isNew={false}
-							disabled={addingIngredient}
-						/>;
-					})
-				}
-				{
-					addingIngredient && 
-					<IngredientInput 
-						ingredient={{id: null, quantity: '', unit: '', description: ''}} 
-						onChangeIngredient={handleChangeForm} 
-						isNew 
-						disabled={false}
-						onAddIngredient={handleAddIngredient}
-					/>
-				}
-				{
-					!addingIngredient &&
-					<Button style={{ marginLeft: '100px', marginBottom: '30px'}} onClick={() => {
-						return setAddingIngredient(true);
-					}}>Add Ingredient</Button>
-				}
 
 				<Form.Control
 					as="textarea"
 					name="instructions"
 					rows={7}
 					placeholder="Enter cooking instructions as a list. e.g. 1. Chop onions"
-					value={formRecipe.instructions}
-					onChange={handleChangeForm}
-					style={{ marginBottom: '30px' }}
+					{...register('instructions')}
 				/>
 
 				<InputGroup style={{ padding: '20px' }}>
@@ -105,30 +52,30 @@ const RecipeForm = ({ recipe, onRecipeChange }: PropTypes) => {
 						as="input"
 						name="prepTime"
 						placeholder="Add prep time (minutes)"
-						type="number"
-						value={formRecipe.prepTime || ''}
-						onChange={handleChangeForm}
+						{...register('prepTime')}
 					/>
 					<Form.Control
 						style={{ margin: '20px' }}
 						as="input"
 						name="cookTime"
-						placeholder="Add cooking time (minutes)"
-						type="number"
-						value={formRecipe.cookTime || ''}
-						onChange={handleChangeForm}
+						placeholder="Add cook time (minutes)"
+						{...register('cookTime')}
 					/>
 					<Form.Control
 						style={{ margin: '20px' }}
 						as="input"
-						name="yields"
-						placeholder="Add yield amount"
-						value={formRecipe.yields || ''} 
-						onChange={handleChangeForm}
+						name="serves"
+						placeholder="Number of servings"
+						{...register('serves')}
 					/>
 				</InputGroup>
 			</Form.Group>
+			<div className="col text-center" style={{ paddingTop: '60px'}} >
+				<Button type="submit">Submit</Button>
+			</div>
 		</Form>);
+
+	// move submit button here? 
 };
 
 export default RecipeForm;

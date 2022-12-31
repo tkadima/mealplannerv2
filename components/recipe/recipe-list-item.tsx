@@ -6,18 +6,18 @@ import { Recipe } from '../../pages/types';
 
 type PropTypes = {
     recipeItem: Recipe,
-    onDelete: (item: Recipe) => void
+    // onDelete: (item: Recipe) => void
 }
-const RecipeListItem = ({ recipeItem, onDelete} : PropTypes) => {
-	const handleDeleteRecipe = () => {
-		onDelete(recipeItem);
-	};
+const RecipeListItem = ({ recipeItem} : PropTypes) => {
+	// const handleDeleteRecipe = () => {
+	// 	onDelete(recipeItem);
+	// };
 	return (
 		<ListGroup.Item>
 			<Link href={`/recipes/${recipeItem.id}`}>{recipeItem.name}</Link>
 			<div style={{ float: 'right' }}>
 				<span style={{ margin: '20px' }}>
-					<BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill>
+					{/* <BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill> */}
 				</span>
 			</div>
 		</ListGroup.Item>

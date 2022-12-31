@@ -9,31 +9,19 @@ datasource db {
 
 model ingredient {
   id              Int      @id @default(autoincrement())
-  recipeId        Int      @map("recipe_id")
-  foodId          Int      @map("food_id")
   quantity        Decimal? @db.Decimal(5, 2)
-  quantity2       Decimal? @map("quantity_2") @db.Decimal(5, 2)
-  unitOfMeasureID String?  @map("unit_of_measure_id") @db.VarChar(50)
-  unitOfMeasure   String?  @map("unit_of_measure") @db.VarChar(50)
+  unitOfMeasure   String? 
   description     String
-  isGroupHeader   Boolean  @map("is_group_header") @default(false)
-  recipe          recipe   @relation(fields: [recipeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  food            food     @relation(fields: [foodId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recipe          recipe   @relation(fields: [recipeId], references: [id])
+  recipeId        Int     
 }
 
 model recipe {
   id           Int          @id @default(autoincrement())
-  name         String       @db.VarChar(50)
+  name         String       
   instructions String?
-  prepTime     Int?         @map("prep_time")
-  cookTime     Int?         @map("cook_time")
-  yields       Decimal?     @db.Decimal(10, 2)
+  prepTime     Int?         
+  cookTime     Int?        
+  serves       Int?     
   ingredients  ingredient[]
-}
-
-model food {
-  id            Int           @id @default(autoincrement())
-  name          String        @db.VarChar(50)
-  aliases       String[]
-  ingredients   ingredient[] 
 }
