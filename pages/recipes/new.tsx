@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import React from 'react';
 import { Recipe } from '../types';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import ErrorAlert from '../../components/error-alert';
@@ -23,16 +22,17 @@ const NewRecipe = ({recipes, setRecipes}: PropTypes) => {
 	const [error, setError] = useState(null); 
 
 
+	// use create mutation 
 	const handleSubmitRecipe = () => {
-		axios.post('/api/recipes', recipe)
-			.then(res => {
-				setRecipes([...recipes, res.data]);
-				if (res.status === 200) router.push('/recipes');
-			})
-			.catch(error => {
-				setError(error.message);
-				console.error(error);
-			});
+		// axios.post('/api/recipes', recipe)
+		// 	.then(res => {
+		// 		setRecipes([...recipes, res.data]);
+		// 		if (res.status === 200) router.push('/recipes');
+		// 	})
+		// 	.catch(error => {
+		// 		setError(error.message);
+		// 		console.error(error);
+		// 	});
        
 	};
 

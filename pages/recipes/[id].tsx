@@ -1,12 +1,12 @@
+import React from 'react';
 import { Button } from 'react-bootstrap';
-import Layout from '../../components/layout';
-import RecipeForm from '../../components/recipe/recipe-form';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Recipe } from '../types';
-import React from 'react';
-import axios from 'axios';
 import { GetStaticPaths } from 'next';
+
+import { Recipe } from '../types';
+import Layout from '../../components/layout';
+import RecipeForm from '../../components/recipe/recipe-form';
 import ErrorAlert from '../../components/error-alert';
 
 type PropTypes = {
@@ -18,15 +18,17 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 
 	const router = useRouter();
 
+
+	// TODO use update mutation 
 	const handleSubmitRecipe = () => {
-		axios.put(`/api/recipes/${recipe.id}`, recipeChanges)
-			.then(res => {
-				if (res.status === 200)  { router.push('/recipes');}
-			})
-			.catch(err => {
-				setError(err.message);
-				console.error(err);
-			});
+		// axios.put(`/api/recipes/${recipe.id}`, recipeChanges)
+		// 	.then(res => {
+		// 		if (res.status === 200)  { router.push('/recipes');}
+		// 	})
+		// 	.catch(err => {
+		// 		setError(err.message);
+		// 		console.error(err);
+		// 	});
 	};
 
 	const handleChangeRecipe = (changes: never) => {
@@ -46,6 +48,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 export default RecipePage;
 
 export const getStaticPaths: GetStaticPaths = async() => {
+	// TODO use graphql 
 	const data  = await fetch('http:localhost:3000/api/recipes');
 	const recipes = await data.json(); 
 	const paths = recipes.map((recipe : Recipe) => ({params: {id: recipe.id.toString()}}));
@@ -56,6 +59,7 @@ export const getStaticPaths: GetStaticPaths = async() => {
 };
 
 export const getStaticProps = async ({ params }) => {
+	// TODO use graphql 
 	const data  = await fetch(`http:localhost:3000/api/recipes/${params.id}`);
 	const recipe = await data.json() as Recipe; 
 
