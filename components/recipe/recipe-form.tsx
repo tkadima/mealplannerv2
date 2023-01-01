@@ -5,27 +5,39 @@ import { useForm } from 'react-hook-form';
 import { Button } from 'react-bootstrap';
 import { parseIngredient } from 'parse-ingredient';
 
-
 type PropTypes = {
 	onSubmitRecipe: (data: object) => void;
+	currentRecipe?: any;
 }
-const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
+const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 	
-	const convertIngredient = (ingredientString: string) => {
+	console.log('current', currentRecipe.name); 
+
+	const convertStringToIngredient = (ingredientString: string) => {
 		const parsedIngredients = parseIngredient(ingredientString);
 		return parsedIngredients.map(i => {
 			return { quantity: i.quantity, unitOfMeasure: i.unitOfMeasureID, description: i.description};
 		});
 	};
 
+	const convertIngredientToString = (ingredients: any[]) => {
+		if (!ingredients || ingredients.length === 0) return '';
+		const ingredientStrings = ingredients.map(ingredient => {
+			const unit = ingredient.unitOfMeasure  ?? '';
+			return `${ingredient.quantity} ${unit} ${ingredient.description}`;
+		});
+		
+		return ingredientStrings.join('\n');
+	};
+
 	const { register, handleSubmit } = useForm({
 		defaultValues: { 
-			name: '', 
-			ingredients: [],
-			instructions: '', 
-			prepTime: 0, 
-			cookTime: 0, 
-			serves: 0
+			name: currentRecipe?.name || '', 
+			ingredients: convertIngredientToString(currentRecipe?.ingredients) || [],
+			instructions: currentRecipe?.instructions || '', 
+			prepTime: currentRecipe?.prepTime || '', 
+			cookTime: currentRecipe?.cookTime || '', 
+			serves: currentRecipe?.serves || '', 
 		}
 	});
 
@@ -34,7 +46,7 @@ const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
 			prepTime: parseInt(recipeObj['prepTime']),
 			cookTime: parseInt(recipeObj['cookTime']),
 			serves: parseFloat(recipeObj['serves']),
-			ingredients: convertIngredient(recipeObj['ingredients'])
+			ingredients: convertStringToIngredient(recipeObj['ingredients'])
 		};
 		onSubmitRecipe(recipe);
 	};

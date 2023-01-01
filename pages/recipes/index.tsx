@@ -51,7 +51,6 @@ const Recipes = ({ recipes } : PropTypes) => {
 
 export default Recipes;
 
-// TODO: server side rendering for recipes 
 export const getServerSideProps = async() => {
 	const recipes = await prisma.recipe.findMany(); 
 	return { 

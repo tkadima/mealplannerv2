@@ -1,11 +1,14 @@
 import React from 'react';
+import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
+
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
-import { useMutation } from '@apollo/client';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
 
-
+// TODO create recipe type? 
 const NewRecipe = () => {
+	const router = useRouter();
 
 	const [createRecipe] = useMutation(ADD_RECIPE, {
 		onError(err) {
@@ -13,9 +16,9 @@ const NewRecipe = () => {
 		},
 	});
 	
-	const handleSubmitRecipe = (recipe) => {	
-		console.log('recipe', recipe);
+	const handleSubmitRecipe = (recipe: object) => {	
 		createRecipe({ variables: recipe});
+		router.push('/recipes');
 	};
 
 	return (
