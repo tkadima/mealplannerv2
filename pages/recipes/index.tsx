@@ -6,9 +6,10 @@ import React from 'react';
 import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
 import prisma from '../../lib/prisma';
+import { Recipe } from '../../components/types';
 
 type PropTypes = {
-    recipes: [],
+    recipes: Recipe[],
 }
 
 const Recipes = ({ recipes } : PropTypes) => {
@@ -34,7 +35,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 			{
 				recipes?.length > 0 &&
                 <ListGroup>
-                	{ recipes.map((r: {id: number, name: string}) => {
+                	{ recipes.map((r: Recipe) => {
                 		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} />;})
                 	}
                 </ListGroup>

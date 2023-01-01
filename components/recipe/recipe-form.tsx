@@ -4,15 +4,15 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'react-bootstrap';
 import { parseIngredient } from 'parse-ingredient';
+import { Ingredient, Recipe } from '../types';
+
 
 type PropTypes = {
 	onSubmitRecipe: (data: object) => void;
-	currentRecipe?: any;
+	currentRecipe?: Recipe;
 }
 const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 	
-	console.log('current', currentRecipe.name); 
-
 	const convertStringToIngredient = (ingredientString: string) => {
 		const parsedIngredients = parseIngredient(ingredientString);
 		return parsedIngredients.map(i => {
@@ -20,11 +20,12 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 		});
 	};
 
-	const convertIngredientToString = (ingredients: any[]) => {
+	const convertIngredientToString = (ingredients: Ingredient[]) => {
 		if (!ingredients || ingredients.length === 0) return '';
 		const ingredientStrings = ingredients.map(ingredient => {
+			const quantity = ingredient.quantity ?? '';
 			const unit = ingredient.unitOfMeasure  ?? '';
-			return `${ingredient.quantity} ${unit} ${ingredient.description}`;
+			return `${quantity} ${unit} ${ingredient.description}`;
 		});
 		
 		return ingredientStrings.join('\n');

@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
+import { Recipe } from '../../components/types';
 
-// TODO create recipe type? 
 const NewRecipe = () => {
 	const router = useRouter();
 
@@ -16,7 +16,7 @@ const NewRecipe = () => {
 		},
 	});
 	
-	const handleSubmitRecipe = (recipe: object) => {	
+	const handleSubmitRecipe = (recipe: Recipe) => {	
 		createRecipe({ variables: recipe});
 		router.push('/recipes');
 	};

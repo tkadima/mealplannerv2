@@ -5,9 +5,10 @@ import { GetStaticPaths } from 'next';
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import prisma from '../../lib/prisma';
+import { Recipe } from '../../components/types';
 
 type PropTypes = {
-  recipe: string,
+  recipe: Recipe,
 }
 export const RecipePage = ({ recipe } : PropTypes) => {
 	const router = useRouter();
@@ -20,7 +21,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	return <Layout>
 		<p>{}</p>
 		<div className='recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
-			<RecipeForm currentRecipe={JSON.parse(recipe)} onSubmitRecipe={handleSubmitRecipe} />
+			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />
 		</div>
 	</Layout>;
 };
@@ -28,7 +29,7 @@ export default RecipePage;
 
 export const getStaticPaths: GetStaticPaths = async() => {
 	const recipes = await prisma.recipe.findMany(); 
-	const paths = recipes.map((recipe) => ({params: {id: recipe.id.toString()}}));
+	const paths = recipes.map((recipe: {id: number}) => ({params: {id: recipe.id.toString()}}));
 	return {
 		paths,
 		fallback: false
@@ -51,7 +52,7 @@ export const getStaticProps = async ({ params }) => {
 	}));
 
 
-	const recipe = JSON.stringify({...prismaRecipe, ingredients: ingredients});
+	const recipe = JSON.parse(JSON.stringify({...prismaRecipe, ingredients: ingredients}));
 
 	return {
 		props: {
