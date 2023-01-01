@@ -3,13 +3,12 @@ import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import React from 'react';
-import { Recipe } from '../types';
 import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
 import prisma from '../../lib/prisma';
 
 type PropTypes = {
-    recipes: Recipe[],
+    recipes: [],
 }
 
 const Recipes = ({ recipes } : PropTypes) => {
@@ -35,7 +34,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 			{
 				recipes?.length > 0 &&
                 <ListGroup>
-                	{ recipes.map((r: Recipe) => {
+                	{ recipes.map((r: {id: number, name: string}) => {
                 		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} />;})
                 	}
                 </ListGroup>

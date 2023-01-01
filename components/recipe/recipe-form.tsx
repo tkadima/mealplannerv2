@@ -3,18 +3,25 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'react-bootstrap';
-import { Recipe } from '../../pages/types';
+import { parseIngredient } from 'parse-ingredient';
 
 
 type PropTypes = {
-	onSubmitRecipe: (data: Recipe) => void;
+	onSubmitRecipe: (data: object) => void;
 }
 const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
 	
+	const convertIngredient = (ingredientString: string) => {
+		const parsedIngredients = parseIngredient(ingredientString);
+		return parsedIngredients.map(i => {
+			return { quantity: i.quantity, unitOfMeasure: i.unitOfMeasureID, description: i.description};
+		});
+	};
 
 	const { register, handleSubmit } = useForm({
 		defaultValues: { 
 			name: '', 
+			ingredients: [],
 			instructions: '', 
 			prepTime: 0, 
 			cookTime: 0, 
@@ -22,7 +29,13 @@ const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
 		}
 	});
 
-	const handleSubmitRecipe = (recipe: Recipe )=> {
+	const handleSubmitRecipe = (recipeObj: object )=> {
+		const recipe = {...recipeObj,
+			prepTime: parseInt(recipeObj['prepTime']),
+			cookTime: parseInt(recipeObj['cookTime']),
+			serves: parseFloat(recipeObj['serves']),
+			ingredients: convertIngredient(recipeObj['ingredients'])
+		};
 		onSubmitRecipe(recipe);
 	};
 
@@ -36,6 +49,15 @@ const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
 					placeholder="Enter recipe title"
 					style={{ marginBottom: '30px' }}
 					{...register('name', { required: true })}
+				/>
+
+				<Form.Control
+					as="textarea"
+					name="ingredients"
+					rows={7}
+					placeholder="Enter ingredients, one ingredient per line" 
+					style={{ marginBottom: '30px' }}
+					{...register('ingredients')}
 				/>
 
 				<Form.Control
@@ -71,11 +93,11 @@ const RecipeForm = ({ onSubmitRecipe }: PropTypes) => {
 				</InputGroup>
 			</Form.Group>
 			<div className="col text-center" style={{ paddingTop: '60px'}} >
+				{/* Add cancel and/or reset button */}
 				<Button type="submit">Submit</Button>
 			</div>
 		</Form>);
 
-	// move submit button here? 
 };
 
 export default RecipeForm;

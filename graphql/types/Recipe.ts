@@ -1,4 +1,4 @@
-import { extendType, floatArg, inputObjectType, intArg, list, nonNull, objectType, stringArg } from 'nexus'; 
+import { arg, extendType, floatArg, inputObjectType, intArg, list, nonNull, objectType, stringArg } from 'nexus'; 
 import prisma from '../../lib/prisma';
 
 export const Recipe = objectType({
@@ -19,6 +19,15 @@ export const Recipe = objectType({
 			}
 		});
 	}
+});
+
+export const createIngredientInput = inputObjectType({
+	name: 'createIngredientInput',
+	definition(t) {
+		t.nonNull.string('description'),
+		t.string('unitOfMeasure'),
+		t.float('quantity');
+	},
 });
 
 export const RecipeQuery = extendType({ 
@@ -43,14 +52,24 @@ export const CreateRecipeMutation = extendType({
 				instructions: stringArg(), 
 				prepTime: intArg(), 
 				cookTime: intArg(),
-				serves: floatArg()
+				serves: floatArg(), 
+				ingredients: arg({
+					type: list(createIngredientInput)
+				})
 
 			},
 			async resolve(_parent, args, ctx) {
 				return await ctx.prisma.recipe.create({
-					data: args
+					data: {...args, 
+						ingredients: {
+							create: args.ingredients
+						}
+					}
 				});
 			}
 		});
 	}
+
+	// TODO add update mutation 
+	// TODO add delete mutation 
 });
