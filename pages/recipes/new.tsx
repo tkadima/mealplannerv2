@@ -14,11 +14,13 @@ const NewRecipe = () => { //prop from _app.tsx -> recipes
 		onError(err) {
 			console.log('error creating recipe', JSON.stringify(err, null, 2));
 		},
+		onCompleted(){
+			router.push('/recipes');
+		}
 	});
 	
 	const handleSubmitRecipe = (recipe: Recipe) => {	
 		createRecipe({ variables: recipe});
-		router.push('/recipes');
 	};
 
 	return (

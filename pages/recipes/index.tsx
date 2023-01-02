@@ -8,6 +8,8 @@ import RecipeListItem from '../../components/recipe/recipe-list-item';
 import { Recipe } from '../../components/types';
 import { useMutation } from '@apollo/client';
 import { DELETE_RECIPE } from '../../graphql/mutations/recipe-mutations';
+import prisma from '../../lib/prisma';
+import { GetServerSideProps } from 'next/types';
 
 type PropTypes = {
     recipes: Recipe[],
@@ -27,7 +29,6 @@ const Recipes = ({ recipes } : PropTypes) => {
 		},
 		onCompleted(data){
 			const res = data.deleteRecipe; 
-			console.log(res);
 			const newRecipeList = recipes.filter(r => r.id !== res.id);
 
 			setRecipeList(newRecipeList);
@@ -59,3 +60,12 @@ const Recipes = ({ recipes } : PropTypes) => {
 };
 
 export default Recipes;
+
+export const getServerSideProps: GetServerSideProps =async () => {
+	const recipes = await prisma.recipe.findMany(); 
+	return {
+		props: {
+			recipes
+		}
+	};
+};
