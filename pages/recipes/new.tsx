@@ -7,7 +7,7 @@ import RecipeForm from '../../components/recipe/recipe-form';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
 import { Recipe } from '../../components/types';
 
-const NewRecipe = () => {
+const NewRecipe = () => { //prop from _app.tsx -> recipes 
 	const router = useRouter();
 
 	const [createRecipe] = useMutation(ADD_RECIPE, {
@@ -17,7 +17,6 @@ const NewRecipe = () => {
 	});
 	
 	const handleSubmitRecipe = (recipe: Recipe) => {	
-		console.log('recipe', recipe);
 		createRecipe({ variables: recipe});
 		router.push('/recipes');
 	};

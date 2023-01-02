@@ -14,7 +14,7 @@ export const ADD_RECIPE = gql`
 export const DELETE_RECIPE = gql`
   mutation Mutation($deleteRecipeId: Int!) {
     deleteRecipe(deleteRecipeId: $deleteRecipeId) {
-      name
+      id
     }
   }
 `;

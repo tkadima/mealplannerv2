@@ -2,10 +2,9 @@
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
-import prisma from '../../lib/prisma';
 import { Recipe } from '../../components/types';
 import { useMutation } from '@apollo/client';
 import { DELETE_RECIPE } from '../../graphql/mutations/recipe-mutations';
@@ -16,10 +15,22 @@ type PropTypes = {
 
 const Recipes = ({ recipes } : PropTypes) => {
 
-	// TODO: use delete mutation 
+	const [recipeList, setRecipeList] = useState([]);
+
+	useEffect(() => {
+		setRecipeList(recipes);
+	}, []);
+
 	const [deleteRecipe] = useMutation(DELETE_RECIPE, {
 		onError(err){
 			console.error('error deleting recipe', JSON.stringify(err, null, 2));
+		},
+		onCompleted(data){
+			const res = data.deleteRecipe; 
+			console.log(res);
+			const newRecipeList = recipes.filter(r => r.id !== res.id);
+
+			setRecipeList(newRecipeList);
 		}
 	});
 	const handleDelete = (recipe: Recipe) => {
@@ -30,9 +41,9 @@ const Recipes = ({ recipes } : PropTypes) => {
 		<Layout>
 			<h3>Recipes</h3>
 			{
-				recipes?.length > 0 &&
+				recipeList?.length > 0 &&
                 <ListGroup>
-                	{ recipes.map((r: Recipe, i: number) => {
+                	{ recipeList.map((r: Recipe, i: number) => {
                 		return <RecipeListItem key={`${i}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})
                 	}
                 </ListGroup>
@@ -48,10 +59,3 @@ const Recipes = ({ recipes } : PropTypes) => {
 };
 
 export default Recipes;
-
-export const getServerSideProps = async() => {
-	const recipes = await prisma.recipe.findMany(); 
-	return { 
-		props: { recipes }
-	};
-};
