@@ -30,7 +30,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			serves: parseFloat(recipeObj['serves']),
 			ingredients: convertStringToIngredient(recipeObj['ingredients'])
 		} as Recipe;
-		
+
 		if (!currentRecipe)
 			onSubmitRecipe(recipe);
 		else {
@@ -41,6 +41,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 	};
 
 	return (
+		// Add form validation
 		<Form onSubmit={handleSubmit(handleSubmitRecipe)}>
 			<Form.Group>
 				<Form.Control

@@ -61,7 +61,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 
 export default Recipes;
 
-export const getServerSideProps: GetServerSideProps =async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
 	const recipes = await prisma.recipe.findMany(); 
 	return {
 		props: {

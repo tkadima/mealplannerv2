@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import {Form, ListGroup, ListGroupItem, Modal} from 'react-bootstrap';
+import {Form, ListGroup, ListGroupItem, Modal, ModalFooter} from 'react-bootstrap';
+import { Recipe } from '../types';
 
 type PropTypes = {
     show: boolean, 
     onCloseModal: () => void,
     day: string, 
     meal: string
+	recipes: Recipe[]
 }
 
-const ScheduleModal = ({ show, onCloseModal, day, meal} : PropTypes) => {
+const ScheduleModal = ({ show, onCloseModal, day, meal, recipes} : PropTypes) => {
 
-	const recipeList = ['apple pie', 'spaghetti', 'mac and cheese', 'milk'];
 	const [selectedRecipes, setSelectedRecipes] = useState([]);
 
 	const selectRecipes = (e: any) => {
@@ -27,18 +28,18 @@ const ScheduleModal = ({ show, onCloseModal, day, meal} : PropTypes) => {
 			<Modal.Title>{day} {meal}</Modal.Title>
 		</Modal.Header>
 		<Modal.Body>
-			<Form.Group>
+			<Form>
 				<Form.Label>
                     Select recipes for this meal slot
 				</Form.Label>
-				<Form.Control as='select' multiple onChange={selectRecipes}>
+				<Form.Control as='select' multiple onChange={selectRecipes} style={{ marginBottom: '30px' }}>
 					{
-						recipeList.map((r, i) => {
-							return <option key={i} value={r} disabled={selectedRecipes.includes(r)}>{r}</option>;
+						recipes.map((r, i) => {
+							return <option key={i} value={r.name} disabled={selectedRecipes.includes(r)}>{r.name}</option>;
 						})
 					}
 				</Form.Control>
-			</Form.Group>
+			</Form>
 			<div>
             Selected Recipes: 
 				<ListGroup>
@@ -51,9 +52,13 @@ const ScheduleModal = ({ show, onCloseModal, day, meal} : PropTypes) => {
 			</div>
           
 		</Modal.Body>
-		<Button variant="secondary" onClick={handleClose}>
-            Close
-		</Button>
+		<ModalFooter>
+			<Button variant="secondary" onClick={handleClose}>
+            Cancel
+			</Button>
+			<Button variant="primary">Save</Button>
+		</ModalFooter>
+		
 	</Modal>);
 };
 

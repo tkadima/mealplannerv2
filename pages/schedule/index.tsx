@@ -3,10 +3,17 @@ import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import Cell from '../../components/schedule/cell';
 import ScheduleModal from '../../components/schedule/schedule-modal';
+import { GetServerSideProps } from 'next/types';
+import prisma from '../../lib/prisma';
+import { Recipe } from '../../components/types';
 
-const Schedule = () => {
-	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 
-	const meals = ['Breakfast', 'Lunch', 'Dinner', 'Snacks']; 
+type PropTypes = {
+	recipes: Recipe[]
+}
+
+const Schedule = ({recipes}: PropTypes) => {
+	const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; 
+	const MEALS = ['Breakfast', 'Lunch', 'Dinner', 'Snacks']; 
 
 	const [showModal, setShowModal] = useState(false); 
 	const [selectedDay, setSelectedDay] = useState(null); 
@@ -25,23 +32,27 @@ const Schedule = () => {
 	return (
 		<Layout>
 			<h3>Schedule</h3>
-			<ScheduleModal show={showModal} onCloseModal={handleCloseModal} day={selectedDay} meal={selectedMeal}/>
+			<ScheduleModal 
+				show={showModal} 
+				onCloseModal={handleCloseModal} 
+				day={selectedDay} meal={selectedMeal} 
+				recipes={recipes}/>
 			<div>
 				<Table bordered>
 					<thead>
 						<tr>
 							<th></th>
 							{
-								days.map((day, i) => <th key={i}>{day}</th>)
+								DAYS.map((day, i) => <th key={i}>{day}</th>)
 							}
 						</tr>
 					</thead>
 					<tbody>
-						{meals.map((meal, i) => {
+						{MEALS.map((meal, i) => {
 							return <tr key={i}>
 								<td>{meal}</td>
 								{ 
-									days.map((day, i) => {
+									DAYS.map((day, i) => {
 										return <Cell key={i} onSelectCell={handleSelectCell} dayOfWeek={day} meal={meal} />;
 									})
 								}
@@ -55,3 +66,13 @@ const Schedule = () => {
 };
 
 export default Schedule;
+
+
+export const getServerSideProps: GetServerSideProps = async () => {
+	const recipes = await prisma.recipe.findMany(); 
+	return {
+		props: {
+			recipes
+		}
+	};
+};
