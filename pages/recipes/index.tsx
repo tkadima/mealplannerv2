@@ -7,6 +7,8 @@ import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
 import prisma from '../../lib/prisma';
 import { Recipe } from '../../components/types';
+import { useMutation } from '@apollo/client';
+import { DELETE_RECIPE } from '../../graphql/mutations/recipe-mutations';
 
 type PropTypes = {
     recipes: Recipe[],
@@ -14,20 +16,15 @@ type PropTypes = {
 
 const Recipes = ({ recipes } : PropTypes) => {
 
-
 	// TODO: use delete mutation 
-	// const handleDelete = (recipe: Recipe) => {
-	// 	axios.delete(`/api/recipes/${recipe.id}`)
-	// 		.then(res => {
-	// 			if (res.status === 200) {
-	// 				const newRecipeList = recipes.filter(r => r.id !== recipe.id);
-	// 				setRecipes(newRecipeList);
-	// 			}
-	// 		})
-	// 		.catch(err => {
-	// 			console.error('Error occured while deleted', err);
-	// 		});
-	// };
+	const [deleteRecipe] = useMutation(DELETE_RECIPE, {
+		onError(err){
+			console.error('error deleting recipe', JSON.stringify(err, null, 2));
+		}
+	});
+	const handleDelete = (recipe: Recipe) => {
+		deleteRecipe({variables: {deleteRecipeId: recipe.id} });
+	};
 
 	return (
 		<Layout>
@@ -35,8 +32,8 @@ const Recipes = ({ recipes } : PropTypes) => {
 			{
 				recipes?.length > 0 &&
                 <ListGroup>
-                	{ recipes.map((r: Recipe) => {
-                		return <RecipeListItem key={`${r.id}-${r.name}`} recipeItem={r} />;})
+                	{ recipes.map((r: Recipe, i: number) => {
+                		return <RecipeListItem key={`${i}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})
                 	}
                 </ListGroup>
 			}

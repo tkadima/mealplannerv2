@@ -11,7 +11,8 @@ type Ingredient {
 }
 
 type Mutation {
-  createRecipe(cookTime: Int, ingredients: [createIngredientInput], instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
+  createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
+  deleteRecipe(deleteRecipeId: Int!): Recipe!
 }
 
 type Query {
@@ -28,8 +29,20 @@ type Recipe {
   serves: Float
 }
 
-input createIngredientInput {
+input ingredientInput {
   description: String!
+  id: Int
   quantity: Float
+  recipeId: Int
   unitOfMeasure: String
+}
+
+input recipeInput {
+  cookTime: Int
+  id: Int
+  ingredients: [ingredientInput!]
+  instructions: String
+  name: String
+  prepTime: Int
+  serves: Float
 }

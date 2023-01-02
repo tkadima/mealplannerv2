@@ -21,14 +21,31 @@ export const Recipe = objectType({
 	}
 });
 
-export const createIngredientInput = inputObjectType({
-	name: 'createIngredientInput',
+export const ingredientInput = inputObjectType({
+	name: 'ingredientInput',
 	definition(t) {
 		t.nonNull.string('description'),
+		t.int('id'),
 		t.string('unitOfMeasure'),
 		t.float('quantity');
+		t.int('recipeId');
 	},
 });
+
+export const recipeInput = inputObjectType({
+	name: 'recipeInput', 
+	definition(t) {
+		t.int('id'),
+		t.string('name'),
+		t.string('instructions'),
+		t.int('prepTime'),
+		t.int('cookTime'),
+		t.float('serves');
+		t.field('ingredients', { type: list(nonNull(ingredientInput))});
+	},
+});
+
+
 
 export const RecipeQuery = extendType({ 
 	type: 'Query', 
@@ -54,7 +71,7 @@ export const CreateRecipeMutation = extendType({
 				cookTime: intArg(),
 				serves: floatArg(), 
 				ingredients: arg({
-					type: list(createIngredientInput)
+					type: list(ingredientInput)
 				})
 
 			},
@@ -69,7 +86,68 @@ export const CreateRecipeMutation = extendType({
 			}
 		});
 	}
+});
 
-	// TODO add update mutation 
-	// TODO add delete mutation 
+// TODO add update mutation 
+// export const UpdateRecipeMutation = extendType({
+// 	type: 'Mutation', 
+// 	definition(t) {
+// 		t.nonNull.field('updateRecipe', {
+// 			type: Recipe,
+// 			args: {
+// 				recipeId: nonNull(intArg()),
+// 				newData: nonNull(recipeInput.asArg()),
+// 			},
+// 			async resolve(_parent, args, ctx) { 
+// 				const createIngredients = args.newData.ingredients.map(i => {
+// 					return {  
+// 						create: {
+// 							quantity: i.quantity, 
+// 							unitOfMeasure: i.unitOfMeasure, 
+// 							description: i.description
+// 						}
+// 					};
+// 				});
+// 				return await ctx.prisma.recipe.update({
+// 					where: {
+// 						id: args.recipeId
+// 					},
+// 					include: {
+// 						ingredients: true
+// 					},
+// 					data: {...args.newData, 
+// 						ingredients: {
+// 							create: args.newData.ingredients
+// 						}
+// 					}
+// 				});
+// 			}
+// 		});
+// 	},
+
+// });
+// TODO add delete mutation 
+
+export const DeleteRecipeMutation = extendType({ 
+	type: 'Mutation', 
+	definition(t) { 
+		t.nonNull.field('deleteRecipe', {
+			type: Recipe,
+			args: {
+				deleteRecipeId: nonNull(intArg())
+			},
+			async resolve(_parent, args, ctx) {
+				await ctx.prisma.ingredient.deleteMany({
+					where: {
+						recipeId: args.deleteRecipeId
+					}
+				});
+				return await prisma.recipe.delete({
+					where: {
+						id: args.deleteRecipeId
+					}
+				});
+			}
+		});
+	}
 });

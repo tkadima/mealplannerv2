@@ -1,14 +1,13 @@
 export type Ingredient = { 
  description: string
-  id: number
   quantity: number
   unitOfMeasure: string
   recipeId: number
 }
 
 export type Recipe = {
+    id: number
 	cookTime: number
-	id: number
 	ingredients: Ingredient[]
 	instructions: string
 	name: string 

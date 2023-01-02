@@ -8,7 +8,7 @@ import { Ingredient, Recipe } from '../types';
 
 
 type PropTypes = {
-	onSubmitRecipe: (data: object) => void;
+	onSubmitRecipe: (data: Recipe) => void;
 	currentRecipe?: Recipe;
 }
 const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
@@ -16,7 +16,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 	const convertStringToIngredient = (ingredientString: string) => {
 		const parsedIngredients = parseIngredient(ingredientString);
 		return parsedIngredients.map(i => {
-			return { quantity: i.quantity, unitOfMeasure: i.unitOfMeasureID, description: i.description};
+			return { quantity: i.quantity, unitOfMeasure: i.unitOfMeasure, description: i.description};
 		});
 	};
 
@@ -48,7 +48,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			cookTime: parseInt(recipeObj['cookTime']),
 			serves: parseFloat(recipeObj['serves']),
 			ingredients: convertStringToIngredient(recipeObj['ingredients'])
-		};
+		} as Recipe;
 		onSubmitRecipe(recipe);
 	};
 

@@ -14,7 +14,9 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	const router = useRouter();
 
 	// TODO use update mutation 
-	const handleSubmitRecipe = () => {
+	const handleSubmitRecipe = (recipeChanges: Recipe) => { // recipe input object 
+		console.log('changes', recipeChanges);
+		// updateRecipe[variables]
 		router.push('/recipes');
 	};
 

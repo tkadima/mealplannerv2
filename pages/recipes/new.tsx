@@ -17,6 +17,7 @@ const NewRecipe = () => {
 	});
 	
 	const handleSubmitRecipe = (recipe: Recipe) => {	
+		console.log('recipe', recipe);
 		createRecipe({ variables: recipe});
 		router.push('/recipes');
 	};
