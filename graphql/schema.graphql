@@ -13,6 +13,7 @@ type Ingredient {
 type Mutation {
   createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
+  updateRecipe(newData: recipeInput!, recipeId: Int!): Recipe!
 }
 
 type Query {

@@ -88,45 +88,39 @@ export const CreateRecipeMutation = extendType({
 	}
 });
 
-// TODO add update mutation 
-// export const UpdateRecipeMutation = extendType({
-// 	type: 'Mutation', 
-// 	definition(t) {
-// 		t.nonNull.field('updateRecipe', {
-// 			type: Recipe,
-// 			args: {
-// 				recipeId: nonNull(intArg()),
-// 				newData: nonNull(recipeInput.asArg()),
-// 			},
-// 			async resolve(_parent, args, ctx) { 
-// 				const createIngredients = args.newData.ingredients.map(i => {
-// 					return {  
-// 						create: {
-// 							quantity: i.quantity, 
-// 							unitOfMeasure: i.unitOfMeasure, 
-// 							description: i.description
-// 						}
-// 					};
-// 				});
-// 				return await ctx.prisma.recipe.update({
-// 					where: {
-// 						id: args.recipeId
-// 					},
-// 					include: {
-// 						ingredients: true
-// 					},
-// 					data: {...args.newData, 
-// 						ingredients: {
-// 							create: args.newData.ingredients
-// 						}
-// 					}
-// 				});
-// 			}
-// 		});
-// 	},
+export const UpdateRecipeMutation = extendType({
+	type: 'Mutation', 
+	definition(t) {
+		t.nonNull.field('updateRecipe', {
+			type: Recipe,
+			args: {
+				recipeId: nonNull(intArg()),
+				newData: nonNull(recipeInput.asArg()),
+			},
+			async resolve(_parent, args, ctx) { 
+				if (args.newData.ingredients) {
+					await prisma.ingredient.deleteMany({
+						where: {
+							recipeId: args.recipeId
+						}
+					});
+				}
+				return await ctx.prisma.recipe.update({
+					where: {
+						id: args.recipeId
+					},
+					data: {
+						...args.newData, 
+						ingredients: {
+							create: args.newData.ingredients
+						}
+					}
+				});
+			}
+		});
+	},
 
-// });
-// TODO add delete mutation 
+});
 
 export const DeleteRecipeMutation = extendType({ 
 	type: 'Mutation', 

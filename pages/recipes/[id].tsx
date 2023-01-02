@@ -6,6 +6,8 @@ import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import prisma from '../../lib/prisma';
 import { Recipe } from '../../components/types';
+import { useMutation } from '@apollo/client';
+import { EDIT_RECIPE } from '../../graphql/mutations/recipe-mutations';
 
 type PropTypes = {
   recipe: Recipe,
@@ -13,15 +15,21 @@ type PropTypes = {
 export const RecipePage = ({ recipe } : PropTypes) => {
 	const router = useRouter();
 
-	// TODO use update mutation 
-	const handleSubmitRecipe = (recipeChanges: Recipe) => { // recipe input object 
-		console.log('changes', recipeChanges);
-		// updateRecipe[variables]
-		router.push('/recipes');
+	const [updateRecipe] = useMutation(EDIT_RECIPE, {
+		onError(err){
+			console.error('error deleting recipe', JSON.stringify(err, null, 2));
+		},
+		onCompleted(){
+			router.push('/recipes');
+		}
+	}); 
+
+	const handleSubmitRecipe = (recipeChanges: object, recipeId: number) => {
+		console.log(recipeId, recipeChanges);
+		updateRecipe({variables:{ recipeId, newData: recipeChanges} });
 	};
 
 	return <Layout>
-		<p>{}</p>
 		<div className='recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
 			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />
 		</div>

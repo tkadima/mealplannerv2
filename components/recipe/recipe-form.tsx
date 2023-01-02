@@ -3,33 +3,14 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from 'react-bootstrap';
-import { parseIngredient } from 'parse-ingredient';
-import { Ingredient, Recipe } from '../types';
-
+import { Recipe } from '../types';
+import { convertIngredientToString, convertStringToIngredient, getChanges } from '../../helpers';
 
 type PropTypes = {
-	onSubmitRecipe: (data: Recipe) => void;
+	onSubmitRecipe: (data: object, recipeId?: number) => void;
 	currentRecipe?: Recipe;
 }
 const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
-	
-	const convertStringToIngredient = (ingredientString: string) => {
-		const parsedIngredients = parseIngredient(ingredientString);
-		return parsedIngredients.map(i => {
-			return { quantity: i.quantity, unitOfMeasure: i.unitOfMeasure, description: i.description};
-		});
-	};
-
-	const convertIngredientToString = (ingredients: Ingredient[]) => {
-		if (!ingredients || ingredients.length === 0) return '';
-		const ingredientStrings = ingredients.map(ingredient => {
-			const quantity = ingredient.quantity ?? '';
-			const unit = ingredient.unitOfMeasure  ?? '';
-			return `${quantity} ${unit} ${ingredient.description}`;
-		});
-		
-		return ingredientStrings.join('\n');
-	};
 
 	const { register, handleSubmit } = useForm({
 		defaultValues: { 
@@ -49,10 +30,16 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			serves: parseFloat(recipeObj['serves']),
 			ingredients: convertStringToIngredient(recipeObj['ingredients'])
 		} as Recipe;
-		onSubmitRecipe(recipe);
+		
+		if (!currentRecipe)
+			onSubmitRecipe(recipe);
+		else {
+			recipe.id = currentRecipe.id;
+			const changes = getChanges(currentRecipe, recipe); 
+			onSubmitRecipe(changes, recipe.id);
+		}
 	};
 
-	
 	return (
 		<Form onSubmit={handleSubmit(handleSubmitRecipe)}>
 			<Form.Group>
