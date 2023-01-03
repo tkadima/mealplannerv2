@@ -7,7 +7,7 @@ import RecipeForm from '../../components/recipe/recipe-form';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
 import { Recipe } from '../../components/types';
 
-const NewRecipe = () => { //prop from _app.tsx -> recipes 
+const NewRecipe = () => { 
 	const router = useRouter();
 
 	const [createRecipe] = useMutation(ADD_RECIPE, {

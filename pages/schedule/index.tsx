@@ -5,7 +5,9 @@ import Cell from '../../components/schedule/cell';
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
-import { DAYS, Meal, MEALS, Recipe } from '../../components/types';
+import { DaysOfWeek, Meal, MealTypes, Recipe } from '../../components/types';
+import { EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
+import { useMutation } from '@apollo/client';
 
 type PropTypes = {
 	recipes: Recipe[],
@@ -14,21 +16,36 @@ type PropTypes = {
 
 const Schedule = ({recipes, meals}: PropTypes) => {
 	
-	const dayKeys = Object.keys(DAYS);
-	const mealKeys = Object.keys(MEALS); 
+	const dayKeys = Object.keys(DaysOfWeek);
+	const mealKeys = Object.keys(MealTypes); 
 
+	console.log('day', dayKeys);
+	console.log('meal', mealKeys); 
 	const [showModal, setShowModal] = useState(false); 
 	const [selectedMeal, setSelectedMeal] = useState(null); 
 	const [scheduleData, setScheduleData] = useState({});
+
+	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
+		onError(err) {
+			console.log('error creating recipe', JSON.stringify(err, null, 2));
+		},
+		onCompleted(){
+			const updatedData = {...scheduleData, 
+				[selectedMeal.day]: {...scheduleData[selectedMeal.day], 
+					[selectedMeal.meal]: {...scheduleData[selectedMeal.meal]}
+				}};
+			setScheduleData(updatedData);
+		}
+	});
 
 	const handleSelectCell = (mealData: Meal) => {
 		setSelectedMeal(mealData); 
 		setShowModal(true);
 	};
 
-	const handleSaveMeal = () => {
-		// save meal mutation 
-
+	const handleSaveMeal = (newRecipes: Recipe[]) => {
+		const recipeIdList = newRecipes.map(r => r.id);
+		updateMealRecipes({variables: { mealId: selectedMeal.id, recipeIdList }});
 	};
 
 	const handleCloseModal = () => { 
@@ -36,17 +53,15 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	};
 
 	const initializeScheduleData  = () => {
-		
 		const scheduleData = {}; 
 		dayKeys.forEach(day => {
-			const mealsForDay = meals.filter(meal => meal.day === DAYS[day]); 
+			const mealsForDay = meals.filter(meal => meal.day === DaysOfWeek[day]); 
 			scheduleData[day] = {};
 			mealKeys.forEach(meal => {
-				const mealForDayandType = mealsForDay.filter(m => m.mealType === MEALS[meal])[0]; 
+				const mealForDayandType = mealsForDay.filter(m => m.mealType === MealTypes[meal])[0]; 
 				scheduleData[day][meal] = mealForDayandType; 
 			});
 		});
-		console.log(scheduleData['Sunday']['Breakfast']);
 		setScheduleData(scheduleData);
 	};
 
@@ -75,11 +90,12 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 					</thead>
 					<tbody>
 						{
-							dayKeys.map((day, i) => {
+							mealKeys.map((meal, i) => {
 								return <tr key={i}>
-									<td>{day}</td>
+									<td>{meal}</td>
 									{ 
-										mealKeys.map((meal, i) => {
+										dayKeys.map((day, i) => {
+											console.log(day, meal); 
 											return <Cell 
 												key={i} 
 												onSelectCell={handleSelectCell} 
@@ -101,7 +117,7 @@ export default Schedule;
 
 export const getServerSideProps: GetServerSideProps = async () => {
 	const recipes = await prisma.recipe.findMany(); 
-	const meals = await prisma.meal.findMany();
+	const meals = await prisma.meal.findMany({include: { recipes: true }});
 	return {
 		props: {
 			recipes, 

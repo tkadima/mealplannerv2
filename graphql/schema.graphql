@@ -2,6 +2,16 @@
 ### Do not make changes to this file directly
 
 
+enum DayEnum {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
+}
+
 type Ingredient {
   description: String!
   id: Int!
@@ -10,9 +20,24 @@ type Ingredient {
   unitOfMeasure: String
 }
 
+type Meal {
+  day: DayEnum!
+  id: Int!
+  mealType: MealTypeEnum!
+  recipes: [Recipe!]
+}
+
+enum MealTypeEnum {
+  BREAKFAST
+  DINNER
+  LUNCH
+  SNACKS
+}
+
 type Mutation {
   createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
+  updateMealRecipes(mealId: Int!, recipeIdList: [Int]!): Meal!
   updateRecipe(newData: recipeInput!, recipeId: Int!): Recipe!
 }
 

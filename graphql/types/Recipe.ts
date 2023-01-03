@@ -99,7 +99,7 @@ export const UpdateRecipeMutation = extendType({
 			},
 			async resolve(_parent, args, ctx) { 
 				if (args.newData.ingredients) {
-					await prisma.ingredient.deleteMany({
+					await ctx.prisma.ingredient.deleteMany({
 						where: {
 							recipeId: args.recipeId
 						}

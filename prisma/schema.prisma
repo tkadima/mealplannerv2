@@ -8,11 +8,11 @@ datasource db {
 }
 
 model ingredient {
-  id            Int      @id @default(autoincrement())
-  quantity      Decimal? @db.Decimal(5, 2)
+  id            Int         @id @default(autoincrement())
+  quantity      Decimal?    @db.Decimal(5, 2)
   unitOfMeasure String?
   description   String
-  recipe        recipe   @relation(fields: [recipeId], references: [id])
+  recipe        recipe      @relation(fields: [recipeId], references: [id])
   recipeId      Int
 }
 
@@ -28,7 +28,7 @@ model recipe {
 }
 
 model meal {
-  id       Int       @id @default(autoincrement())
+  id       Int              @id @default(autoincrement())
   mealType MealType
   day      DayOfWeek
   recipes recipe[]

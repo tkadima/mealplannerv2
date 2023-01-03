@@ -9,7 +9,7 @@ type PropTypes = {
     onCloseModal: () => void,
     mealData?: Meal,
 	recipes: Recipe[],
-	onSave: (selected: string[]) => void; // we may need to pass recipe[] instead later, get from nameRecipeMap
+	onSave: (selected: Recipe[]) => void;
 }
 
 const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
@@ -18,8 +18,9 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 
 	const nameRecipeMap = Object.assign({}, ...recipes.map(r => ({ [r.name]: r})));
 
-	const handleSaveMeal = (data: string[]) => {
-		onSave(data);
+	const handleSaveMeal = (data: {recipes: string[]}) => {
+		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
+		onSave(recipeList);
 		onCloseModal();
 	};
 

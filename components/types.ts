@@ -24,7 +24,7 @@ export type Meal = {
 	recipes: Recipe[]
 }
 
-export const DAYS = {
+export const DaysOfWeek = {
 	'Sunday': DayOfWeek.SUNDAY,
 	'Monday': DayOfWeek.MONDAY,
 	'Tuesday': DayOfWeek.TUESDAY,
@@ -34,7 +34,7 @@ export const DAYS = {
 	'Saturday': DayOfWeek.SATURDAY
 }; 
 
-export const MEALS = {
+export const MealTypes = {
 	'Breakfast': MealType.BREAKFAST, 
 	'Lunch': MealType.LUNCH, 
 	'Dinner': MealType.DINNER, 
