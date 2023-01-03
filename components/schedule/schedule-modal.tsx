@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import {ButtonGroup, Form, Modal, ModalFooter} from 'react-bootstrap';
+import {ButtonGroup, Form, ListGroup, ListGroupItem, Modal} from 'react-bootstrap';
 import { Meal, Recipe } from '../types';
 import { useForm } from 'react-hook-form';
+import { TfiClose } from 'react-icons/tfi';
 
 type PropTypes = {
     show: boolean, 
     onCloseModal: () => void,
     mealData?: Meal,
 	recipes: Recipe[],
-	onSave: (selected: Recipe[]) => void;
+	onSave: (selected: Recipe[], unSelected: Recipe[]) => void;
 }
 
-const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
+const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => { // add onRemove prop
+
+	const [removedRecipes, setRemovedRecipes] = useState([]); 
 
 	const { register, handleSubmit } = useForm({});
 
@@ -20,8 +23,21 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 
 	const handleSaveMeal = (data: {recipes: string[]}) => {
 		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
-		onSave(recipeList);
+		onSave(recipeList, removedRecipes);
+		setRemovedRecipes([]);
 		onCloseModal();
+	};
+
+	const handleRemoveRecipe = (recipe: Recipe) => {
+		if (removedRecipes.find(r => r.id === recipe.id)) {
+			const newRemoved = removedRecipes.filter(r => r.id !== recipe.id);
+			setRemovedRecipes(newRemoved);
+		}
+		else {
+			const updatedRemoved = [...removedRecipes, recipe]; 
+			setRemovedRecipes(updatedRemoved);
+		}
+	
 	};
 
 	const handleClose = () => onCloseModal();
@@ -48,13 +64,26 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 						Object.keys(nameRecipeMap).map((name, i) => {
 							return <option 
 								key={i} 
-								disabled={mealData && mealData.recipes && mealData.recipes.includes(nameRecipeMap[name]) }
+								disabled={mealData?.recipes?.some(r => r.name == name) }
 								value={name}>
 								{name} 
 							</option>;
 						})
 					}
 				</Form.Control>
+				Recipes for this Meal: 
+				<ListGroup style={{ marginBottom: '30px' } }>
+					{
+						mealData?.recipes.map((recipe, i) => {
+							return <ListGroupItem key={i} active={removedRecipes?.some(r => r.id === recipe.id)}>
+								{recipe.name}
+								<div style={{ float: 'right' }}>
+									<TfiClose onClick={() => handleRemoveRecipe(recipe)}/>
+								</div>
+							</ListGroupItem>;
+						})
+					}
+				</ListGroup>
 				<ButtonGroup>
 					<Button variant="secondary" onClick={handleClose}>Cancel
 					</Button>
@@ -63,10 +92,6 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 			</Form>
           
 		</Modal.Body>
-		<ModalFooter>
-			
-		</ModalFooter>
-		
 	</Modal>);
 };
 

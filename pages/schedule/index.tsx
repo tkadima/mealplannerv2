@@ -19,20 +19,22 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const dayKeys = Object.keys(DaysOfWeek);
 	const mealKeys = Object.keys(MealTypes); 
 
-	console.log('day', dayKeys);
-	console.log('meal', mealKeys); 
 	const [showModal, setShowModal] = useState(false); 
 	const [selectedMeal, setSelectedMeal] = useState(null); 
 	const [scheduleData, setScheduleData] = useState({});
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
-			console.log('error creating recipe', JSON.stringify(err, null, 2));
+			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
 		},
-		onCompleted(){
+		onCompleted(data){
+			const day = dayKeys.find(d => DaysOfWeek[d] === selectedMeal.day);
+			const meal = mealKeys.find(m =>  MealTypes[m] === selectedMeal.mealType);
+			const updatedSelectedMeal = {...selectedMeal, recipes: data.updateMealRecipes.recipes};
 			const updatedData = {...scheduleData, 
-				[selectedMeal.day]: {...scheduleData[selectedMeal.day], 
-					[selectedMeal.meal]: {...scheduleData[selectedMeal.meal]}
+				[day]: {
+					...scheduleData[day], 
+					[meal]: updatedSelectedMeal
 				}};
 			setScheduleData(updatedData);
 		}
@@ -43,9 +45,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		setShowModal(true);
 	};
 
-	const handleSaveMeal = (newRecipes: Recipe[]) => {
-		const recipeIdList = newRecipes.map(r => r.id);
-		updateMealRecipes({variables: { mealId: selectedMeal.id, recipeIdList }});
+	const handleSaveMeal = (newRecipes: Recipe[], deletedRecipes: Recipe[]) => {
+		const newRecipeIds = newRecipes?.map(r => r.id);
+		const removeRecipeIds = deletedRecipes?.map(r => r.id);
+		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
 	};
 
 	const handleCloseModal = () => { 
@@ -95,7 +98,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 									<td>{meal}</td>
 									{ 
 										dayKeys.map((day, i) => {
-											console.log(day, meal); 
 											return <Cell 
 												key={i} 
 												onSelectCell={handleSelectCell} 

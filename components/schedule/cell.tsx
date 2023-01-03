@@ -26,7 +26,11 @@ const Cell = ({onSelectCell, mealData}: PropTypes) => {
 		onMouseLeave={unHoverCell}>
 		{
 			mealData && mealData.recipes && mealData.recipes.map((recipe, i) => {
-				return <p key={i}>{recipe.name}</p>;
+				return <p key={i}
+					onMouseOver={hoverCell} 
+					onMouseLeave={unHoverCell}>
+					{recipe.name}
+				</p>;
 			})
 		}
 	</td>);

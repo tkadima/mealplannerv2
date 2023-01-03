@@ -12,7 +12,7 @@ const NewRecipe = () => {
 
 	const [createRecipe] = useMutation(ADD_RECIPE, {
 		onError(err) {
-			console.log('error creating recipe', JSON.stringify(err, null, 2));
+			console.error('error creating recipe', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
 			router.push('/recipes');
