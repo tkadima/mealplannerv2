@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'; 
+import { Meal } from '../types';
 
 type PropTypes = {
-    onSelectCell: (day: string, meal: string) => void; 
-    dayOfWeek: string
-    meal: string
+    onSelectCell: (mealData: Meal) => void; 
+    mealData?: Meal
 }
-const Cell = ({onSelectCell, dayOfWeek, meal }: PropTypes) => {
+const Cell = ({onSelectCell, mealData}: PropTypes) => {
 	const selectCell = () => {
-		onSelectCell(dayOfWeek, meal);
+		onSelectCell(mealData);
 	};
 
 	const hoverCell = (e: any) => {

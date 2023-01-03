@@ -1,62 +1,69 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React from 'react';
 import Button from 'react-bootstrap/Button';
-import {Form, ListGroup, ListGroupItem, Modal, ModalFooter} from 'react-bootstrap';
-import { Recipe } from '../types';
+import {ButtonGroup, Form, Modal, ModalFooter} from 'react-bootstrap';
+import { Meal, Recipe } from '../types';
+import { useForm } from 'react-hook-form';
 
 type PropTypes = {
     show: boolean, 
     onCloseModal: () => void,
-    day: string, 
-    meal: string
-	recipes: Recipe[]
+    mealData?: Meal,
+	recipes: Recipe[],
+	onSave: (selected: string[]) => void; // we may need to pass recipe[] instead later, get from nameRecipeMap
 }
 
-const ScheduleModal = ({ show, onCloseModal, day, meal, recipes} : PropTypes) => {
+const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
 
-	const [selectedRecipes, setSelectedRecipes] = useState([]);
+	const { register, handleSubmit } = useForm({});
 
-	const selectRecipes = (e: any) => {
-		const selected = [].slice.call(e.target.selectedOptions).map((item: any) => item.value);
-		setSelectedRecipes(selected);
+	const nameRecipeMap = Object.assign({}, ...recipes.map(r => ({ [r.name]: r})));
+
+	const handleSaveMeal = (data: string[]) => {
+		onSave(data);
+		onCloseModal();
 	};
 
 	const handleClose = () => onCloseModal();
 
 	return (<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
-			<Modal.Title>{day} {meal}</Modal.Title>
+			{
+				mealData && 
+				<Modal.Title>{mealData.day} {mealData.mealType}</Modal.Title>
+			}
 		</Modal.Header>
 		<Modal.Body>
-			<Form>
+			<Form onSubmit={handleSubmit(handleSaveMeal)}>
 				<Form.Label>
                     Select recipes for this meal slot
 				</Form.Label>
-				<Form.Control as='select' multiple onChange={selectRecipes} style={{ marginBottom: '30px' }}>
+				<Form.Control 
+					as='select' 
+					multiple 
+					style={{ marginBottom: '30px' } }
+					{...register('recipes')}
+				>
 					{
-						recipes.map((r, i) => {
-							return <option key={i} value={r.name} disabled={selectedRecipes.includes(r)}>{r.name}</option>;
+						Object.keys(nameRecipeMap).map((name, i) => {
+							return <option 
+								key={i} 
+								disabled={mealData && mealData.recipes && mealData.recipes.includes(nameRecipeMap[name]) }
+								value={name}>
+								{name} 
+							</option>;
 						})
 					}
 				</Form.Control>
+				<ButtonGroup>
+					<Button variant="secondary" onClick={handleClose}>Cancel
+					</Button>
+					<Button variant="primary" type="submit">Save</Button>
+				</ButtonGroup>
 			</Form>
-			<div>
-            Selected Recipes: 
-				<ListGroup>
-					{ selectedRecipes.map((r, i) => {
-						return <ListGroupItem key={i}>
-							{r}
-						</ListGroupItem>;
-					})}
-				</ListGroup>
-			</div>
           
 		</Modal.Body>
 		<ModalFooter>
-			<Button variant="secondary" onClick={handleClose}>
-            Cancel
-			</Button>
-			<Button variant="primary">Save</Button>
+			
 		</ModalFooter>
 		
 	</Modal>);
