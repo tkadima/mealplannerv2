@@ -14,12 +14,11 @@ export default function Layout({ children }: PropTypes) {
 		<>
 			<Navbar bg="success" variant="dark">
 				<Container>
-					<Navbar.Brand href="#home">Meal Planner</Navbar.Brand>
+					<Navbar.Brand href="/">Meal Planner</Navbar.Brand>
 					<Nav className="me-auto">
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/recipes">Recipes</Nav.Link>
 						<Nav.Link href="/schedule">Schedule</Nav.Link>
-						<Nav.Link href="/food">Fridge</Nav.Link>
 					</Nav>
 				</Container>
 			</Navbar>
