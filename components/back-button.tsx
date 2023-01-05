@@ -9,9 +9,9 @@ type PropTypes = {
 
 const BackButton = ({link}: PropTypes) => {
 	return (
-		<div style={{ padding: '10px 0px' }}>
+		<div className='back-button'>
 			<Link href={link}>
-				<Button>
+				<Button variant='outline-primary'>
 					<AiOutlineArrowLeft/>
 				</Button>
 			</Link>

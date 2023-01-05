@@ -45,23 +45,24 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 		<Form onSubmit={handleSubmit(handleSubmitRecipe)}>
 			<Form.Group>
 				<Form.Control
+					className="form-spacing"
 					as="input"
 					name="name"
 					placeholder="Enter recipe title"
-					style={{ marginBottom: '30px' }}
 					{...register('name', { required: true })}
 				/>
 
 				<Form.Control
+					className="form-spacing"
 					as="textarea"
 					name="ingredients"
 					rows={7}
 					placeholder="Enter ingredients, one ingredient per line" 
-					style={{ marginBottom: '30px' }}
 					{...register('ingredients')}
 				/>
 
 				<Form.Control
+					className="form-spacing"
 					as="textarea"
 					name="instructions"
 					rows={7}
@@ -69,23 +70,23 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 					{...register('instructions')}
 				/>
 
-				<InputGroup style={{ padding: '20px' }}>
+				<InputGroup>
 					<Form.Control
-						style={{ margin: '20px' }}
+						className="number-input-spacing"
 						as="input"
 						name="prepTime"
 						placeholder="Add prep time (minutes)"
 						{...register('prepTime')}
 					/>
 					<Form.Control
-						style={{ margin: '20px' }}
+						className="number-input-spacing"
 						as="input"
 						name="cookTime"
 						placeholder="Add cook time (minutes)"
 						{...register('cookTime')}
 					/>
 					<Form.Control
-						style={{ margin: '20px' }}
+						className="number-input-spacing"
 						as="input"
 						name="serves"
 						placeholder="Number of servings"
@@ -93,8 +94,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 					/>
 				</InputGroup>
 			</Form.Group>
-			<div className="col text-center" style={{ paddingTop: '60px'}} >
-				{/* Add cancel and/or reset button */}
+			<div className="col text-center">
 				<Button type="submit">Submit</Button>
 			</div>
 		</Form>);

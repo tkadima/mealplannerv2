@@ -57,7 +57,7 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 				<Form.Control 
 					as='select' 
 					multiple 
-					style={{ marginBottom: '30px' } }
+					className="form-spacing"
 					{...register('recipes')}
 				>
 					{
@@ -72,12 +72,12 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 					}
 				</Form.Control>
 				Recipes for this Meal: 
-				<ListGroup style={{ marginBottom: '30px' } }>
+				<ListGroup className="form-spacing">
 					{
 						mealData?.recipes.map((recipe, i) => {
 							return <ListGroupItem key={i} active={removedRecipes?.some(r => r.id === recipe.id)}>
 								{recipe.name}
-								<div style={{ float: 'right' }}>
+								<div className="float-right">
 									<TfiClose onClick={() => handleRemoveRecipe(recipe)}/>
 								</div>
 							</ListGroupItem>;

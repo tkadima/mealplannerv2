@@ -31,7 +31,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	};
 
 	return <Layout>
-		<div className='recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
+		<div className='recipe-form' >
 			<BackButton link="/recipes"/>
 			<h3>Edit Recipe</h3>
 			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />

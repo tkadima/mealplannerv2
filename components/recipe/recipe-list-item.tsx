@@ -16,10 +16,8 @@ const RecipeListItem = ({ recipeItem, onDelete } : PropTypes) => {
 	return (
 		<ListGroup.Item>
 			<Link href={`/recipes/${recipeItem.id}`}>{recipeItem.name}</Link>
-			<div style={{ float: 'right' }}>
-				<span style={{ margin: '20px' }}>
-					<BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill>
-				</span>
+			<div className="float-right">
+				<BsFillTrashFill onClick={handleDeleteRecipe}></BsFillTrashFill>
 			</div>
 		</ListGroup.Item>
 	);

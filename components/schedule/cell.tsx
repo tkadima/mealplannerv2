@@ -19,7 +19,7 @@ const Cell = ({onSelectCell, mealData}: PropTypes) => {
 		e.currentTarget.style.background = '';
 	};
 
-	return (<td style={{ padding: '30px'}} 
+	return (<td
 		onClick={selectCell} 
 		onMouseOver={hoverCell} 
 		onMouseLeave={unHoverCell}>

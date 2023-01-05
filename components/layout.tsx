@@ -30,10 +30,6 @@ export default function Layout({ children }: PropTypes) {
 						content="Meal Planner App"
 					/>
 				</Head>
-      
-				<header className={styles.header}>
-        
-				</header>
 				<main className={styles.container}>{children}</main>
 			</div></>
 	);

@@ -100,7 +100,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	return (
 		<Layout>
 			<h3>Schedule</h3>
-			<Button variant="primary" style={{ float: 'right'}} onClick={handleResetTable}>Reset Schedule</Button>
+			<Button variant="primary" className="reset-button" onClick={handleResetTable}>Reset Schedule</Button>
 			<ScheduleModal 
 				show={showModal} 
 				onCloseModal={handleCloseModal} 

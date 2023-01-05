@@ -21,7 +21,28 @@ a:hover {
   text-decoration: underline;
 }
 
-img {
-  max-width: 100%;
-  display: block;
+.back-button { 
+  margin-bottom: 20px;
+}
+
+.form-spacing { 
+  margin-bottom: 30px;
+}
+
+.number-input-spacing { 
+  margin:  0px 20px 30px 0px;
+}
+
+.float-right {
+  float: right;
+}
+
+.recipe-form{
+  float: left;
+  padding: 20px;
+}
+
+.reset-button { 
+  float: right; 
+  margin-bottom: 20px; 
 }

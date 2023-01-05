@@ -27,12 +27,9 @@ const NewRecipe = () => {
 		<Layout>
 			<BackButton link="/recipes"/>
 			<h3>Create New Recipe</h3>
-			<div style={{ padding: '10px 0px' }}>
-				<div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
-					<RecipeForm onSubmitRecipe={handleSubmitRecipe}/>
-				</div>
+			<div className=' recipe-form'>
+				<RecipeForm onSubmitRecipe={handleSubmitRecipe}/>
 			</div>
-
 		</Layout>
 	);
 };
