@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
@@ -42,12 +41,18 @@ const Recipes = ({ recipes } : PropTypes) => {
 		<Layout>
 			<h3>Recipes</h3>
 			{
-				recipeList?.length > 0 &&
-                <ListGroup>
-                	{ recipeList.map((r: Recipe, i: number) => {
-                		return <RecipeListItem key={`${i}-${r.name}`} recipeItem={r} onDelete={handleDelete}/>;})
-                	}
-                </ListGroup>
+				recipeList.length > 0 && 
+				<ListGroup>
+					{
+						recipeList.map((recipe, i) => {
+							return <RecipeListItem 
+								key={`${i}-${recipe.name}`}
+								recipeItem={recipe}
+								onDelete={handleDelete}
+							/>;
+						})
+					}
+				</ListGroup>
 			}
 			<div className="col text-center padding-md">
 				<Link href="/recipes/new">
