@@ -1,13 +1,13 @@
 import Layout from '../../components/layout';
 import React, { useEffect, useState } from 'react'; 
-import { Button, Table } from 'react-bootstrap';
-import Cell from '../../components/schedule/cell';
+import { Button } from 'react-bootstrap';
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
 import { DaysOfWeek, Meal, MealTypes, Recipe } from '../../components/types';
 import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
 import { useMutation } from '@apollo/client';
+import MealTable from '../../components/schedule/meal-table';
 
 type PropTypes = {
 	recipes: Recipe[],
@@ -108,33 +108,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				recipes={recipes}
 				onSave={handleSaveMeal}/>
 			<div>
-				<Table bordered>
-					<thead>
-						<tr>
-							<th></th>
-							{
-								dayKeys.map((day, i) => <th key={i}>{day}</th>)
-							}
-						</tr>
-					</thead>
-					<tbody>
-						{
-							mealKeys.map((meal, i) => {
-								return <tr key={i}>
-									<td>{meal}</td>
-									{ 
-										dayKeys.map((day, i) => {
-											return <Cell 
-												key={i} 
-												onSelectCell={handleSelectCell} 
-												mealData={ scheduleData[day] ? scheduleData[day][meal] : null}
-											/>;
-										})
-									}
-								</tr>;
-							})}
-					</tbody>
-				</Table>
+				<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 			</div>
 		</Layout>
 	);
