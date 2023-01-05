@@ -8,6 +8,7 @@ import prisma from '../../lib/prisma';
 import { Recipe } from '../../components/types';
 import { useMutation } from '@apollo/client';
 import { EDIT_RECIPE } from '../../graphql/mutations/recipe-mutations';
+import BackButton from '../../components/back-button';
 
 type PropTypes = {
   recipe: Recipe,
@@ -31,6 +32,8 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 
 	return <Layout>
 		<div className='recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
+			<BackButton link="/recipes"/>
+			<h3>Edit Recipe</h3>
 			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />
 		</div>
 	</Layout>;

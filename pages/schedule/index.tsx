@@ -48,7 +48,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			const days = Object.keys(scheduleData);  
 			let newData = {}; 
 			days.forEach(day => {
-				const mealsForDay = scheduleData[day];// {'breakfast': {meal obj... recipes}, 'lunch': ...}
+				const mealsForDay = scheduleData[day];
 				const mealTypes = Object.keys(mealsForDay); 
 				let newMeals = {};
 				mealTypes.forEach(mealType => {

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-
 import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
 import { Recipe } from '../../components/types';
+import BackButton from '../../components/back-button';
 
 const NewRecipe = () => { 
 	const router = useRouter();
@@ -25,6 +25,7 @@ const NewRecipe = () => {
 
 	return (
 		<Layout>
+			<BackButton link="/recipes"/>
 			<h3>Create New Recipe</h3>
 			<div style={{ padding: '10px 0px' }}>
 				<div className=' recipe-form'  style={{ width: '50%', float:'left', padding: '20px' }}>
