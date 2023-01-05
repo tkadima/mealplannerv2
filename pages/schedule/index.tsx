@@ -72,14 +72,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
 	};
 
-	const handleResetTable = () => { 
-		clearMealRecipes();
-	};
-
-	const handleCloseModal = () => { 
-		setShowModal(false); 
-	};
-
 	const initializeScheduleData  = () => {
 		const scheduleData = {}; 
 		dayKeys.forEach(day => {
@@ -100,10 +92,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	return (
 		<Layout>
 			<h3>Schedule</h3>
-			<Button variant="primary" className="reset-button" onClick={handleResetTable}>Reset Schedule</Button>
+			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
 			<ScheduleModal 
 				show={showModal} 
-				onCloseModal={handleCloseModal} 
+				onCloseModal={() => setShowModal(false)} 
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
 				onSave={handleSaveMeal}/>

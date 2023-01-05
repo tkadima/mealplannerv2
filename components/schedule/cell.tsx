@@ -24,7 +24,7 @@ const Cell = ({onSelectCell, mealData}: PropTypes) => {
 		onMouseOver={hoverCell} 
 		onMouseLeave={unHoverCell}>
 		{
-			mealData && mealData.recipes && mealData.recipes.map((recipe, i) => {
+			mealData?.recipes?.map((recipe, i) => {
 				return <p key={i}
 					onMouseOver={hoverCell} 
 					onMouseLeave={unHoverCell}>

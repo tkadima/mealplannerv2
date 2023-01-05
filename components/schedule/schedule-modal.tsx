@@ -13,7 +13,7 @@ type PropTypes = {
 	onSave: (selected: Recipe[], unSelected: Recipe[]) => void;
 }
 
-const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => { // add onRemove prop
+const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
 
 	const [removedRecipes, setRemovedRecipes] = useState([]); 
 
@@ -40,9 +40,7 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 	
 	};
 
-	const handleClose = () => onCloseModal();
-
-	return (<Modal show={show} onHide={handleClose}>
+	return (<Modal show={show} onHide={() => onCloseModal()}>
 		<Modal.Header closeButton>
 			{
 				mealData && 
@@ -85,8 +83,7 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 					}
 				</ListGroup>
 				<ButtonGroup>
-					<Button variant="secondary" onClick={handleClose}>Cancel
-					</Button>
+					<Button variant="secondary" onClick={() => onCloseModal()}>Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button>
 				</ButtonGroup>
 			</Form>

@@ -8,7 +8,6 @@ export const ADD_RECIPE = gql`
 }
 `;
 
-// TODO EDIT_RECIPE mutation 
 export const EDIT_RECIPE = gql`
   mutation Mutation($recipeId: Int!, $newData: recipeInput!) {
     updateRecipe(recipeId: $recipeId, newData: $newData) {
@@ -17,7 +16,6 @@ export const EDIT_RECIPE = gql`
   }
 `;
 
-//TODO DELETE_RECIPE mutation 
 export const DELETE_RECIPE = gql`
   mutation Mutation($deleteRecipeId: Int!) {
     deleteRecipe(deleteRecipeId: $deleteRecipeId) {
