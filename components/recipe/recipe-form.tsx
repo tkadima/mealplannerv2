@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from 'react-bootstrap';
 import { Recipe } from '../types';
 import { convertIngredientToString, convertStringToIngredient, getChanges } from '../../helpers';
+import ErrorAlert from '../error-alert';
 
 type PropTypes = {
 	onSubmitRecipe: (data: object, recipeId?: number) => void;
@@ -12,7 +13,7 @@ type PropTypes = {
 }
 const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 
-	const { register, handleSubmit } = useForm({
+	const { register, handleSubmit, formState: { errors }} = useForm({
 		defaultValues: { 
 			name: currentRecipe?.name || '', 
 			ingredients: convertIngredientToString(currentRecipe?.ingredients) || [],
@@ -41,15 +42,24 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 	};
 
 	return (
-		// Add form validation
 		<Form onSubmit={handleSubmit(handleSubmitRecipe)}>
+			{
+				Object.values(errors).map( (e,idx) => {
+					return (<ErrorAlert key={idx} errorMessage={e.message}/>);
+				})
+			}
 			<Form.Group>
 				<Form.Control
 					className="form-spacing"
 					as="input"
 					name="name"
 					placeholder="Enter recipe title"
-					{...register('name', { required: true })}
+					{...register('name', { 
+						required: {
+							value: true, 
+							message: 'Recipe title cannot be empty'
+						} 
+					})}
 				/>
 
 				<Form.Control
