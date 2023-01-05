@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'; 
 import { Meal } from '../types';
 
@@ -12,12 +11,12 @@ const Cell = ({onSelectCell, mealData}: PropTypes) => {
 		onSelectCell(mealData);
 	};
 
-	const hoverCell = (e: any) => {
-		e.target.style.background = '#D3D3D3';
+	const hoverCell = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.currentTarget.style.background = '#D3D3D3';
 	};
 
-	const unHoverCell = (e: any) => {
-		e.target.style.background = '';
+	const unHoverCell = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.currentTarget.style.background = '';
 	};
 
 	return (<td style={{ padding: '30px'}} 
