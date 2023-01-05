@@ -50,7 +50,7 @@ export const UpdateMealRecipesMutation = extendType({
 				newRecipeIds: nonNull(list(intArg())),
 				removeRecipeIds: nonNull(list(intArg()))
 			},
-			async resolve(_parent, args){ // use ctx 
+			async resolve(_parent, args){
 				const newRecipeIds = args.newRecipeIds.map(recipeId => ({ id: recipeId }));
 				const removedRecipeIds = args.removeRecipeIds.map(recipeId => ({ id: recipeId}));
 				return  prisma.meal.update({
@@ -61,6 +61,34 @@ export const UpdateMealRecipesMutation = extendType({
 							disconnect: removedRecipeIds
 						}
 					}
+				});
+			}
+		});
+	}
+});
+
+export const ClearMealRecipes = extendType({
+	type: 'Mutation',
+	definition(t) {
+		t.field('clearMealRecipe', {
+			type: Meal,
+			async resolve() {
+				const meals = await prisma.meal.findMany({ include: { recipes: true }}); 
+				return await meals.forEach(async (meal) => {
+					const recipes = meal.recipes; 
+					const recipeIds = recipes.map(recipe => ({id: recipe.id}));
+					if (recipeIds.length > 0) {
+						return await prisma.meal.update({
+							where: {id : meal.id}, 
+							data: {
+								recipes: {
+									disconnect: recipeIds
+								}
+							}
+						});
+
+					}
+				
 				});
 			}
 		});

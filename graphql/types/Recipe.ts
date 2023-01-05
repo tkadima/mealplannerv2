@@ -18,6 +18,14 @@ export const Recipe = objectType({
 				}).ingredients();
 			}
 		});
+		t.list.field('meals', {
+			type: 'Meal', 
+			resolve: (parent) => {
+				return prisma.recipe.findUnique({
+					where: {id: parent.id}
+				}).meals();
+			}
+		});
 	}
 });
 
