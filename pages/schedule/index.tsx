@@ -1,12 +1,12 @@
 import Layout from '../../components/layout';
 import React, { useEffect, useState } from 'react'; 
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import Cell from '../../components/schedule/cell';
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
 import { DaysOfWeek, Meal, MealTypes, Recipe } from '../../components/types';
-import { EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
+import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
 import { useMutation } from '@apollo/client';
 
 type PropTypes = {
@@ -40,6 +40,27 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		}
 	});
 
+	const [clearMealRecipes] = useMutation(CLEAR_MEAL_RECIPES, {
+		onError(err) {
+			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
+		},
+		onCompleted(){
+			const days = Object.keys(scheduleData);  
+			let newData = {}; 
+			days.forEach(day => {
+				const mealsForDay = scheduleData[day];// {'breakfast': {meal obj... recipes}, 'lunch': ...}
+				const mealTypes = Object.keys(mealsForDay); 
+				let newMeals = {};
+				mealTypes.forEach(mealType => {
+					const mealObj = {...scheduleData[day][mealType], recipes: []}; 
+					newMeals = {...newMeals, [mealType]: mealObj};
+				}); 
+				newData = {...newData, [day]: newMeals};
+			});
+			setScheduleData(newData); 
+		}
+	});
+
 	const handleSelectCell = (mealData: Meal) => {
 		setSelectedMeal(mealData); 
 		setShowModal(true);
@@ -49,6 +70,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		const newRecipeIds = newRecipes?.map(r => r.id);
 		const removeRecipeIds = deletedRecipes?.map(r => r.id);
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
+	};
+
+	const handleResetTable = () => { 
+		clearMealRecipes();
 	};
 
 	const handleCloseModal = () => { 
@@ -75,6 +100,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	return (
 		<Layout>
 			<h3>Schedule</h3>
+			<Button variant="primary" style={{ float: 'right'}} onClick={handleResetTable}>Reset Schedule</Button>
 			<ScheduleModal 
 				show={showModal} 
 				onCloseModal={handleCloseModal} 

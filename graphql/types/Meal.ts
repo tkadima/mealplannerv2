@@ -70,7 +70,7 @@ export const UpdateMealRecipesMutation = extendType({
 export const ClearMealRecipes = extendType({
 	type: 'Mutation',
 	definition(t) {
-		t.field('clearMealRecipe', {
+		t.field('clearMealRecipes', {
 			type: Meal,
 			async resolve() {
 				const meals = await prisma.meal.findMany({ include: { recipes: true }}); 
