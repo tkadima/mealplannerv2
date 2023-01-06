@@ -1,5 +1,4 @@
 import { enumType, extendType, intArg, list, nonNull, objectType } from 'nexus';
-import prisma from '../../lib/prisma';
 
 export const Meal = objectType({
 	name: 'Meal',
@@ -9,8 +8,8 @@ export const Meal = objectType({
 		t.nonNull.field('mealType', {type: MealTypeEnum}),
 		t.list.nonNull.field('recipes', {
 			type: 'Recipe', 
-			resolve: (parent) => {
-				return prisma.meal.findUnique({
+			resolve: (parent, _, ctx) => {
+				return ctx.prisma.meal.findUnique({
 					where: {id: parent.id}
 				}).recipes();
 			}
@@ -20,24 +19,24 @@ export const Meal = objectType({
 
 const DayEnum = enumType({
 	name: 'DayEnum', 
-	members: {
-		SUNDAY: 0, 
-		MONDAY: 1, 
-		TUESDAY: 2, 
-		WEDNESDAY: 3, 
-		THURSDAY: 4, 
-		FRIDAY: 5, 
-		SATURDAY: 6
-	}
+	members: [
+		'SUNDAY',
+		'MONDAY', 
+		'TUESDAY', 
+		'WEDNESDAY', 
+		'THURSDAY', 
+		'FRIDAY', 
+		'SATURDAY'
+	]
 });
 const MealTypeEnum = enumType({
 	name: 'MealTypeEnum', 
-	members: {
-		BREAKFAST: 0, 
-		LUNCH: 1, 
-		DINNER: 2, 
-		SNACKS: 4
-	}
+	members: [
+		'BREAKFAST', 
+		'LUNCH', 
+		'DINNER', 
+		'SNACKS'
+	]
 });
 
 export const UpdateMealRecipesMutation = extendType({ 
@@ -50,10 +49,10 @@ export const UpdateMealRecipesMutation = extendType({
 				newRecipeIds: nonNull(list(intArg())),
 				removeRecipeIds: nonNull(list(intArg()))
 			},
-			async resolve(_parent, args){
+			async resolve(_parent, args, ctx){
 				const newRecipeIds = args.newRecipeIds.map(recipeId => ({ id: recipeId }));
 				const removedRecipeIds = args.removeRecipeIds.map(recipeId => ({ id: recipeId}));
-				return  prisma.meal.update({
+				return  ctx.prisma.meal.update({
 					where: { id: args.mealId },
 					data: {
 						recipes: {
@@ -72,13 +71,13 @@ export const ClearMealRecipes = extendType({
 	definition(t) {
 		t.field('clearMealRecipes', {
 			type: Meal,
-			async resolve() {
-				const meals = await prisma.meal.findMany({ include: { recipes: true }}); 
-				return await meals.forEach(async (meal) => {
+			async resolve(_parent, _, ctx) {
+				const meals = await ctx.prisma.meal.findMany({ include: { recipes: true }}); 
+				for (const meal of meals){
 					const recipes = meal.recipes; 
 					const recipeIds = recipes.map(recipe => ({id: recipe.id}));
 					if (recipeIds.length > 0) {
-						return await prisma.meal.update({
+						return  await ctx.prisma.meal.update({
 							where: {id : meal.id}, 
 							data: {
 								recipes: {
@@ -86,10 +85,10 @@ export const ClearMealRecipes = extendType({
 								}
 							}
 						});
-
 					}
 				
-				});
+				
+				}
 			}
 		});
 	}

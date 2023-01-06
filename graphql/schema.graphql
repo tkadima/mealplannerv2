@@ -17,6 +17,7 @@ type Ingredient {
   id: Int!
   quantity: Float
   recipe: Recipe!
+  recipeId: Int!
   unitOfMeasure: String
 }
 
@@ -49,7 +50,7 @@ type Query {
 type Recipe {
   cookTime: Int
   id: Int!
-  ingredients: [Ingredient!]!
+  ingredients: [Ingredient]
   instructions: String
   meals: [Meal]
   name: String!

@@ -1,5 +1,4 @@
 import { objectType } from 'nexus'; 
-import prisma from '../../lib/prisma';
 
 export const Ingredient =  objectType({
 	name: 'Ingredient',
@@ -8,10 +7,11 @@ export const Ingredient =  objectType({
 		t.float('quantity'),
 		t.string('unitOfMeasure'),
 		t.nonNull.string('description'),
+		t.nonNull.int('recipeId'),
 		t.nonNull.field('recipe', { 
 			type: 'Recipe',
-			resolve: (parent) => {
-				return prisma.ingredient.findUnique({
+			resolve: (parent, _, ctx) => {
+				return  ctx.prisma.ingredient.findUnique({
 					where: { id: parent.id}
 				}).recipe();
 			}

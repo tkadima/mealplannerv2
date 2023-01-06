@@ -1,5 +1,4 @@
 import { arg, extendType, floatArg, inputObjectType, intArg, list, nonNull, objectType, stringArg } from 'nexus'; 
-import prisma from '../../lib/prisma';
 
 export const Recipe = objectType({
 	name: 'Recipe', 
@@ -10,18 +9,22 @@ export const Recipe = objectType({
 		t.int('prepTime'),
 		t.int('cookTime'),
 		t.float('serves');
-		t.nonNull.list.nonNull.field('ingredients', {
+		t.list.field('ingredients', {
 			type: 'Ingredient', 
-			resolve: (parent) => {
-				return prisma.recipe.findUnique({
+			resolve: async (parent, _, ctx ) => {
+				const ingredients =  await ctx.prisma.recipe.findUnique({
 					where: {id: parent.id}
 				}).ingredients();
+				return ingredients.map(i => {
+					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
+					return ({...i, quantity});
+				});
 			}
 		});
 		t.list.field('meals', {
 			type: 'Meal', 
-			resolve: (parent) => {
-				return prisma.recipe.findUnique({
+			resolve: async (parent, _, ctx) => {
+				return  await ctx.prisma.recipe.findUnique({
 					where: {id: parent.id}
 				}).meals();
 			}
@@ -144,7 +147,7 @@ export const DeleteRecipeMutation = extendType({
 						recipeId: args.deleteRecipeId
 					}
 				});
-				return await prisma.recipe.delete({
+				return await ctx.prisma.recipe.delete({
 					where: {
 						id: args.deleteRecipeId
 					}
