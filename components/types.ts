@@ -14,7 +14,9 @@ export type Recipe = {
 	instructions: string
 	name: string 
 	prepTime: number 
-	serves: number
+	serves: number,
+	requiresOven: boolean,
+	requiresStovetop: boolean
   };
 
 export type Meal = {

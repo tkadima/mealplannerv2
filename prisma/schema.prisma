@@ -8,32 +8,33 @@ datasource db {
 }
 
 model ingredient {
-  id            Int         @id @default(autoincrement())
-  quantity      Decimal?    @db.Decimal(5, 2)
+  id            Int      @id @default(autoincrement())
+  quantity      Decimal? @db.Decimal(5, 2)
   unitOfMeasure String?
   description   String
-  recipe        recipe      @relation(fields: [recipeId], references: [id])
+  recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
 }
 
 model recipe {
-  id           Int          @id @default(autoincrement())
-  name         String
-  instructions String?
-  prepTime     Int?
-  cookTime     Int?
-  serves       Int?
-  ingredients  ingredient[]
-  meals        meal[]
+  id               Int          @id @default(autoincrement())
+  name             String
+  instructions     String?
+  prepTime         Int?
+  cookTime         Int?
+  serves           Int?
+  ingredients      ingredient[]
+  meals            meal[]
+  requiresOven     Boolean      @default(false)
+  requiresStovetop Boolean      @default(false)
 }
 
 model meal {
-  id       Int              @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   mealType MealType
   day      DayOfWeek
-  recipes recipe[]
+  recipes  recipe[]
 }
-
 
 enum MealType {
   BREAKFAST

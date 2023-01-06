@@ -23,7 +23,8 @@
     "react-bootstrap": "^2.6.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.41.3",
-    "react-icons": "^4.6.0"
+    "react-icons": "^4.6.0",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",

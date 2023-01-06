@@ -1,4 +1,4 @@
-import { arg, extendType, floatArg, inputObjectType, intArg, list, nonNull, objectType, stringArg } from 'nexus'; 
+import { arg, booleanArg, extendType, floatArg, inputObjectType, intArg, list, nonNull, objectType, stringArg } from 'nexus'; 
 
 export const Recipe = objectType({
 	name: 'Recipe', 
@@ -29,6 +29,8 @@ export const Recipe = objectType({
 				}).meals();
 			}
 		});
+		t.nonNull.boolean('requiresOven');
+		t.nonNull.boolean('requiresStovetop');
 	}
 });
 
@@ -83,7 +85,9 @@ export const CreateRecipeMutation = extendType({
 				serves: floatArg(), 
 				ingredients: arg({
 					type: list(ingredientInput)
-				})
+				}),
+				requiresOven: booleanArg(),
+				requireStovetop: booleanArg()
 
 			},
 			async resolve(_parent, args, ctx) {

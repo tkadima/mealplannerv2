@@ -37,7 +37,7 @@ enum MealTypeEnum {
 
 type Mutation {
   clearMealRecipes: Meal
-  createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, serves: Float): Recipe!
+  createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, requireStovetop: Boolean, requiresOven: Boolean, serves: Float): Recipe!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
   updateMealRecipes(mealId: Int!, newRecipeIds: [Int]!, removeRecipeIds: [Int]!): Meal!
   updateRecipe(newData: recipeInput!, recipeId: Int!): Recipe!
@@ -55,6 +55,8 @@ type Recipe {
   meals: [Meal]
   name: String!
   prepTime: Int
+  requiresOven: Boolean!
+  requiresStovetop: Boolean!
   serves: Float
 }
 

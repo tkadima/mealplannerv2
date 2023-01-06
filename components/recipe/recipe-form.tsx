@@ -21,6 +21,8 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			prepTime: currentRecipe?.prepTime || '', 
 			cookTime: currentRecipe?.cookTime || '', 
 			serves: currentRecipe?.serves || '', 
+			requiresOven: currentRecipe?.requiresOven || false,
+			requiresStovetop: currentRecipe?.requiresStovetop || false,
 		}
 	});
 
@@ -31,6 +33,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			serves: parseFloat(recipeObj['serves']),
 			ingredients: convertStringToIngredient(recipeObj['ingredients'])
 		} as Recipe;
+		console.log('r', recipe);
 
 		if (!currentRecipe)
 			onSubmitRecipe(recipe);
@@ -49,60 +52,66 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 				})
 			}
 			<Form.Group>
-				<Form.Control
-					className="form-spacing"
-					as="input"
-					name="name"
-					placeholder="Enter recipe title"
-					{...register('name', { 
-						required: {
-							value: true, 
-							message: 'Recipe title cannot be empty'
-						} 
-					})}
-				/>
-
-				<Form.Control
-					className="form-spacing"
-					as="textarea"
-					name="ingredients"
-					rows={7}
-					placeholder="Enter ingredients, one ingredient per line" 
-					{...register('ingredients')}
-				/>
-
-				<Form.Control
-					className="form-spacing"
-					as="textarea"
-					name="instructions"
-					rows={7}
-					placeholder="Enter cooking instructions as a list. e.g. 1. Chop onions"
-					{...register('instructions')}
-				/>
-
-				<InputGroup>
+				<div className='col'>
 					<Form.Control
-						className="number-input-spacing"
+						className="form-spacing"
 						as="input"
-						name="prepTime"
-						placeholder="Add prep time (minutes)"
-						{...register('prepTime')}
+						name="name"
+						placeholder="Enter recipe title"
+						{...register('name', { 
+							required: {
+								value: true, 
+								message: 'Recipe title cannot be empty'
+							} 
+						})}
 					/>
+
 					<Form.Control
-						className="number-input-spacing"
-						as="input"
-						name="cookTime"
-						placeholder="Add cook time (minutes)"
-						{...register('cookTime')}
+						className="form-spacing"
+						as="textarea"
+						name="ingredients"
+						rows={7}
+						placeholder="Enter ingredients, one ingredient per line" 
+						{...register('ingredients')}
 					/>
+
 					<Form.Control
-						className="number-input-spacing"
-						as="input"
-						name="serves"
-						placeholder="Number of servings"
-						{...register('serves')}
+						className="form-spacing"
+						as="textarea"
+						name="instructions"
+						rows={7}
+						placeholder="Enter cooking instructions as a list. e.g. 1. Chop onions"
+						{...register('instructions')}
 					/>
-				</InputGroup>
+
+					<InputGroup>
+						<Form.Control
+							className="number-input-spacing"
+							as="input"
+							name="prepTime"
+							placeholder="Add prep time (minutes)"
+							{...register('prepTime')}
+						/>
+						<Form.Control
+							className="number-input-spacing"
+							as="input"
+							name="cookTime"
+							placeholder="Add cook time (minutes)"
+							{...register('cookTime')}
+						/>
+						<Form.Control
+							className="number-input-spacing"
+							as="input"
+							name="serves"
+							placeholder="Number of servings"
+							{...register('serves')}
+						/>
+					</InputGroup>
+				</div>
+				<div className="col">
+					<Form.Check type="switch" label="Requires an oven?" {...register('requiresOven')} />
+					<Form.Check type="switch" label="Requires the stovetop?" {...register('requiresStovetop')} />
+				</div>
 			</Form.Group>
 			<div className="col text-center">
 				<Button type="submit">Submit</Button>
