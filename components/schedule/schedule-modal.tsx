@@ -69,10 +69,10 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 						})
 					}
 				</Form.Control>
-				Recipes for this Meal: 
+				{mealData && 
 				<ListGroup className="form-spacing">
 					{
-						mealData?.recipes.map((recipe, i) => {
+						mealData?.recipes?.map((recipe, i) => {
 							return <ListGroupItem key={i} active={removedRecipes?.some(r => r.id === recipe.id)}>
 								{recipe.name}
 								<div className="float-right">
@@ -82,7 +82,8 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 						})
 					}
 				</ListGroup>
-				<ButtonGroup>
+				}
+				<ButtonGroup className="float-right">
 					<Button variant="secondary" onClick={() => onCloseModal()}>Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button>
 				</ButtonGroup>

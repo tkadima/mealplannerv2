@@ -99,9 +99,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
 				onSave={handleSaveMeal}/>
-			<div>
-				<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
-			</div>
+			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 		</Layout>
 	);
 };
