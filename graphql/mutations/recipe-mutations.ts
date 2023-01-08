@@ -1,8 +1,10 @@
 import { gql } from '@apollo/client';
 
 export const ADD_RECIPE = gql` 
-	mutation Mutation($name: String!, $instructions: String, $prepTime: Int, $cookTime: Int, $serves: Float, $ingredients: [ingredientInput]) {
-  createRecipe(name: $name, instructions: $instructions, prepTime: $prepTime, cookTime: $cookTime, serves: $serves, ingredients: $ingredients) {
+mutation Mutation($name: String!, $instructions: String, $prepTime: Int, $cookTime: Int, 
+$serves: Float, $requiresOven: Boolean!, $ingredients: [ingredientInput], $requiresStovetop: Boolean!) {
+  createRecipe(name: $name, instructions: $instructions, prepTime: $prepTime, cookTime: $cookTime, 
+  serves: $serves, requiresOven: $requiresOven, ingredients: $ingredients, requiresStovetop: $requiresStovetop) {
     id
   }
 }

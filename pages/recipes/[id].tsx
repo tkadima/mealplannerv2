@@ -26,7 +26,6 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	}); 
 
 	const handleSubmitRecipe = (recipeChanges: object, recipeId: number) => {
-		console.log(recipeId, recipeChanges);
 		updateRecipe({variables:{ recipeId, newData: recipeChanges} });
 	};
 

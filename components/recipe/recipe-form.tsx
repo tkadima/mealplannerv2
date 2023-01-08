@@ -33,8 +33,6 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 			serves: parseFloat(recipeObj['serves']),
 			ingredients: convertStringToIngredient(recipeObj['ingredients'])
 		} as Recipe;
-		console.log('r', recipe);
-
 		if (!currentRecipe)
 			onSubmitRecipe(recipe);
 		else {

@@ -1,6 +1,6 @@
 export const recipe = {
 	name: 'PB and Banana Smoothie', 
-	instructions: '1. Blend ingredients in food processor. 2. Serve with toppings', 
+	instructions: '1. Blend ingredients in food processor.\n 2. Serve with toppings', 
 	prepTime: 5, 
 	cookTime: 5,
 	serves: 1, 

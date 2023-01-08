@@ -55,6 +55,8 @@ export const recipeInput = inputObjectType({
 		t.int('cookTime'),
 		t.float('serves');
 		t.field('ingredients', { type: list(nonNull(ingredientInput))});
+		t.boolean('requiresOven'); 
+		t.boolean('requiresStovetop');
 	},
 });
 
@@ -86,8 +88,8 @@ export const CreateRecipeMutation = extendType({
 				ingredients: arg({
 					type: list(ingredientInput)
 				}),
-				requiresOven: booleanArg(),
-				requireStovetop: booleanArg()
+				requiresOven: nonNull(booleanArg()),
+				requiresStovetop: nonNull(booleanArg())
 
 			},
 			async resolve(_parent, args, ctx) {
