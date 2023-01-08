@@ -10,8 +10,10 @@ datasource db {
 model ingredient {
   id            Int      @id @default(autoincrement())
   quantity      Decimal? @db.Decimal(5, 2)
+  quantity2     Decimal?  @db.Decimal(5, 2)
   unitOfMeasure String?
   description   String
+  isGroupHeader Boolean  @default(false)
   recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
 }

@@ -17,7 +17,9 @@ export const Recipe = objectType({
 				}).ingredients();
 				return ingredients.map(i => {
 					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
-					return ({...i, quantity});
+					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
+
+					return ({...i, quantity, quantity2});
 				});
 			}
 		});
@@ -41,7 +43,9 @@ export const ingredientInput = inputObjectType({
 		t.int('id'),
 		t.string('unitOfMeasure'),
 		t.float('quantity');
+		t.float('quantity2');
 		t.int('recipeId');
+		t.boolean('isGroupHeader');
 	},
 });
 

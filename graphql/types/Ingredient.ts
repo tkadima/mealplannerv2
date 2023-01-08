@@ -5,6 +5,7 @@ export const Ingredient =  objectType({
 	definition(t) {
 		t.nonNull.int('id'), 
 		t.float('quantity'),
+		t.float('quantity2'),
 		t.string('unitOfMeasure'),
 		t.nonNull.string('description'),
 		t.nonNull.int('recipeId'),
@@ -15,6 +16,7 @@ export const Ingredient =  objectType({
 					where: { id: parent.id}
 				}).recipe();
 			}
-		});
+		}),
+		t.nonNull.boolean('isGroupHeader');
 	}
 });

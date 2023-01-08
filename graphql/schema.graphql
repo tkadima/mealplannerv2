@@ -15,7 +15,9 @@ enum DayEnum {
 type Ingredient {
   description: String!
   id: Int!
+  isGroupHeader: Boolean!
   quantity: Float
+  quantity2: Float
   recipe: Recipe!
   recipeId: Int!
   unitOfMeasure: String
@@ -63,7 +65,9 @@ type Recipe {
 input ingredientInput {
   description: String!
   id: Int
+  isGroupHeader: Boolean
   quantity: Float
+  quantity2: Float
   recipeId: Int
   unitOfMeasure: String
 }

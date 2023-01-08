@@ -1,10 +1,12 @@
 import { DayOfWeek, MealType } from '@prisma/client';
 
 export type Ingredient = { 
- description: string
-  quantity: number
-  unitOfMeasure: string
-  recipeId: number
+	description: string
+	quantity: number
+	quantity2: number
+	unitOfMeasure: string
+	recipeId: number
+	isGroupHeader: boolean
 }
 
 export type Recipe = {
@@ -12,7 +14,7 @@ export type Recipe = {
 	cookTime: number
 	ingredients: Ingredient[]
 	instructions: string
-	name: string 
+	name: string
 	prepTime: number 
 	serves: number,
 	requiresOven: boolean,

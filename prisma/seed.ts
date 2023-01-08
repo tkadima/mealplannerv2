@@ -1,6 +1,6 @@
 import { DayOfWeek, MealType } from '@prisma/client';
 import prisma from '../lib/prisma';
-import { recipe, ingredients } from './data';
+import { recipes, ingredients } from './data';
 
 const DAYS = [DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY]; 
 const MEALS = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER, MealType.SNACKS]; 
@@ -8,9 +8,18 @@ const MEALS = [MealType.BREAKFAST, MealType.LUNCH, MealType.DINNER, MealType.SNA
 const main = async() => {
 	await prisma.recipe.create({
 		data: {
-			...recipe,
+			...recipes[0],
 			ingredients: {
-				create: ingredients
+				create: ingredients.slice(0, 5)
+			}
+		}
+	});
+
+	await prisma.recipe.create({
+		data: {
+			...recipes[1],
+			ingredients: {
+				create: ingredients.slice(5)
 			}
 		}
 	});
