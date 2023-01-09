@@ -25,7 +25,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
-			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
+			console.error('error adding recipe to meal', err, JSON.stringify(err, null, 2));
 		},
 		onCompleted(data){
 			const day = dayKeys.find(d => DaysOfWeek[d] === selectedMeal.day);
@@ -84,6 +84,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		});
 		setScheduleData(scheduleData);
 	};
+	const handleCloseModal = () => {
+		setShowModal(false);
+		//setSelectedMeal(null);
+	};
 
 	useEffect(() => {
 		initializeScheduleData();
@@ -95,10 +99,11 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
 			<ScheduleModal 
 				show={showModal} 
-				onCloseModal={() => setShowModal(false)} 
+				onCloseModal={handleCloseModal} 
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
-				onSave={handleSaveMeal}/>
+				onSave={handleSaveMeal}
+			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 		</Layout>
 	);

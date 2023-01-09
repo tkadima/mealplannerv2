@@ -26,7 +26,7 @@ a:hover {
 }
 
 .form-spacing { 
-  margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 .number-input-spacing { 
@@ -45,4 +45,13 @@ a:hover {
 .reset-button { 
   float: right; 
   margin-bottom: 20px; 
+}
+
+.add-recipe-button {
+  margin-top: 30px;
+}
+
+.modal-button-group {
+  float: right;
+  margin-top: 20px; 
 }

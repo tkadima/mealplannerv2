@@ -54,7 +54,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 					}
 				</ListGroup>
 			}
-			<div className="col text-center padding-md">
+			<div className="col text-center add-recipe-button">
 				<Link href="/recipes/new">
 					<Button>Add New</Button>
 				</Link>

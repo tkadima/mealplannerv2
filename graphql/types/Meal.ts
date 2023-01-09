@@ -52,7 +52,7 @@ export const UpdateMealRecipesMutation = extendType({
 			async resolve(_parent, args, ctx){
 				const newRecipeIds = args.newRecipeIds.map(recipeId => ({ id: recipeId }));
 				const removedRecipeIds = args.removeRecipeIds.map(recipeId => ({ id: recipeId}));
-				return  ctx.prisma.meal.update({
+				return ctx.prisma.meal.update({
 					where: { id: args.mealId },
 					data: {
 						recipes: {

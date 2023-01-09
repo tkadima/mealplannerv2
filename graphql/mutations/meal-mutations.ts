@@ -3,22 +3,25 @@ import { gql } from '@apollo/client';
 export const EDIT_MEAL= gql`
   mutation Mutation($mealId: Int!, $newRecipeIds: [Int]!, $removeRecipeIds: [Int]!) {
     updateMealRecipes(mealId: $mealId, newRecipeIds: $newRecipeIds, removeRecipeIds: $removeRecipeIds) {
-      id
       recipes {
         id
-        name
         ingredients {
           id
           quantity
+          quantity2
           unitOfMeasure
+          isGroupHeader
           description
         }
         instructions
+        name
         prepTime
-        cookTime
+        requiresOven
+        requiresStovetop
         serves
-      }
+        cookTime
     }
+  }
 }`;
 
 export const  CLEAR_MEAL_RECIPES = gql`

@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import {ButtonGroup, Form, ListGroup, ListGroupItem, Modal} from 'react-bootstrap';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { Controller, useForm } from 'react-hook-form';
+import Select, { MultiValue } from 'react-select';
+
 import { Meal, Recipe } from '../types';
-import { useForm } from 'react-hook-form';
-import { TfiClose } from 'react-icons/tfi';
+
 
 type PropTypes = {
     show: boolean, 
@@ -14,12 +18,17 @@ type PropTypes = {
 }
 
 const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
-
 	const [removedRecipes, setRemovedRecipes] = useState([]); 
 
-	const { register, handleSubmit } = useForm({});
+	const { control, handleSubmit, setValue} = useForm({});
 
 	const nameRecipeMap = Object.assign({}, ...recipes.map(r => ({ [r.name]: r})));
+
+	useEffect(() => {
+		if(mealData?.recipes)  {
+			setValue('recipes', mealData?.recipes.map(r => r.name));
+		}
+	}, [setValue, mealData]);
 
 	const handleSaveMeal = (data: {recipes: string[]}) => {
 		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
@@ -28,17 +37,16 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 		onCloseModal();
 	};
 
-	const handleRemoveRecipe = (recipe: Recipe) => {
-		if (removedRecipes.find(r => r.id === recipe.id)) {
-			const newRemoved = removedRecipes.filter(r => r.id !== recipe.id);
-			setRemovedRecipes(newRemoved);
-		}
-		else {
-			const updatedRemoved = [...removedRecipes, recipe]; 
-			setRemovedRecipes(updatedRemoved);
-		}
-	
+	const handleChange = (data: MultiValue<{ value: string; label: string; }>) => {
+		const changeNames = data.map(d => d.value); 
+		const mealDataNames = mealData?.recipes?.map(r => r.name);
+		const removedNames = mealDataNames.filter((recipeName:string) => !changeNames
+			.includes(recipeName)); 
+		const removed = removedNames.map(r => nameRecipeMap[r]);
+		setRemovedRecipes(removed);
 	};
+
+	const recipeOptions = Object.keys(nameRecipeMap).map((name) => ({value: name, label: name}));
 
 	return (<Modal show={show} onHide={() => onCloseModal()}>
 		<Modal.Header closeButton>
@@ -52,38 +60,25 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 				<Form.Label>
                     Select recipes for this meal slot
 				</Form.Label>
-				<Form.Control 
-					as='select' 
-					multiple 
-					className="form-spacing"
-					{...register('recipes')}
-				>
-					{
-						Object.keys(nameRecipeMap).map((name, i) => {
-							return <option 
-								key={i} 
-								disabled={mealData?.recipes?.some(r => r.name == name) }
-								value={name}>
-								{name} 
-							</option>;
-						})
+				<Controller
+					name='recipes'
+					control={control}
+					defaultValue= {mealData?.recipes?.map(r => r.name)}
+					render={({ field: { onChange, value, name }}) => (
+						<Select
+							isMulti
+							name={name}
+							value={recipeOptions.filter(r => value.includes(r.value))}
+							options={recipeOptions}
+							onChange={val => {
+								onChange(val.map(c => c.value));
+								handleChange(val);
+							}}
+							isClearable
+						/>)
 					}
-				</Form.Control>
-				{mealData && 
-				<ListGroup className="form-spacing">
-					{
-						mealData?.recipes?.map((recipe, i) => {
-							return <ListGroupItem key={i} active={removedRecipes?.some(r => r.id === recipe.id)}>
-								{recipe.name}
-								<div className="float-right">
-									<TfiClose onClick={() => handleRemoveRecipe(recipe)}/>
-								</div>
-							</ListGroupItem>;
-						})
-					}
-				</ListGroup>
-				}
-				<ButtonGroup className="float-right">
+				/>
+				<ButtonGroup className="float-right modal-button-group">
 					<Button variant="secondary" onClick={() => onCloseModal()}>Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button>
 				</ButtonGroup>
