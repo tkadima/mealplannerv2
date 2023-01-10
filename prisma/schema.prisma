@@ -10,12 +10,14 @@ datasource db {
 model ingredient {
   id            Int      @id @default(autoincrement())
   quantity      Decimal? @db.Decimal(5, 2)
-  quantity2     Decimal?  @db.Decimal(5, 2)
+  quantity2     Decimal? @db.Decimal(5, 2)
   unitOfMeasure String?
   description   String
   isGroupHeader Boolean  @default(false)
   recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
+  food          food?    @relation(fields: [foodId], references: [id])
+  foodId        Int?
 }
 
 model recipe {
@@ -36,6 +38,15 @@ model meal {
   mealType MealType
   day      DayOfWeek
   recipes  recipe[]
+}
+
+model food {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  amount      Decimal      @default(0) @db.Decimal(5, 2)
+  unit        String?
+  ingredients ingredient[]
+  have        Boolean      @default(false)
 }
 
 enum MealType {

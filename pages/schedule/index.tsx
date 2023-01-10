@@ -22,6 +22,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const [showModal, setShowModal] = useState(false); 
 	const [selectedMeal, setSelectedMeal] = useState(null); 
 	const [scheduleData, setScheduleData] = useState({});
+	// add shopping list 
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
@@ -40,11 +41,16 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		}
 	});
 
+	// Food mutation that either creates or updates food based on ingredients 
+	// on error 
+	// on complete: add foods where have = false to the shopping list 
+
 	const [clearMealRecipes] = useMutation(CLEAR_MEAL_RECIPES, {
 		onError(err) {
 			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
+			// move some of this out into its own method and call it
 			const days = Object.keys(scheduleData);  
 			let newData = {}; 
 			days.forEach(day => {
@@ -72,6 +78,9 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
 	};
 
+	// have save ingredients 
+	// call mutation   
+
 	const initializeScheduleData  = () => {
 		const scheduleData = {}; 
 		dayKeys.forEach(day => {
@@ -86,11 +95,11 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	};
 	const handleCloseModal = () => {
 		setShowModal(false);
-		//setSelectedMeal(null);
 	};
 
 	useEffect(() => {
 		initializeScheduleData();
+		// populate shopping list 
 	}, []);
 
 	return (
@@ -103,8 +112,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
 				onSave={handleSaveMeal}
+				// onSaveIngredients 
 			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
+			{/* Add shopping list component side by side with table if possible */}
 		</Layout>
 	);
 };
@@ -119,6 +130,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 		props: {
 			recipes, 
 			meals
+			// shopping list 
 		}
 	};
 };

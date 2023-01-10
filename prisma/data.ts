@@ -16,7 +16,7 @@ export const recipes = [
 		cookTime: null, 
 		serves: 2, 
 		requiresOven: false, 
-		requiresStoveTop: false
+		requiresStovetop: false
 	}
 ];
 
