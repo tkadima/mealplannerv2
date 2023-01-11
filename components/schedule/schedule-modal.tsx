@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client';
 import React, {  useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
@@ -5,9 +6,9 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Controller, useForm } from 'react-hook-form';
 import Select, { MultiValue } from 'react-select';
-
+import { GET_INGREDIENT_BY_RECIPE_ID } from '../../graphql/queries/ingredient-queries';
+import ErrorAlert from '../error-alert';
 import { Ingredient, Meal, Recipe } from '../types';
-
 
 type PropTypes = {
     show: boolean, 
@@ -24,17 +25,23 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 	const [ mealIngredients, setMealIngredients] = useState<Ingredient[]>([]); 
 
 	const { control, handleSubmit, setValue, register } = useForm({});
+	const {  error, data } = useQuery(GET_INGREDIENT_BY_RECIPE_ID, {
+		variables: { recipeIds: mealData?.recipes?.map(r => r.id) }, 
+		skip: !mealData?.recipes || mealData?.recipes.length === 0
+	});
 
 	const nameRecipeMap = Object.assign({}, ...recipes.map(r => ({ [r.name]: r})));
 
 	useEffect(() => {
+		if (error) console.error(error.stack);
 		if(mealData?.recipes)  {
-			setValue('recipes', mealData?.recipes.map(r => r.name));
+			setSelectedRecipes(mealData.recipes);
+			setValue('recipes', mealData.recipes.map(r => r.name));
+			if(data?.ingredient) setMealIngredients(data.ingredient);
 		}
-	}, [setValue, mealData]);
+	}, [setValue, mealData, data]);
 
 	const handleSaveMeal = (data: {recipes: string[]}) => { // possible rename 
-		console.log('data', data);
 		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
 		onSave(recipeList, removedRecipes);
 		// save ingredients list 
@@ -81,7 +88,6 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 		}
 		setMealIngredients([...mealIngredients, ...newIngredients]);
 	};
-
 	const recipeOptions = Object.keys(nameRecipeMap).map((name) => ({value: name, label: name}));
 
 	return (<Modal show={show} onHide={() => onCloseModal()}>
@@ -92,6 +98,10 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 			}
 		</Modal.Header>
 		<Modal.Body>
+			{ 
+				error && 
+				<ErrorAlert errorMessage={'Error fetching meal data: ' + error.message}/>		
+			}
 			<Form onSubmit={handleSubmit(handleSaveMeal)}>
 				<Form.Label>
                     Select recipes for this meal slot

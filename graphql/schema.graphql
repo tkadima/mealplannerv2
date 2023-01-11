@@ -48,6 +48,7 @@ type Mutation {
 }
 
 type Query {
+  ingredient(recipeIds: [Int]!): [Ingredient]
   recipe: [Recipe]
 }
 

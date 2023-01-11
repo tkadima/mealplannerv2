@@ -23,6 +23,29 @@ export const Ingredient =  objectType({
 	}
 });
 
+export const IngredientQuery = extendType({
+	type: 'Query', 
+	definition(t) {
+		t.list.field('ingredient', {
+			type: Ingredient,
+			args: { recipeIds: nonNull(list(intArg()))},
+			resolve: async(_parent, args, ctx) => {
+				const recipeObjIds = args.recipeIds.map(rid => ({recipeId: rid}));
+				const ingredients =  await ctx.prisma.ingredient.findMany({
+					where: { 
+						OR: recipeObjIds
+					}
+				});
+				return ingredients.map(i => {
+					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
+					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
+					return ({...i, quantity, quantity2});
+				});
+			}
+		});
+	},
+});
+
 export const UpdateIngredientHaveMutation = extendType({ 
 	type: 'Mutation', 
 	definition(t) { 
