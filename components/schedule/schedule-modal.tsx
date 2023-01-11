@@ -6,7 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Controller, useForm } from 'react-hook-form';
 import Select, { MultiValue } from 'react-select';
 
-import { Meal, Recipe } from '../types';
+import { Ingredient, Meal, Recipe } from '../types';
 
 
 type PropTypes = {
@@ -19,10 +19,11 @@ type PropTypes = {
 }
 
 const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
-	const [removedRecipes, setRemovedRecipes] = useState([]); 
-	// Add ingredients state 
+	const [selectedRecipes, setSelectedRecipes] = useState<Recipe[]>([]);
+	const [removedRecipes, setRemovedRecipes] = useState<Recipe[]>([]); 
+	const [ mealIngredients, setMealIngredients] = useState<Ingredient[]>([]); 
 
-	const { control, handleSubmit, setValue} = useForm({});
+	const { control, handleSubmit, setValue, register } = useForm({});
 
 	const nameRecipeMap = Object.assign({}, ...recipes.map(r => ({ [r.name]: r})));
 
@@ -33,6 +34,7 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 	}, [setValue, mealData]);
 
 	const handleSaveMeal = (data: {recipes: string[]}) => { // possible rename 
+		console.log('data', data);
 		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
 		onSave(recipeList, removedRecipes);
 		// save ingredients list 
@@ -41,18 +43,43 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 		onCloseModal();
 	};
 
+	// refactor a lot! 
 	const handleChange = (data: MultiValue<{ value: string; label: string; }>) => {
+		const prevSelected = selectedRecipes.map(r => r.name);
 		const changeNames = data.map(d => d.value); 
-		const mealDataNames = mealData?.recipes?.map(r => r.name);
-		const removedNames = mealDataNames.filter((recipeName:string) => !changeNames
-			.includes(recipeName)); 
-		const removed = removedNames.map(r => nameRecipeMap[r]);
-		setRemovedRecipes(removed);
 
-		// for recipes being added: 
-		//   add recipe.ingredients to ingredients state for every recipe being added
-		// for recipes being removed 
-		//  remove all ingredients belonging to the removed   
+		const newNames = changeNames.filter((recipeName:string) => !prevSelected
+			.includes(recipeName)); 
+
+		if (newNames.length > 0) {
+			const ingredients = newNames.map(r => nameRecipeMap[r].ingredients).flat(2);
+			getIngredientsFromSelectedRecipes(ingredients);
+		}
+
+		const removedNames = prevSelected.filter((recipeName:string) => !changeNames
+			.includes(recipeName)); 
+			
+		if (removedNames.length > 0) {
+			const removed = removedNames.map(r => nameRecipeMap[r]);
+			setRemovedRecipes(removed);
+
+			const removedIngredients = removed.map(r => r.ingredients).flat(2);
+			const updatedMealIngredients = mealIngredients.filter(meal => !removedIngredients
+				.some(remove =>  remove.id === meal.id));
+			setMealIngredients(updatedMealIngredients);
+		}
+
+		setSelectedRecipes(changeNames.map(n => nameRecipeMap[n]));
+	};
+
+	const getIngredientsFromSelectedRecipes = (ingredients: Ingredient[]) => {
+		let newIngredients = []; 
+		// use filter ? 
+		for (const ingredient of ingredients) {
+			if (!newIngredients.some(ni => ni.description === ingredient.description) && !ingredient.isGroupHeader )
+				newIngredients = [...newIngredients, ingredient];
+		}
+		setMealIngredients([...mealIngredients, ...newIngredients]);
 	};
 
 	const recipeOptions = Object.keys(nameRecipeMap).map((name) => ({value: name, label: name}));
@@ -87,13 +114,22 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 						/>)
 					}
 				/>
-				{/* create section for the ingredients of the recipes that were selected  
-					populate using ingredients list from state 
-					/Form.check type = 'checkbox' with register from form-hook 
-					
-				*/}
+				<div className="form-spacing">
+					{
+						mealIngredients?.map((ingredient, i) => {
+							return <Form.Check key={i} name={ingredient.description} 
+								{...register(`${ingredient.id}`)}
+								type='checkbox' label={ingredient.description} />;
+						})
+					}
+				</div>
 				<ButtonGroup className="float-right modal-button-group">
-					<Button variant="secondary" onClick={() => onCloseModal()}>Cancel</Button>
+					<Button variant="secondary" 
+						onClick={() => { 
+							onCloseModal();
+							setMealIngredients([]);
+						}}>
+								Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button> 
 				</ButtonGroup>
 			</Form>

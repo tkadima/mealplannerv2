@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator nexusPrisma {
+   provider = "nexus-prisma"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -16,8 +20,7 @@ model ingredient {
   isGroupHeader Boolean  @default(false)
   recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
-  food          food?    @relation(fields: [foodId], references: [id])
-  foodId        Int?
+  have          Boolean @default(false)
 }
 
 model recipe {
@@ -38,15 +41,6 @@ model meal {
   mealType MealType
   day      DayOfWeek
   recipes  recipe[]
-}
-
-model food {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
-  amount      Decimal      @default(0) @db.Decimal(5, 2)
-  unit        String?
-  ingredients ingredient[]
-  have        Boolean      @default(false)
 }
 
 enum MealType {

@@ -1,4 +1,5 @@
-import { objectType } from 'nexus'; 
+import { extendType, intArg, list, nonNull, objectType } from 'nexus'; 
+import prisma from '../../lib/prisma';
 
 export const Ingredient =  objectType({
 	name: 'Ingredient',
@@ -18,5 +19,30 @@ export const Ingredient =  objectType({
 			}
 		}),
 		t.nonNull.boolean('isGroupHeader');
+		t.nonNull.boolean('have');
+	}
+});
+
+export const UpdateIngredientHaveMutation = extendType({ 
+	type: 'Mutation', 
+	definition(t) { 
+		t.nonNull.field('updateIngredientsHave', {
+			type: 'Boolean', 
+			args: {
+				ingredientIds: nonNull(list(intArg()))
+			},
+			async resolve(_parent, {ingredientIds}) { // fix to use ctx 
+				const ingredientObjIds = ingredientIds.map((i: number) => ({id: i }));
+				await prisma.ingredient.updateMany({
+					where:  { 
+						OR: ingredientObjIds
+					},
+					data: {
+						have: true
+					}
+				});
+				return true;
+			}
+		});
 	}
 });

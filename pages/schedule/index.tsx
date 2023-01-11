@@ -4,14 +4,18 @@ import { Button } from 'react-bootstrap';
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
-import { DaysOfWeek, Meal, MealTypes, Recipe } from '../../components/types';
+import { DaysOfWeek, Ingredient, Meal, MealTypes, Recipe } from '../../components/types';
 import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
 import { useMutation } from '@apollo/client';
 import MealTable from '../../components/schedule/meal-table';
+import { UPDATE_INGREDIENT_HAVE } from '../../graphql/mutations/ingredient-mutations';
+import { ingredients } from '../../prisma/data';
+import ShoppingList from '../plans/shopping';
 
 type PropTypes = {
 	recipes: Recipe[],
-	meals: Meal[]
+	meals: Meal[],
+	ingredients: Ingredient[]
 }
 
 const Schedule = ({recipes, meals}: PropTypes) => {
@@ -22,7 +26,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const [showModal, setShowModal] = useState(false); 
 	const [selectedMeal, setSelectedMeal] = useState(null); 
 	const [scheduleData, setScheduleData] = useState({});
-	// add shopping list 
+	const [shoppingList, setShoppingList]  = useState([]);
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
@@ -41,9 +45,11 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		}
 	});
 
-	// Food mutation that either creates or updates food based on ingredients 
-	// on error 
-	// on complete: add foods where have = false to the shopping list 
+	const [updateIngredientHave] = useMutation(UPDATE_INGREDIENT_HAVE, {
+		onError(err) {
+			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
+		},
+	});
 
 	const [clearMealRecipes] = useMutation(CLEAR_MEAL_RECIPES, {
 		onError(err) {
@@ -76,10 +82,12 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		const newRecipeIds = newRecipes?.map(r => r.id);
 		const removeRecipeIds = deletedRecipes?.map(r => r.id);
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
+		updateIngredientHave({variables: { ingredientIds: shoppingList.map(i => i.id)}});
 	};
 
-	// have save ingredients 
-	// call mutation   
+	const handleCheckIngredient = (ingredients: Ingredient[]) => {
+		console.log('checked', ingredients); 
+	};
 
 	const initializeScheduleData  = () => {
 		const scheduleData = {}; 
@@ -98,8 +106,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	};
 
 	useEffect(() => {
-		initializeScheduleData();
-		// populate shopping list 
+		initializeScheduleData();		
 	}, []);
 
 	return (
@@ -115,7 +122,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				// onSaveIngredients 
 			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
-			{/* Add shopping list component side by side with table if possible */}
+			<ShoppingList ingredientList={shoppingList}/> 
 		</Layout>
 	);
 };
@@ -124,13 +131,20 @@ export default Schedule;
 
 
 export const getServerSideProps: GetServerSideProps = async () => {
-	const recipes = await prisma.recipe.findMany(); 
+	const unparsedRecipes = await prisma.recipe.findMany({include: { ingredients: true }});
+	const recipes = unparsedRecipes.map(r => ({
+		...r, 
+		ingredients: r.ingredients.map(i => ({
+			...i,
+			quantity: i.quantity?.toNumber() ?? null, 
+			quantity2: i.quantity?.toNumber() ?? null
+		}))
+	}));
 	const meals = await prisma.meal.findMany({include: { recipes: true }});
 	return {
 		props: {
-			recipes, 
-			meals
-			// shopping list 
+			recipes,
+			meals,
 		}
 	};
 };

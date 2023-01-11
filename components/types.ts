@@ -1,12 +1,14 @@
 import { DayOfWeek, MealType } from '@prisma/client';
 
 export type Ingredient = { 
+	id: number,
 	description: string
 	quantity: number
 	quantity2: number
 	unitOfMeasure: string
 	recipeId: number
 	isGroupHeader: boolean
+	have: boolean
 }
 
 export type Recipe = {
