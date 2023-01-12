@@ -15,11 +15,11 @@ type PropTypes = {
     onCloseModal: () => void,
     mealData?: Meal,
 	recipes: Recipe[],
-	onSave: (selected: Recipe[], unSelected: Recipe[]) => void;// rename 
-	// Add onSaveIngredients ingredients[] -> void 
+	onSaveMeal: (selected: Recipe[], unSelected: Recipe[]) => void;
+	onSaveIngredients: (ingredientIds: number[]) => void; 
 }
 
-const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTypes) => {
+const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSaveMeal, onSaveIngredients} : PropTypes) => {
 	const [selectedRecipes, setSelectedRecipes] = useState<Recipe[]>([]);
 	const [removedRecipes, setRemovedRecipes] = useState<Recipe[]>([]); 
 	const [ mealIngredients, setMealIngredients] = useState<Ingredient[]>([]); 
@@ -37,35 +37,59 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 		if(mealData?.recipes)  {
 			setSelectedRecipes(mealData.recipes);
 			setValue('recipes', mealData.recipes.map(r => r.name));
-			if(data?.ingredient) setMealIngredients(data.ingredient);
+			if(data?.ingredient) {
+				const ingredients = data.ingredient.filter(ingredient => {
+					return !mealIngredients.some(mi => mi.description === ingredient.description) && 
+					!ingredient.isGroupHeader;
+				});
+				setMealIngredients(ingredients);
+			}
 		}
 	}, [setValue, mealData, data]);
 
-	const handleSaveMeal = (data: {recipes: string[]}) => { // possible rename 
+	const handleSaveMeal = (data: {recipes: string[]}) => {
 		const recipeList = data.recipes.map(r => nameRecipeMap[r]);
-		onSave(recipeList, removedRecipes);
-		// save ingredients list 
-		// reset ingredients list 
+		onSaveMeal(recipeList, removedRecipes);
+		const ids = Object.keys(data).filter(key => !isNaN(parseInt(key)) && data[key]).map(key => parseInt(key)); 
+		onSaveIngredients(ids);
+
 		setRemovedRecipes([]);
-		onCloseModal();
+		handleClose();
 	};
 
-	// refactor a lot! 
 	const handleChange = (data: MultiValue<{ value: string; label: string; }>) => {
 		const prevSelected = selectedRecipes.map(r => r.name);
-		const changeNames = data.map(d => d.value); 
+		const changeNames = data.map(d => d.value);
+
+		setSelectedRecipes(changeNames.map(n => nameRecipeMap[n]));
+
+		setSelectedRecipeIngredients(prevSelected, changeNames);
+		setRemovedRecipesIngredients(prevSelected, changeNames); 
+	};
+
+
+	const setSelectedRecipeIngredients = (prevSelected: string[], changeNames: string[]) => {
 
 		const newNames = changeNames.filter((recipeName:string) => !prevSelected
 			.includes(recipeName)); 
-
+		
 		if (newNames.length > 0) {
 			const ingredients = newNames.map(r => nameRecipeMap[r].ingredients).flat(2);
-			getIngredientsFromSelectedRecipes(ingredients);
-		}
+			let newIngredients = []; 
 
+			for (const ingredient of ingredients) {
+				if (!newIngredients.some(ni => ni.description === ingredient.description) && !ingredient.isGroupHeader )
+					newIngredients = [...newIngredients, ingredient];
+			}
+
+			setMealIngredients([...mealIngredients, ...newIngredients]);
+		}
+	};
+
+	const setRemovedRecipesIngredients = (prevSelected: string[], changeNames: string[]) => {
 		const removedNames = prevSelected.filter((recipeName:string) => !changeNames
 			.includes(recipeName)); 
-			
+		
 		if (removedNames.length > 0) {
 			const removed = removedNames.map(r => nameRecipeMap[r]);
 			setRemovedRecipes(removed);
@@ -75,22 +99,17 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 				.some(remove =>  remove.id === meal.id));
 			setMealIngredients(updatedMealIngredients);
 		}
-
-		setSelectedRecipes(changeNames.map(n => nameRecipeMap[n]));
 	};
 
-	const getIngredientsFromSelectedRecipes = (ingredients: Ingredient[]) => {
-		let newIngredients = []; 
-		// use filter ? 
-		for (const ingredient of ingredients) {
-			if (!newIngredients.some(ni => ni.description === ingredient.description) && !ingredient.isGroupHeader )
-				newIngredients = [...newIngredients, ingredient];
-		}
-		setMealIngredients([...mealIngredients, ...newIngredients]);
+	const handleClose = () => {
+		onCloseModal();
+		setMealIngredients([]);
 	};
+
 	const recipeOptions = Object.keys(nameRecipeMap).map((name) => ({value: name, label: name}));
 
-	return (<Modal show={show} onHide={() => onCloseModal()}>
+
+	return (<Modal show={show} onHide={handleClose}>
 		<Modal.Header closeButton>
 			{
 				mealData && 
@@ -126,20 +145,21 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSave} : PropTy
 				/>
 				<div className="form-spacing">
 					{
-						mealIngredients?.map((ingredient, i) => {
-							return <Form.Check key={i} name={ingredient.description} 
-								{...register(`${ingredient.id}`)}
-								type='checkbox' label={ingredient.description} />;
+						mealIngredients?.map((ingredient) => {
+							return <Form.Check 
+								key={ingredient.id} 
+								name={ingredient.description} 
+								{...register(ingredient.id.toString())} 
+								defaultChecked={ingredient.have}
+								type='checkbox' 
+								label={ingredient.description} 
+							/>;
 						})
 					}
 				</div>
 				<ButtonGroup className="float-right modal-button-group">
 					<Button variant="secondary" 
-						onClick={() => { 
-							onCloseModal();
-							setMealIngredients([]);
-						}}>
-								Cancel</Button>
+						onClick={handleClose}>Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button> 
 				</ButtonGroup>
 			</Form>

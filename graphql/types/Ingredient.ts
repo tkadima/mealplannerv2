@@ -29,6 +29,7 @@ export const IngredientQuery = extendType({
 		t.list.field('ingredient', {
 			type: Ingredient,
 			args: { recipeIds: nonNull(list(intArg()))},
+			// move into resolver 
 			resolve: async(_parent, args, ctx) => {
 				const recipeObjIds = args.recipeIds.map(rid => ({recipeId: rid}));
 				const ingredients =  await ctx.prisma.ingredient.findMany({
@@ -37,6 +38,7 @@ export const IngredientQuery = extendType({
 					}
 				});
 				return ingredients.map(i => {
+					// do this just once 
 					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
 					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
 					return ({...i, quantity, quantity2});

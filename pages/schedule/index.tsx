@@ -9,7 +9,6 @@ import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-muta
 import { useMutation } from '@apollo/client';
 import MealTable from '../../components/schedule/meal-table';
 import { UPDATE_INGREDIENT_HAVE } from '../../graphql/mutations/ingredient-mutations';
-import { ingredients } from '../../prisma/data';
 import ShoppingList from '../plans/shopping';
 
 type PropTypes = {
@@ -23,10 +22,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const dayKeys = Object.keys(DaysOfWeek);
 	const mealKeys = Object.keys(MealTypes); 
 
-	const [showModal, setShowModal] = useState(false); 
-	const [selectedMeal, setSelectedMeal] = useState(null); 
+	const [showModal, setShowModal] = useState<boolean>(false); 
+	const [selectedMeal, setSelectedMeal] = useState<Meal>(null); 
 	const [scheduleData, setScheduleData] = useState({});
-	const [shoppingList, setShoppingList]  = useState([]);
+	const [shoppingList]  = useState([]);
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
@@ -56,8 +55,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
-			// move some of this out into its own method and call it
-			const days = Object.keys(scheduleData);  
+			const days = Object.keys(scheduleData);  // needed? 
 			let newData = {}; 
 			days.forEach(day => {
 				const mealsForDay = scheduleData[day];
@@ -72,6 +70,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			setScheduleData(newData); 
 		}
 	});
+	
 
 	const handleSelectCell = (mealData: Meal) => {
 		setSelectedMeal(mealData); 
@@ -82,11 +81,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		const newRecipeIds = newRecipes?.map(r => r.id);
 		const removeRecipeIds = deletedRecipes?.map(r => r.id);
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
-		updateIngredientHave({variables: { ingredientIds: shoppingList.map(i => i.id)}});
 	};
 
-	const handleCheckIngredient = (ingredients: Ingredient[]) => {
-		console.log('checked', ingredients); 
+	const handleSaveIngredients = (checkedIngredientIds: number[] ) => {
+		updateIngredientHave({ variables: {ingredientIds: checkedIngredientIds}});
 	};
 
 	const initializeScheduleData  = () => {
@@ -95,12 +93,13 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			const mealsForDay = meals.filter(meal => meal.day === DaysOfWeek[day]); 
 			scheduleData[day] = {};
 			mealKeys.forEach(meal => {
-				const mealForDayandType = mealsForDay.filter(m => m.mealType === MealTypes[meal])[0]; 
+				const mealForDayandType = mealsForDay.filter(m => MealTypes[meal] === m.mealType)[0]; 
 				scheduleData[day][meal] = mealForDayandType; 
 			});
 		});
 		setScheduleData(scheduleData);
 	};
+
 	const handleCloseModal = () => {
 		setShowModal(false);
 	};
@@ -118,8 +117,8 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				onCloseModal={handleCloseModal} 
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
-				onSave={handleSaveMeal}
-				// onSaveIngredients 
+				onSaveMeal={handleSaveMeal}
+				onSaveIngredients={handleSaveIngredients}
 			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 			<ShoppingList ingredientList={shoppingList}/> 

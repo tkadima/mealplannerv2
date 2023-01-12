@@ -73,23 +73,38 @@ export const ClearMealRecipes = extendType({
 			type: Meal,
 			async resolve(_parent, _, ctx) {
 				const meals = await ctx.prisma.meal.findMany({ include: { recipes: true }}); 
-				for (const meal of meals){
-					const recipes = meal.recipes; 
-					const recipeIds = recipes.map(recipe => ({id: recipe.id}));
-					if (recipeIds.length > 0) {
-						return  await ctx.prisma.meal.update({
-							where: {id : meal.id}, 
-							data: {
-								recipes: {
-									disconnect: recipeIds
-								}
+				const mealsWithRecipes = meals.filter(m => m.recipes.length > 0); 
+				console.log('meals with recipes', mealsWithRecipes.length);
+				const x = mealsWithRecipes.map(async (meal) => {
+					const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
+					console.log('recipeIds', recipeIds);
+					return await ctx.prisma.meal.update({
+						where: {id: meal.id},
+						data : {
+							recipes: {
+								disconnect: recipeIds
 							}
-						});
-					}
-				
-				
-				}
+						}
+					});
+				});
+
+				console.log('x', x);
+				return x; 
 			}
 		});
 	}
 });
+
+// for (const meal of mealsWithRecipes) {
+// 	console.log('meal', meal);
+// 	const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
+// 	//console.log('ids', recipeIds);
+// 	//console.log('rids', recipeIds);
+// 	return  await ctx.prisma.meal.update({
+// 		where: {id : meal.id}, 
+// 		data: {
+// 			recipes: {
+// 				disconnect: recipeIds
+// 			}
+// 		}
+// 	})
