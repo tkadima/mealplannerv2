@@ -6,7 +6,7 @@ import Layout from '../components/layout';
 const Home = () => {
 	return (
 		<Layout>
-			<h1></h1>
+			<h1>Welcome to Meal Planner</h1>
 		</Layout>
     
 	);
