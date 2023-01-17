@@ -5,7 +5,7 @@ import Recipes from '../index';
 import { MockedProvider } from "@apollo/client/testing";
 
 
-describe('Home page is displayed', () => {
+describe('Recipe index page', () => {
    
 	it('Should display recipe index page', () => {
 		render(<MockedProvider>

@@ -82,7 +82,7 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 						{...register('instructions')}
 					/>
 
-					<InputGroup>
+					<InputGroup className="form-spacing">
 						<Form.Control
 							className="number-input-spacing"
 							as="input"
@@ -107,8 +107,18 @@ const RecipeForm = ({ onSubmitRecipe, currentRecipe }: PropTypes) => {
 					</InputGroup>
 				</div>
 				<div className="col">
-					<Form.Check type="switch" label="Requires an oven?" {...register('requiresOven')} />
-					<Form.Check type="switch" label="Requires the stovetop?" {...register('requiresStovetop')} />
+					<Form.Check 
+						type="switch" 
+						name="requiresOven" 
+						label="Requires the oven?" 
+						{...register('requiresOven')} 
+					/>
+					<Form.Check 
+						type="switch" 
+						name="requiresStovetop" 
+						label="Requires the stovetop?" 
+						{...register('requiresStovetop')} 
+					/>
 				</div>
 			</Form.Group>
 			<div className="col text-center">
