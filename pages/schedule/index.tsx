@@ -118,7 +118,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
 				onSaveMeal={handleSaveMeal}
-				onSaveIngredients={handleSaveIngredients}
 			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 			<ShoppingList ingredientList={shoppingList}/> 
