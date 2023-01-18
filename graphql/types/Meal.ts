@@ -74,7 +74,6 @@ export const ClearMealRecipes = extendType({
 			async resolve(_parent, _, ctx) {
 				const meals = await ctx.prisma.meal.findMany({ include: { recipes: true }}); 
 				const mealsWithRecipes = meals.filter(m => m.recipes.length > 0); 
-				console.log('meals with recipes', mealsWithRecipes.length);
 				const x = mealsWithRecipes.map(async (meal) => {
 					const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
 					console.log('recipeIds', recipeIds);
@@ -88,7 +87,6 @@ export const ClearMealRecipes = extendType({
 					});
 				});
 
-				console.log('x', x);
 				return x; 
 			}
 		});

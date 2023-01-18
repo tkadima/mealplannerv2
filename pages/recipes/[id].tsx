@@ -18,7 +18,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 
 	const [updateRecipe] = useMutation(EDIT_RECIPE, {
 		onError(err){
-			console.error('error deleting recipe', JSON.stringify(err, null, 2));
+			console.error('error updating recipe', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
 			router.push('/recipes');

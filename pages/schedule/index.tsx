@@ -25,7 +25,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const [showModal, setShowModal] = useState<boolean>(false); 
 	const [selectedMeal, setSelectedMeal] = useState<Meal>(null); 
 	const [scheduleData, setScheduleData] = useState({});
-	const [shoppingList]  = useState([]);
+	const [shoppingList, setShoppingList]  = useState([]);
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
@@ -34,6 +34,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		onCompleted(data){
 			const day = dayKeys.find(d => DaysOfWeek[d] === selectedMeal.day);
 			const meal = mealKeys.find(m =>  MealTypes[m] === selectedMeal.mealType);
+
 			const updatedSelectedMeal = {...selectedMeal, recipes: data.updateMealRecipes.recipes};
 			const updatedData = {...scheduleData, 
 				[day]: {
@@ -41,18 +42,28 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 					[meal]: updatedSelectedMeal
 				}};
 			setScheduleData(updatedData);
+
+			const ingredients = data.updateMealRecipes.recipes
+				.map((recipe: prisma.recipe )=> recipe.ingredients).flat(2);
+
+			let newIngredients: prisma.ingredient = []; 
+			ingredients.forEach((ingredient: prisma.ingredient) => {
+				if (!shoppingList.some(i => i.id === ingredient.id)) 
+					newIngredients.push(ingredient);
+			});
+			setShoppingList([...shoppingList, ...newIngredients] )
 		}
 	});
 
 	const [updateIngredientHave] = useMutation(UPDATE_INGREDIENT_HAVE, {
 		onError(err) {
-			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
+			console.error('error updating ingredient', JSON.stringify(err, null, 2));
 		},
 	});
 
 	const [clearMealRecipes] = useMutation(CLEAR_MEAL_RECIPES, {
 		onError(err) {
-			console.error('error adding recipe to meal', JSON.stringify(err, null, 2));
+			console.error('error clearing recipes', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
 			const days = Object.keys(scheduleData);  // needed? 
@@ -70,7 +81,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			setScheduleData(newData); 
 		}
 	});
-	
 
 	const handleSelectCell = (mealData: Meal) => {
 		setSelectedMeal(mealData); 
@@ -81,10 +91,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		const newRecipeIds = newRecipes?.map(r => r.id);
 		const removeRecipeIds = deletedRecipes?.map(r => r.id);
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
-	};
-
-	const handleSaveIngredients = (checkedIngredientIds: number[] ) => {
-		updateIngredientHave({ variables: {ingredientIds: checkedIngredientIds}});
+		 // update shopping list 
 	};
 
 	const initializeScheduleData  = () => {
@@ -130,9 +137,9 @@ export default Schedule;
 
 export const getServerSideProps: GetServerSideProps = async () => {
 	const unparsedRecipes = await prisma.recipe.findMany({include: { ingredients: true }});
-	const recipes = unparsedRecipes.map(r => ({
+	const recipes = unparsedRecipes.map((r: prisma.recipe) => ({
 		...r, 
-		ingredients: r.ingredients.map(i => ({
+		ingredients: r.ingredients.map((i: prisma.ingredient) => ({
 			...i,
 			quantity: i.quantity?.toNumber() ?? null, 
 			quantity2: i.quantity?.toNumber() ?? null
