@@ -59,6 +59,7 @@ describe('New recipe page', () => {
         const requiresOvenInput = screen.getAllByRole('checkbox')[0];
         const requiresStovetopInput = screen.getAllByRole('checkbox')[1];
 
+        fireEvent.change(nameInput, { target: { value: null }});  
         fireEvent.change(ingredientsInput, { target: { value: '1 cup milk\n 0.5 cups oats\n 2 tbsp syrup' }});  
         fireEvent.change(instructionsInput, { target: { value: 'Follow instructions on package' }});  
         fireEvent.change(prepTimeInput, { target: { value: '5' }});  
@@ -71,7 +72,7 @@ describe('New recipe page', () => {
 
         fireEvent.click(submitButton);     
 
-        // TODO: expect(await screen.findByText('Recipe title cannot be empty')).toBeInTheDocument();
+       // expect(await screen.findByText('Recipe title cannot be empty')).toBeInTheDocument();
     })
 })
 

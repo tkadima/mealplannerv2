@@ -15,11 +15,13 @@ const NewRecipe = () => {
 			console.error('error creating recipe', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
+			// get new id from data 
+			// if we need to save ingredients, route to /ingredients/id
 			router.push('/recipes');
 		}
 	});
 	
-	const handleSubmitRecipe = (recipe: Recipe) => {	
+	const handleSubmitRecipe = (recipe: Recipe) => {
 		createRecipe({ variables: recipe});
 	};
 
