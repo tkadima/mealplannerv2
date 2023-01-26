@@ -7,22 +7,29 @@ import Form from 'react-bootstrap/Form';
 import { Ingredient } from '../types';
 
 type PropTypes = {
-    ingredient: Ingredient
+    ingredient: Ingredient,
+    foodList: string[]
 }
-const SaveIngredientForm = ({ ingredient }: PropTypes) => {
-    const sampleFoodNames = ['apple', 'rice', 'banana', 'milk', 'syrup'];
+const SaveIngredientForm = ({ ingredient, foodList }: PropTypes) => { 
 
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
 
-    return (<Card style={{ width: '70%', padding:'20px', margin:'30px' }}>
+    //  onSubmitIngredientForm: 
+    // adding: save new food with ingredient id 
+    // save existing: add ingredient to food.ingredients 
+
+    return (<Card className='ingredient-card'>
                 <Card.Title>{ingredient.description}</Card.Title>
                 <Card.Body>
-                    {!addingToPantry && !savingExisting && <ButtonGroup>
-                        <Button onClick={() => setAddingToPantry(true)}variant="warning">Add To Pantry</Button>
-                        <Button onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
-                    </ButtonGroup>}
-                    <Form style={{width: '40%'}}>
+                    {
+                        !addingToPantry && !savingExisting && <ButtonGroup>
+                            <Button onClick={() => setAddingToPantry(true)}variant="warning">Add To Pantry</Button>
+                            <Button onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
+                        </ButtonGroup>
+                    }
+                    {/* onSubmit */}
+                    <Form className='food-form'>
                         { 
                             addingToPantry && <FormGroup>
                                 <Form.Label for="name">New Food Name (leave out adjectives from the recipe e.g. "diced", "creamy") </Form.Label>
@@ -39,7 +46,8 @@ const SaveIngredientForm = ({ ingredient }: PropTypes) => {
                         {
                             savingExisting && <Form.Control as='select'>
                                 <option>Select food from pantry</option>
-                                { sampleFoodNames.map(food => {
+                                { foodList.map(food => {
+                                    console.log('food', food)
                                     return <option value={food}>{food}</option>
                                 })}
                             </Form.Control>
@@ -62,3 +70,4 @@ const SaveIngredientForm = ({ ingredient }: PropTypes) => {
 }
 
 export default SaveIngredientForm;
+
