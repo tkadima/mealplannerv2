@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 type PropTypes = {
     ingredient: Ingredient,
     foodList: string[],
-    onSubmit: (food: Food) => void
+    onSubmit: (food: Food, ingredientId: number) => void
  }
 const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => { 
 
@@ -25,7 +25,7 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
         if (addingToPantry) {
             const food = {...foodObject, quantity: parseFloat(foodObject['quantity']),
              calories: parseInt(foodObject['calories']) } as Food 
-            onSubmit(food);
+            onSubmit(food, ingredient.id);
         }
         else if (savingExisting) {
             // update existing food to include ingredient (connect)

@@ -19,9 +19,9 @@ const HandleIngredients = ({ ingredients, foodNames }: PropTypes) => {
 		}
     })
 
-    const handleSubmitFood = (food: Food) => {
+    const handleSubmitFood = (food: Food, ingredientId: number) => {
         console.log('submitting!', food.name);
-        addFood({ variables: food });
+        addFood({ variables: { food, ingredientId}});
     }
     return (
         <Layout>

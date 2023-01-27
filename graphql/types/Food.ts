@@ -1,6 +1,5 @@
-import { arg, extendType, floatArg, intArg, list, nonNull, nullable, objectType, stringArg } from 'nexus';
+import { extendType, inputObjectType, intArg, nonNull, objectType } from 'nexus';
 import prisma from '../../lib/prisma';
-import { ingredientInput } from './Recipe';
 
 
 export const Food = objectType({
@@ -27,24 +26,42 @@ export const Food = objectType({
         })
     }
 })
+
+export const createFoodInput = inputObjectType({
+    name: 'createFoodInput',
+    definition(t) {
+        t.nonNull.string('name'),
+        t.nonNull.float('quantity')
+        t.nonNull.string('unitOfMeasure')
+        t.int('calories')
+    }
+});
+
 export const CreateFoodMutation = extendType({
     type: 'Mutation',
     definition(t) {
         t.nonNull.field('createFood', {
             type: Food, 
             args: { 
-                name: nonNull(stringArg()),
-                quantity: nonNull(floatArg()),
-                unitOfMeasure: nonNull(stringArg()),
-                calories: nullable(intArg()),
+                ingredientId: nonNull(intArg()),
+				newData: nonNull(createFoodInput.asArg()),
             }, 
             async resolve(_parent, args) {
-                console.log('args');
-                return await prisma.food.create({
-					data: {...args, 
-                        quantity: Number.parseFloat(args.quantity.toString())
-					}
+                const newFood = await prisma.food.create({
+					data: {...args.newData, 
+                        quantity: Number.parseFloat(args.newData.quantity.toString()), 
+					}, 
+                    
 				});
+
+                await prisma.ingredient.update({
+                    where: { id: args.ingredientId },
+                    data: {
+                        foodId: newFood.id
+                    }
+                })
+
+                return newFood;
             }
         })
     }
