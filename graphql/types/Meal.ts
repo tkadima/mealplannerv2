@@ -1,4 +1,5 @@
 import { enumType, extendType, intArg, list, nonNull, objectType } from 'nexus';
+import prisma from '../../lib/prisma';
 
 export const Meal = objectType({
 	name: 'Meal',
@@ -72,11 +73,10 @@ export const ClearMealRecipes = extendType({
 		t.field('clearMealRecipes', {
 			type: Meal,
 			async resolve(_parent, _, ctx) {
-				const meals = await ctx.prisma.meal.findMany({ include: { recipes: true }}); 
+				const meals = await prisma.meal.findMany({ include: { recipes: true }}); 
 				const mealsWithRecipes = meals.filter(m => m.recipes.length > 0); 
 				const x = mealsWithRecipes.map(async (meal) => {
 					const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
-					console.log('recipeIds', recipeIds);
 					return await ctx.prisma.meal.update({
 						where: {id: meal.id},
 						data : {

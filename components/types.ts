@@ -1,5 +1,14 @@
 import { DayOfWeek, MealType } from '@prisma/client';
 
+
+export type Food = {
+	id: number, 
+	name: string, 
+	quantity: number, 
+	unitOfMeasure: string,
+	calories: number,
+	ingredients: Ingredient[]
+}
 export type Ingredient = { 
 	id: number,
 	description: string

@@ -1,9 +1,11 @@
+import { useMutation } from '@apollo/client';
 import { GetStaticPaths } from 'next/types';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Layout from '../../../components/layout';
 import SaveIngredientForm from '../../../components/recipe/save-ingredient-form';
-import { Ingredient } from '../../../components/types';
+import { Food, Ingredient } from '../../../components/types';
+import { ADD_FOOD } from '../../../graphql/mutations/food-mutation';
 import prisma from '../../../lib/prisma';
 
 type PropTypes = {
@@ -11,13 +13,27 @@ type PropTypes = {
     foodNames: string[]
 }
 const HandleIngredients = ({ ingredients, foodNames }: PropTypes) => { 
+    const [addFood] = useMutation(ADD_FOOD, {
+        onError(err){
+			console.error('error creating food', JSON.stringify(err, null, 2));
+		}
+    })
 
+    const handleSubmitFood = (food: Food) => {
+        console.log('submitting!', food.name);
+        addFood({ variables: food });
+    }
     return (
         <Layout>
             <h3>Save the Following Ingredients?</h3>
             { 
                 ingredients.map((ingredient: Ingredient) => {
-                    return (<SaveIngredientForm ingredient={ingredient} foodList={foodNames}/>)
+                    return (<SaveIngredientForm 
+                        key={ingredient.id} 
+                        ingredient={ingredient} 
+                        foodList={foodNames} 
+                        onSubmit={handleSubmitFood}
+                    />)
                 })
             }
             <Button>Finish</Button>
@@ -46,7 +62,6 @@ export const getStaticProps = async ({ params }) => {
 
     const foods = await prisma.food.findMany({});
     const foodNames = foods.map((f: prisma.food) => f.name); 
-    console.log('food names', foodNames);
 
     return {
         props: {

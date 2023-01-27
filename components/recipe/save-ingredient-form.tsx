@@ -4,20 +4,34 @@ import Button from 'react-bootstrap/Button';
 import  ButtonGroup  from 'react-bootstrap/ButtonGroup';
 import Card  from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { Ingredient } from '../types';
+import { Food, Ingredient } from '../types';
+import { useForm } from 'react-hook-form';
 
 type PropTypes = {
     ingredient: Ingredient,
-    foodList: string[]
-}
-const SaveIngredientForm = ({ ingredient, foodList }: PropTypes) => { 
+    foodList: string[],
+    onSubmit: (food: Food) => void
+ }
+const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => { 
 
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
 
-    //  onSubmitIngredientForm: 
-    // adding: save new food with ingredient id 
-    // save existing: add ingredient to food.ingredients 
+    const { register, handleSubmit } = useForm({
+
+    });
+
+     const handleSubmitFoodForm = (foodObject: object) => {
+        if (addingToPantry) {
+            const food = {...foodObject, quantity: parseFloat(foodObject['quantity']),
+             calories: parseInt(foodObject['calories']) } as Food 
+            onSubmit(food);
+        }
+        else if (savingExisting) {
+            // update existing food to include ingredient (connect)
+            console.log('Submit!')
+        }
+     }
 
     return (<Card className='ingredient-card'>
                 <Card.Title>{ingredient.description}</Card.Title>
@@ -29,17 +43,28 @@ const SaveIngredientForm = ({ ingredient, foodList }: PropTypes) => {
                         </ButtonGroup>
                     }
                     {/* onSubmit */}
-                    <Form className='food-form'>
+                    <Form className='food-form' onSubmit={handleSubmit(handleSubmitFoodForm)}>
                         { 
                             addingToPantry && <FormGroup>
-                                <Form.Label for="name">New Food Name (leave out adjectives from the recipe e.g. "diced", "creamy") </Form.Label>
-                                <Form.Control type="text" name="name" placeholder="Food Name" />
-                                <Form.Label for="quantity">Quantity</Form.Label>
-                                <Form.Control type="number" name="quantity" placeholder="Add quantity"/>
-                                <Form.Label for="unit">Unit</Form.Label>
-                                <Form.Control type="text" name="unit" placeholder="Add unit"/>
-                                <Form.Label for="calories">Calories</Form.Label>
-                                <Form.Control type="number" name="calories" placeholder="Add calorie count"/>
+                                <Form.Label htmlFor="name">New Food Name (leave out adjectives from the recipe e.g. "diced", "creamy") </Form.Label>
+                                <Form.Control 
+                                    type="text" 
+                                    name="name" 
+                                    placeholder="Food Name" 
+                                    {...register('name', { 
+                                        required: {
+                                            value: true, 
+                                            message: 'Food name cannot be empty'
+                                        } 
+                                    })}
+                                />
+                                <Form.Label htmlFor="quantity">Quantity</Form.Label>
+                                <Form.Control type="number" name="quantity" placeholder="Add quantity" {...register('quantity')}/>
+                                {/* Consider using select instead */}
+                                <Form.Label htmlFor="unit">Unit</Form.Label>
+                                <Form.Control type="text" name="unit" placeholder="Add unit" {...register('unitOfMeasure')}/>
+                                <Form.Label htmlFor="calories">Calories</Form.Label>
+                                <Form.Control type="number" name="calories" placeholder="Add calorie count" {...register('calories')}/>
                             </FormGroup>
                         }
 
@@ -47,12 +72,11 @@ const SaveIngredientForm = ({ ingredient, foodList }: PropTypes) => {
                             savingExisting && <Form.Control as='select'>
                                 <option>Select food from pantry</option>
                                 { foodList.map(food => {
-                                    console.log('food', food)
-                                    return <option value={food}>{food}</option>
+                                    return <option key={food} value={food}>{food}</option>
                                 })}
                             </Form.Control>
                         }
-                        <Form.Check checked={ingredient.have} label="Save to my shopping list"/>
+                        <Form.Check defaultChecked={ingredient.have} label="Save to my shopping list"/>
                         {
                         (addingToPantry || savingExisting) && 
                             <ButtonGroup>

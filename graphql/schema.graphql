@@ -12,6 +12,15 @@ enum DayEnum {
   WEDNESDAY
 }
 
+type Food {
+  calories: Int
+  id: Int!
+  ingredients: [Ingredient]
+  name: String!
+  quantity: Float!
+  unitOfMeasure: String!
+}
+
 type Ingredient {
   description: String!
   have: Boolean!
@@ -19,7 +28,6 @@ type Ingredient {
   isGroupHeader: Boolean!
   quantity: Float
   quantity2: Float
-  recipe: Recipe!
   recipeId: Int!
   unitOfMeasure: String
 }
@@ -40,6 +48,7 @@ enum MealTypeEnum {
 
 type Mutation {
   clearMealRecipes: Meal
+  createFood(calories: Int, name: String!, quantity: Float!, unitOfMeasure: String!): Food!
   createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, requiresOven: Boolean!, requiresStovetop: Boolean!, serves: Float): Recipe!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
   updateIngredientsHave(ingredientIds: [Int]!): Boolean!
@@ -71,6 +80,7 @@ input ingredientInput {
   isGroupHeader: Boolean
   quantity: Float
   quantity2: Float
+  recipe: recipeInput!
   recipeId: Int
   unitOfMeasure: String
 }
