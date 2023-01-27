@@ -17,9 +17,7 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
 
-    const { register, handleSubmit } = useForm({
-
-    });
+    const { register, handleSubmit } = useForm({});
 
      const handleSubmitFoodForm = (foodObject: object) => {
         if (addingToPantry) {
@@ -42,7 +40,6 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
                             <Button onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
                         </ButtonGroup>
                     }
-                    {/* onSubmit */}
                     <Form className='food-form' onSubmit={handleSubmit(handleSubmitFoodForm)}>
                         { 
                             addingToPantry && <FormGroup>
@@ -76,7 +73,7 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
                                 })}
                             </Form.Control>
                         }
-                        <Form.Check defaultChecked={ingredient.have} label="Save to my shopping list"/>
+                        <Form.Check {...register('have')} defaultChecked={ingredient.have} label="I have currently this ingredient"/>
                         {
                         (addingToPantry || savingExisting) && 
                             <ButtonGroup>

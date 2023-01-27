@@ -13,7 +13,8 @@ model food {
   quantity      Decimal      @db.Decimal(5, 2)
   unitOfMeasure String
   calories      Int
-  ingredients    ingredient[]
+  have          Boolean      @default(false)
+  ingredients   ingredient[]
 }
 
 model ingredient {
@@ -25,8 +26,7 @@ model ingredient {
   isGroupHeader Boolean  @default(false)
   recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
-  have          Boolean  @default(false)
-  food          food?    @relation(fields: [foodId], references: [id]) 
+  food          food?    @relation(fields: [foodId], references: [id])
   foodId        Int?     @unique
 }
 

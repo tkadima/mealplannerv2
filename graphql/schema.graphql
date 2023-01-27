@@ -14,6 +14,7 @@ enum DayEnum {
 
 type Food {
   calories: Int
+  have: Boolean!
   id: Int!
   ingredients: [Ingredient]
   name: String!
@@ -23,7 +24,6 @@ type Food {
 
 type Ingredient {
   description: String!
-  have: Boolean!
   id: Int!
   isGroupHeader: Boolean!
   quantity: Float
@@ -76,6 +76,7 @@ type Recipe {
 
 input createFoodInput {
   calories: Int
+  have: Boolean!
   name: String!
   quantity: Float!
   unitOfMeasure: String!

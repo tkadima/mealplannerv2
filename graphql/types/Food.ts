@@ -10,6 +10,7 @@ export const Food = objectType({
         t.nonNull.float('quantity')
         t.nonNull.string('unitOfMeasure')
         t.int('calories')
+        t.nonNull.boolean('have')
         t.list.field('ingredients', {
             type: 'Ingredient',
             resolve: async (parent, _, ctx) => {
@@ -34,6 +35,7 @@ export const createFoodInput = inputObjectType({
         t.nonNull.float('quantity')
         t.nonNull.string('unitOfMeasure')
         t.int('calories')
+        t.nonNull.boolean('have')
     }
 });
 

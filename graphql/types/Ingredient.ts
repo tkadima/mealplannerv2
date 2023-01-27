@@ -19,7 +19,6 @@ export const Ingredient =  objectType({
 		// 	}
 		// }),
 		t.nonNull.boolean('isGroupHeader');
-		t.nonNull.boolean('have');
 	}
 });
 
