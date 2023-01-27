@@ -20,8 +20,7 @@ const HandleIngredients = ({ ingredients, foodNames }: PropTypes) => {
     })
 
     const handleSubmitFood = (food: Food, ingredientId: number) => {
-        console.log('submitting!', food.name);
-        addFood({ variables: { food, ingredientId}});
+        addFood({ variables: { newData: food, ingredientId}});
     }
     return (
         <Layout>
@@ -57,7 +56,8 @@ export const getStaticProps = async ({ params }) => {
         where: { recipeId: parseInt(params.id) }
     });
 
-    const ingredients = unparsedIngredients.map(ingredient => ({...ingredient, quantity: JSON.stringify(ingredient.quantity), quantity2: JSON.stringify(ingredient.quantity2)}));
+    const ingredients = unparsedIngredients.map(ingredient => ({...ingredient, quantity: JSON.stringify(ingredient.quantity),
+         quantity2: JSON.stringify(ingredient.quantity2)}));
     
 
     const foods = await prisma.food.findMany({});
