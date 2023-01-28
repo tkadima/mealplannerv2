@@ -20,7 +20,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 		onError(err){
 			console.error('error updating recipe', JSON.stringify(err, null, 2));
 		},
-		onCompleted(){
+		onCompleted() {
 			router.push('/recipes');
 		}
 	}); 

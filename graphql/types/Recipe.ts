@@ -45,7 +45,6 @@ export const ingredientInput = inputObjectType({
 		t.float('quantity');
 		t.float('quantity2');
 		t.int('recipeId');
-		t.field('recipe', { type: nonNull(recipeInput)})
 		t.boolean('isGroupHeader');
 	},
 });

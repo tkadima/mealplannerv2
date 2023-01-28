@@ -24,11 +24,12 @@ type Food {
 
 type Ingredient {
   description: String!
-  foodId: Int!
+  foodId: Int
   id: Int!
   isGroupHeader: Boolean!
   quantity: Float
   quantity2: Float
+  recipe: Recipe!
   recipeId: Int!
   unitOfMeasure: String
 }
@@ -89,7 +90,6 @@ input ingredientInput {
   isGroupHeader: Boolean
   quantity: Float
   quantity2: Float
-  recipe: recipeInput!
   recipeId: Int
   unitOfMeasure: String
 }

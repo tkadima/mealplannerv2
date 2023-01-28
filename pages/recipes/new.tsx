@@ -14,10 +14,9 @@ const NewRecipe = () => {
 		onError(err) {
 			console.error('error creating recipe', JSON.stringify(err, null, 2));
 		},
-		onCompleted(){
-			// get new id from data 
+		onCompleted(data){
 			// if we need to save ingredients, route to /ingredients/id
-			router.push('/recipes');
+			router.push(`/recipes/save-ingredients/${data.createRecipe.id}`);
 		}
 	});
 	

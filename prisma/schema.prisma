@@ -27,7 +27,7 @@ model ingredient {
   recipe        recipe   @relation(fields: [recipeId], references: [id])
   recipeId      Int
   food          food?    @relation(fields: [foodId], references: [id])
-  foodId        Int?     @unique
+  foodId        Int?     
 }
 
 model recipe {
