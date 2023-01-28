@@ -4,7 +4,7 @@ import { GetStaticPaths } from 'next/types';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Layout from '../../../components/layout';
-import SaveIngredientForm from '../../../components/recipe/save-ingredient-form';
+import IngredientCard from '../../../components/recipe/ingredient-card';
 import { Food, Ingredient } from '../../../components/types';
 import { ADD_FOOD } from '../../../graphql/mutations/food-mutation';
 import { UPDATE_INGREDIENT_FOOD_ID } from '../../../graphql/mutations/ingredient-mutations';
@@ -65,7 +65,7 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
             <h3>Save the Following Ingredients?</h3>
             { 
                 ingredientList.map((ingredient: Ingredient) => {
-                    return (<SaveIngredientForm 
+                    return (<IngredientCard 
                         key={ingredient.id} 
                         ingredient={ingredient} 
                         foodList={foods} 

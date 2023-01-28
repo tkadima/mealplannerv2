@@ -15,8 +15,7 @@ type PropTypes = {
     completed: boolean
  }
 
-const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood, completed }: PropTypes) => { 
-
+const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood, completed }: PropTypes) => { 
    
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
@@ -105,5 +104,5 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredie
             </Card>);
 }
 
-export default SaveIngredientForm;
+export default IngredientCard;
 
