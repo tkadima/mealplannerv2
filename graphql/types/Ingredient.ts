@@ -19,6 +19,7 @@ export const Ingredient =  objectType({
 		// 	}
 		// }),
 		t.nonNull.boolean('isGroupHeader');
+		t.nonNull.int('foodId')
 	}
 });
 
@@ -47,25 +48,28 @@ export const IngredientQuery = extendType({
 	},
 });
 
-export const UpdateIngredientHaveMutation = extendType({ 
+export const UpdateIngredientFoodIdMutation = extendType({ 
 	type: 'Mutation', 
 	definition(t) { 
-		t.nonNull.field('updateIngredientsHave', {
-			type: 'Boolean', 
+		t.nonNull.field('updateIngredientFoodIdMutation', {
+			type: 'Ingredient', 
 			args: {
-				ingredientIds: nonNull(list(intArg()))
+				ingredientId: nonNull(intArg()),
+				foodId: nonNull(intArg())
 			},
-			async resolve(_parent, {ingredientIds}) { // fix to use ctx 
-				const ingredientObjIds = ingredientIds.map((i: number) => ({id: i }));
-				await prisma.ingredient.updateMany({
-					where:  { 
-						OR: ingredientObjIds
+			async resolve(_parent, {ingredientId, foodId}, ctx) {
+				const ingredient = await ctx.prisma.ingredient.findUnique({ where: { id: ingredientId }})
+				
+				return await prisma.ingredient.update({
+					where: {
+						id: ingredientId
 					},
-					data: {
-						have: true
+					data: {...ingredient, 
+						quantity:  ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()): null,
+						quantity2: ingredient.quantity2 ? Number.parseFloat(ingredient.quantity2.toString()): null,
+						foodId: Number.parseInt(foodId.toString())
 					}
 				});
-				return true;
 			}
 		});
 	}

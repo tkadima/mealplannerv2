@@ -1,37 +1,63 @@
 import { useMutation } from '@apollo/client';
 import { GetStaticPaths } from 'next/types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Layout from '../../../components/layout';
 import SaveIngredientForm from '../../../components/recipe/save-ingredient-form';
 import { Food, Ingredient } from '../../../components/types';
 import { ADD_FOOD } from '../../../graphql/mutations/food-mutation';
+import { UPDATE_INGREDIENT_FOOD_ID } from '../../../graphql/mutations/ingredient-mutations';
 import prisma from '../../../lib/prisma';
 
 type PropTypes = {
     ingredients: Ingredient[], 
-    foodNames: string[]
+    foods: Food[]
 }
-const HandleIngredients = ({ ingredients, foodNames }: PropTypes) => { 
+const HandleIngredients = ({ ingredients, foods }: PropTypes) => { 
+
+    const [ingredientList, setIngredientList] = useState([]);
+
     const [addFood] = useMutation(ADD_FOOD, {
         onError(err){
 			console.error('error creating food', JSON.stringify(err, null, 2));
 		}
     })
 
+    const [updateIngredientFoodId] = useMutation(UPDATE_INGREDIENT_FOOD_ID, {
+        onError(err) {
+            console.error('error updating ingredient.foodId', JSON.stringify(err, null, 2))
+        },
+        onCompleted(data) {
+           const updatedIngredientId = data.updateIngredientFoodIdMutation.id; 
+           const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== updatedIngredientId);
+           setIngredientList(updatedIngredients);
+        }
+    })
+
+    useEffect(() => {
+        setIngredientList(ingredients);
+    }, [])
+
     const handleSubmitFood = (food: Food, ingredientId: number) => {
         addFood({ variables: { newData: food, ingredientId}});
     }
+
+    const handleSavingIngredientToFood = (ingredientId: number, foodId: number) => {
+        console.log('updating', ingredientId, foodId)
+        updateIngredientFoodId({variables: { ingredientId, foodId}})
+    }
+
     return (
         <Layout>
             <h3>Save the Following Ingredients?</h3>
             { 
-                ingredients.map((ingredient: Ingredient) => {
+                ingredientList.map((ingredient: Ingredient) => {
                     return (<SaveIngredientForm 
                         key={ingredient.id} 
                         ingredient={ingredient} 
-                        foodList={foodNames} 
-                        onSubmit={handleSubmitFood}
+                        foodList={foods} 
+                        onSubmitFood={handleSubmitFood}
+                        onSaveIngredientToFood={handleSavingIngredientToFood}
                     />)
                 })
             }
@@ -56,17 +82,18 @@ export const getStaticProps = async ({ params }) => {
         where: { recipeId: parseInt(params.id) }
     });
 
-    const ingredients = unparsedIngredients.map(ingredient => ({...ingredient, quantity: JSON.stringify(ingredient.quantity),
+    const allIngredients = unparsedIngredients.map((ingredient: prisma.ingredient)=> ({...ingredient, quantity: JSON.stringify(ingredient.quantity),
          quantity2: JSON.stringify(ingredient.quantity2)}));
     
+    const ingredients = allIngredients.filter((ingredient: prisma.ingredient) => ingredient.foodId === null)
 
-    const foods = await prisma.food.findMany({});
-    const foodNames = foods.map((f: prisma.food) => f.name); 
+    const unparsedFoods = await prisma.food.findMany({});
+    const foods = unparsedFoods.map((food: prisma.food) => ({...food, quantity: JSON.stringify(food.quantity)}))
 
     return {
         props: {
             ingredients, 
-            foodNames
+            foods
         }
     }
 }

@@ -1,7 +1,9 @@
 import { gql } from '@apollo/client';
 
-export const UPDATE_INGREDIENT_HAVE = gql`
-    mutation Mutation($ingredientIds: [Int]!) {
-    updateIngredientsHave(ingredientIds: $ingredientIds)
-    }
-`; 
+export const UPDATE_INGREDIENT_FOOD_ID = gql`
+    mutation Mutation($ingredientId: Int!, $foodId: Int!) {
+  updateIngredientFoodIdMutation(ingredientId: $ingredientId, foodId: $foodId) {
+    id
+    foodId
+  }
+}`; 

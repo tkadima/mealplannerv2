@@ -24,6 +24,7 @@ type Food {
 
 type Ingredient {
   description: String!
+  foodId: Int!
   id: Int!
   isGroupHeader: Boolean!
   quantity: Float
@@ -51,7 +52,7 @@ type Mutation {
   createFood(ingredientId: Int!, newData: createFoodInput!): Food!
   createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, requiresOven: Boolean!, requiresStovetop: Boolean!, serves: Float): Recipe!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
-  updateIngredientsHave(ingredientIds: [Int]!): Boolean!
+  updateIngredientFoodIdMutation(foodId: Int!, ingredientId: Int!): Ingredient!
   updateMealRecipes(mealId: Int!, newRecipeIds: [Int]!, removeRecipeIds: [Int]!): Meal!
   updateRecipe(newData: recipeInput!, recipeId: Int!): Recipe!
 }

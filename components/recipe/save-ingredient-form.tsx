@@ -9,25 +9,26 @@ import { useForm } from 'react-hook-form';
 
 type PropTypes = {
     ingredient: Ingredient,
-    foodList: string[],
-    onSubmit: (food: Food, ingredientId: number) => void
+    foodList: Food[],
+    onSubmitFood: (food: Food, ingredientId: number) => void
+    onSaveIngredientToFood: (foodId: number, ingredientId: number) => void
  }
-const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => { 
+
+const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood }: PropTypes) => { 
 
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
 
     const { register, handleSubmit } = useForm({});
 
-     const handleSubmitFoodForm = (foodObject: object) => {
+     const handleSubmitForm = (formObject: object) => {
         if (addingToPantry) {
-            const food = {...foodObject, quantity: parseFloat(foodObject['quantity']),
-             calories: parseInt(foodObject['calories']) } as Food 
-            onSubmit(food, ingredient.id);
+            const food = {...formObject, quantity: parseFloat(formObject['quantity']),
+            calories: parseInt(formObject['calories']) } as Food 
+            onSubmitFood(food, ingredient.id);
         }
-        else if (savingExisting) {
-            // update existing food to include ingredient (connect)
-            console.log('Submit!')
+        else if(savingExisting) {
+            onSaveIngredientToFood( ingredient.id, parseInt(formObject['foodId']),);
         }
      }
 
@@ -40,7 +41,7 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
                             <Button onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
                         </ButtonGroup>
                     }
-                    <Form className='food-form' onSubmit={handleSubmit(handleSubmitFoodForm)}>
+                    <Form className='food-form' onSubmit={handleSubmit(handleSubmitForm)}>
                         { 
                             addingToPantry && <FormGroup>
                                 <Form.Label htmlFor="name">New Food Name (leave out adjectives from the recipe e.g. "diced", "creamy") </Form.Label>
@@ -66,10 +67,10 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmit }: PropTypes) => {
                         }
 
                         {
-                            savingExisting && <Form.Control as='select'>
+                            savingExisting && <Form.Control as='select' {...register('foodId')}>
                                 <option>Select food from pantry</option>
                                 { foodList.map(food => {
-                                    return <option key={food} value={food}>{food}</option>
+                                    return <option key={food.id} value={food.id}>{food.name}</option>
                                 })}
                             </Form.Control>
                         }
