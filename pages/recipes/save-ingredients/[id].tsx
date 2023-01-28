@@ -23,9 +23,9 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
 			console.error('error creating food', JSON.stringify(err, null, 2));
 		},
         onCompleted(data) {
-            const ingredientId = data.createFood.ingredients[0].id;
-            const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== ingredientId);
-            setIngredientList(updatedIngredients)
+            // const ingredientId = data.createFood.ingredients[0].id;
+            // const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== ingredientId);
+            // setIngredientList(updatedIngredients)
         }
     })
 
@@ -34,11 +34,19 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
             console.error('error updating ingredient.foodId', JSON.stringify(err, null, 2))
         },
         onCompleted(data) {
-           const updatedIngredientId = data.updateIngredientFoodIdMutation.id; 
-           const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== updatedIngredientId);
-           setIngredientList(updatedIngredients);
+            const updatedIngredientId = data.updateIngredientFoodIdMutation.id; 
+            console.log('id', updatedIngredientId)
+            const updatedIngredients = ingredientList.map(ingredient => {
+                if (ingredient.id === updatedIngredientId) {
+                    return {...ingredient, foodId: data.updateIngredientFoodIdMutation.foodId }
+                }
+                else return ingredient 
+                
+            }); 
+            console.log(updatedIngredients);
+            setIngredientList(updatedIngredients);
         }
-    })
+    });
 
     useEffect(() => {
         setIngredientList(ingredients);
@@ -63,10 +71,11 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
                         foodList={foods} 
                         onSubmitFood={handleSubmitFood}
                         onSaveIngredientToFood={handleSavingIngredientToFood}
+                        completed={ingredient?.foodId !== null}
                     />)
                 })
             }
-            <Link href='/recipes'><Button>Finish</Button></Link>
+            <Link href='/recipes'><Button size="lg">Finish</Button></Link>
         </Layout>
     );
 }
@@ -90,8 +99,7 @@ export const getStaticProps = async ({ params }) => {
     const allIngredients = unparsedIngredients.map((ingredient: prisma.ingredient)=> ({...ingredient, quantity: JSON.stringify(ingredient.quantity),
          quantity2: JSON.stringify(ingredient.quantity2)}));
     
-    const ingredients = allIngredients.filter((ingredient: prisma.ingredient) => ingredient.foodId === null 
-    && !ingredient.isGroupHeader)
+    const ingredients = allIngredients.filter((ingredient: prisma.ingredient) => !ingredient.isGroupHeader)
 
     const unparsedFoods = await prisma.food.findMany({});
     const foods = unparsedFoods.map((food: prisma.food) => ({...food, quantity: JSON.stringify(food.quantity)}))

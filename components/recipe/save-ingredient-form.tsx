@@ -12,10 +12,12 @@ type PropTypes = {
     foodList: Food[],
     onSubmitFood: (food: Food, ingredientId: number) => void
     onSaveIngredientToFood: (foodId: number, ingredientId: number) => void
+    completed: boolean
  }
 
-const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood }: PropTypes) => { 
+const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood, completed }: PropTypes) => { 
 
+   
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
 
@@ -36,9 +38,9 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredie
                 <Card.Title>{ingredient.description}</Card.Title>
                 <Card.Body>
                     {
-                        !addingToPantry && !savingExisting && <ButtonGroup>
-                            <Button onClick={() => setAddingToPantry(true)}variant="warning">Add To Pantry</Button>
-                            <Button onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
+                        !addingToPantry && !savingExisting && !completed && <ButtonGroup>
+                            <Button  onClick={() => setAddingToPantry(true)} variant="warning">Add To Pantry</Button>
+                            <Button  onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
                         </ButtonGroup>
                     }
                     <Form className='food-form' onSubmit={handleSubmit(handleSubmitForm)}>
@@ -67,16 +69,22 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredie
                         }
 
                         {
-                            savingExisting && <Form.Control as='select' {...register('foodId')}>
+                            savingExisting && !completed && <Form.Control as='select' {...register('foodId')}>
                                 <option>Select food from pantry</option>
                                 { foodList.map(food => {
                                     return <option key={food.id} value={food.id}>{food.name}</option>
                                 })}
                             </Form.Control>
                         }
-                        <Form.Check {...register('have')} defaultChecked={ingredient.have} label="I have currently this ingredient"/>
                         {
-                        (addingToPantry || savingExisting) && 
+                            savingExisting || addingToPantry &&
+                            <Form.Check {...register('have')} 
+                                defaultChecked={ingredient.have} 
+                                label="I have currently this ingredient"
+                            />
+                        }
+                        {
+                        (addingToPantry || savingExisting) && !completed &&
                             <ButtonGroup>
                                 <Button variant="secondary" onClick={() => {
                                     setAddingToPantry(false);
@@ -87,6 +95,12 @@ const SaveIngredientForm = ({ ingredient, foodList, onSubmitFood, onSaveIngredie
                         }
                     
                     </Form>
+                    {
+                        // TODO implement reset
+                        completed &&
+                        <Button style={{ float: 'right'}}>Reset</Button>
+                    }
+
                 </Card.Body>
             </Card>);
 }

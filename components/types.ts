@@ -18,6 +18,7 @@ export type Ingredient = {
 	recipeId: number
 	isGroupHeader: boolean
 	have: boolean
+	foodId: number
 }
 
 export type Recipe = {
