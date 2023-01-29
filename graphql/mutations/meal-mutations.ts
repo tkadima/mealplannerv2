@@ -26,8 +26,6 @@ export const EDIT_MEAL= gql`
 
 export const  CLEAR_MEAL_RECIPES = gql`
   mutation Mutation {
-    clearMealRecipes {
-      mealType
+    clearMealRecipes
   }
-}
 `;

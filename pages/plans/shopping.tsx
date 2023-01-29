@@ -8,7 +8,6 @@ type PropTypes = {
 const ShoppingList = ({ingredientList}: PropTypes) => 
 {
 	return <div>
-        Shopping List:
 		<ListGroup>
 			{
 				ingredientList.map((l, i) => {

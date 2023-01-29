@@ -71,23 +71,28 @@ export const ClearMealRecipes = extendType({
 	type: 'Mutation',
 	definition(t) {
 		t.field('clearMealRecipes', {
-			type: Meal,
+			type: 'Boolean',
 			async resolve(_parent, _, ctx) {
-				const meals = await prisma.meal.findMany({ include: { recipes: true }}); 
-				const mealsWithRecipes = meals.filter(m => m.recipes.length > 0); 
-				const x = mealsWithRecipes.map(async (meal) => {
-					const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
-					return await ctx.prisma.meal.update({
-						where: {id: meal.id},
-						data : {
+				const meals = await ctx.prisma.meal.findMany({ 
+					include: {
+						recipes: true
+					}
+				});
+				const nonEmptyMeals = meals.filter(meal => meal.recipes.length > 0);
+
+				for (const meal of nonEmptyMeals) {
+					const mealId = meal.id; 
+					const recipeIdsForMeal = meal.recipes.map(recipe => ({id: recipe.id})); 
+					await ctx.prisma.meal.update({
+						where: { id: mealId }, 
+						data: {
 							recipes: {
-								disconnect: recipeIds
+								disconnect: recipeIdsForMeal
 							}
 						}
-					});
-				});
-
-				return x; 
+					})
+				}
+				return true;
 			}
 		});
 	}

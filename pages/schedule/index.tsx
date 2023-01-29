@@ -8,8 +8,6 @@ import { DaysOfWeek, Ingredient, Meal, MealTypes, Recipe } from '../../component
 import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
 import { useMutation } from '@apollo/client';
 import MealTable from '../../components/schedule/meal-table';
-import { UPDATE_INGREDIENT_HAVE } from '../../graphql/mutations/ingredient-mutations';
-import ShoppingList from '../plans/shopping';
 
 type PropTypes = {
 	recipes: Recipe[],
@@ -32,6 +30,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			console.error('error adding recipe to meal', err, JSON.stringify(err, null, 2));
 		},
 		onCompleted(data){
+			console.log('completed')
 			const day = dayKeys.find(d => DaysOfWeek[d] === selectedMeal.day);
 			const meal = mealKeys.find(m =>  MealTypes[m] === selectedMeal.mealType);
 
@@ -55,18 +54,12 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		}
 	});
 
-	const [updateIngredientHave] = useMutation(UPDATE_INGREDIENT_HAVE, {
-		onError(err) {
-			console.error('error updating ingredient', JSON.stringify(err, null, 2));
-		},
-	});
-
 	const [clearMealRecipes] = useMutation(CLEAR_MEAL_RECIPES, {
 		onError(err) {
 			console.error('error clearing recipes', JSON.stringify(err, null, 2));
 		},
 		onCompleted(){
-			const days = Object.keys(scheduleData);  // needed? 
+			const days = Object.keys(scheduleData); 
 			let newData = {}; 
 			days.forEach(day => {
 				const mealsForDay = scheduleData[day];
@@ -127,7 +120,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 				onSaveMeal={handleSaveMeal}
 			/>
 			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
-			<ShoppingList ingredientList={shoppingList}/> 
 		</Layout>
 	);
 };
@@ -145,6 +137,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 			quantity2: i.quantity?.toNumber() ?? null
 		}))
 	}));
+
 	const meals = await prisma.meal.findMany({include: { recipes: true }});
 	return {
 		props: {
