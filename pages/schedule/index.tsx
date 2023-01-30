@@ -1,6 +1,7 @@
 import Layout from '../../components/layout';
 import React, { useEffect, useState } from 'react'; 
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
@@ -21,9 +22,10 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const mealKeys = Object.keys(MealTypes); 
 
 	const [showModal, setShowModal] = useState<boolean>(false); 
+	const [showDayModal, setShowDayModal] = useState<boolean>(false); 
 	const [selectedMeal, setSelectedMeal] = useState<Meal>(null); 
+	const [selectedHeaderDay, setSelectedHeaderDay] = useState<string>(null); 
 	const [scheduleData, setScheduleData] = useState({});
-	const [shoppingList, setShoppingList]  = useState([]);
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
 		onError(err) {
@@ -40,16 +42,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 					[meal]: updatedSelectedMeal
 				}};
 			setScheduleData(updatedData);
-
-			const ingredients = data.updateMealRecipes.recipes
-				.map((recipe: prisma.recipe )=> recipe.ingredients).flat(2);
-
-			let newIngredients: prisma.ingredient = []; 
-			ingredients.forEach((ingredient: prisma.ingredient) => {
-				if (!shoppingList.some(i => i.id === ingredient.id)) 
-					newIngredients.push(ingredient);
-			});
-			setShoppingList([...shoppingList, ...newIngredients] )
 		}
 	});
 
@@ -79,11 +71,15 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		setShowModal(true);
 	};
 
+	const handleHeaderSelectCell = (selectedDay: string) => {
+		setSelectedHeaderDay(selectedDay)
+		setShowDayModal(true);
+	}
+
 	const handleSaveMeal = (newRecipes: Recipe[], deletedRecipes: Recipe[]) => {
 		const newRecipeIds = newRecipes?.map(r => r.id);
 		const removeRecipeIds = deletedRecipes?.map(r => r.id);
 		updateMealRecipes({variables: { mealId: selectedMeal.id, newRecipeIds, removeRecipeIds }});
-		 // update shopping list 
 	};
 
 	const initializeScheduleData  = () => {
@@ -111,14 +107,28 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		<Layout>
 			<h3>Schedule</h3>
 			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
-			<ScheduleModal 
-				show={showModal} 
-				onCloseModal={handleCloseModal} 
-				mealData={selectedMeal ?? null} 
-				recipes={recipes}
-				onSaveMeal={handleSaveMeal}
+				<ScheduleModal 
+					show={showModal} 
+					onCloseModal={handleCloseModal} 
+					mealData={selectedMeal ?? null} 
+					recipes={recipes}
+					onSaveMeal={handleSaveMeal}
+				/>
+				<Modal show={showDayModal}>
+					<Modal.Header closeButton>
+					{
+						selectedHeaderDay && 
+						<Modal.Title>{selectedHeaderDay}</Modal.Title>
+					}
+					</Modal.Header>
+					<Modal.Body>
+						Total Calories: 1300
+					</Modal.Body>
+				</Modal>
+			<MealTable scheduleData={scheduleData} 
+					   onSelectCell={handleSelectCell} 
+			           onSelectHeaderCell={handleHeaderSelectCell}
 			/>
-			<MealTable scheduleData={scheduleData} onSelectCell={handleSelectCell}/>
 		</Layout>
 	);
 };

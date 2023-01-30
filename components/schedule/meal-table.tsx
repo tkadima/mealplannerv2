@@ -7,18 +7,35 @@ import Cell from './cell';
 type PropTypes = {
     scheduleData: object; // create type ? 
     onSelectCell: (mealData: Meal) => void;
+	onSelectHeaderCell: (day: string) => void;
 }
-const MealTable = ({scheduleData, onSelectCell}: PropTypes) => {
+const MealTable = ({scheduleData, onSelectCell, onSelectHeaderCell}: PropTypes) => {
 	const dayKeys = Object.keys(DaysOfWeek);
 	const mealKeys = Object.keys(MealTypes); 
     
+	const selectHeaderCell = (value: string) => {
+		onSelectHeaderCell(value)
+	};
+
+	const hoverHeaderCell = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.currentTarget.style.background = '#D3D3D3';
+	};
+
+	const unHoverHeaderCell = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.currentTarget.style.background = '';
+	};
+
 	return (
 		<Table bordered>
 			<thead>
 				<tr>
 					<th></th>
 					{
-						dayKeys.map((day, i) => <th key={i}>{day}</th>)
+						dayKeys.map((day, i) => {
+							return <th key={i} onClick={() => selectHeaderCell(day)} 
+							onMouseOver={hoverHeaderCell} 
+							onMouseLeave={unHoverHeaderCell}>{day}</th>
+					    })
 					}
 				</tr>
 			</thead>
