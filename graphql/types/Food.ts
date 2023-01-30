@@ -1,5 +1,4 @@
 import { extendType, inputObjectType, intArg, nonNull, objectType } from 'nexus';
-import prisma from '../../lib/prisma';
 
 export const Food = objectType({
     name: 'Food',
@@ -65,4 +64,5 @@ export const CreateFoodMutation = extendType({
             }
         })
     }
-})
+});
+

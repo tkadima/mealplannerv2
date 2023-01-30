@@ -12,10 +12,11 @@ type PropTypes = {
     foodList: Food[],
     onSubmitFood: (food: Food, ingredientId: number) => void
     onSaveIngredientToFood: (foodId: number, ingredientId: number) => void
-    completed: boolean
+    completed: boolean,
+    onReset: (ingredientId: number, foodId: number) => void
  }
 
-const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood, completed }: PropTypes) => { 
+const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientToFood, completed, onReset }: PropTypes) => { 
    
     const [addingToPantry, setAddingToPantry] = useState(false); 
     const [savingExisting, setSavingExisting] = useState(false);
@@ -31,6 +32,10 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
         else if(savingExisting) {
             onSaveIngredientToFood( ingredient.id, parseInt(formObject['foodId']),);
         }
+     }
+
+     const handleReset = (ingredientId: number, foodId: number) => {
+        onReset(ingredientId, foodId)
      }
      
 
@@ -96,9 +101,8 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                     
                     </Form>
                     {
-                        // TODO implement reset
                         completed &&
-                        <Button style={{ float: 'right'}}>Reset</Button>
+                        <Button style={{ float: 'right'}} onClick={() => handleReset(ingredient.id, ingredient.foodId)}>Reset</Button>
                     }
 
                 </Card.Body>

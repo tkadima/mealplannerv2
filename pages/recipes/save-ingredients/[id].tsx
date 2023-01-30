@@ -35,7 +35,6 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
         },
         onCompleted(data) {
             const updatedIngredientId = data.updateIngredientFoodIdMutation.id; 
-            console.log('id', updatedIngredientId)
             const updatedIngredients = ingredientList.map(ingredient => {
                 if (ingredient.id === updatedIngredientId) {
                     return {...ingredient, foodId: data.updateIngredientFoodIdMutation.foodId }
@@ -43,7 +42,6 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
                 else return ingredient 
                 
             }); 
-            console.log(updatedIngredients);
             setIngredientList(updatedIngredients);
         }
     });
@@ -57,7 +55,11 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
     }
 
     const handleSavingIngredientToFood = (ingredientId: number, foodId: number) => {
-        updateIngredientFoodId({variables: { ingredientId, foodId}})
+        updateIngredientFoodId({variables: { ingredientId, foodId, attach: true}});
+    }
+
+    const handleResettingIngredient = (ingredientId: number, foodId: number) => {
+        updateIngredientFoodId({variables: { ingredientId, foodId, attach: false}});
     }
 
     return (
@@ -72,6 +74,7 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
                         onSubmitFood={handleSubmitFood}
                         onSaveIngredientToFood={handleSavingIngredientToFood}
                         completed={ingredient?.foodId !== null}
+                        onReset={handleResettingIngredient}
                     />)
                 })
             }

@@ -1,4 +1,4 @@
-import { extendType, intArg, list, nonNull, objectType } from 'nexus'; 
+import { booleanArg, extendType, intArg, list, nonNull, objectType } from 'nexus'; 
 
 export const Ingredient =  objectType({
 	name: 'Ingredient',
@@ -66,18 +66,34 @@ export const UpdateIngredientFoodIdMutation = extendType({
 			type: 'Ingredient', 
 			args: {
 				ingredientId: nonNull(intArg()),
-				foodId: nonNull(intArg())
+				foodId: nonNull(intArg()),
+				attach: nonNull(booleanArg())
 			},
-			async resolve(_parent, {ingredientId, foodId}, ctx) {
+			async resolve(_parent, {ingredientId, foodId, attach}, ctx) {
+				const foodIdNumber = Number.parseInt(foodId.toString());
 				const ingredient = await ctx.prisma.ingredient.findUnique({ where: { id: ingredientId }})
-				return await ctx.prisma.ingredient.update({
-					where: {
-						id: ingredientId
-					},
-					data: {...ingredient, 
-						foodId: Number.parseInt(foodId.toString())
-					}
-				});
+				if (attach) {
+					return await ctx.prisma.ingredient.update({
+						where: {
+							id: ingredientId
+						},
+						data: {...ingredient, 
+							foodId: foodIdNumber
+						}
+					});
+				}
+				else {
+					return await ctx.prisma.ingredient.update({
+						where: {
+							id: ingredientId
+						},
+						data: { 
+							food: {
+								disconnect: true
+							}
+						}
+					});
+				}
 			}
 		});
 	}

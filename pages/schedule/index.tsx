@@ -30,7 +30,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			console.error('error adding recipe to meal', err, JSON.stringify(err, null, 2));
 		},
 		onCompleted(data){
-			console.log('completed')
 			const day = dayKeys.find(d => DaysOfWeek[d] === selectedMeal.day);
 			const meal = mealKeys.find(m =>  MealTypes[m] === selectedMeal.mealType);
 
