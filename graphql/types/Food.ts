@@ -15,7 +15,7 @@ export const Food = objectType({
 				return ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()) : null;
 			}
 		}),        t.nonNull.string('unitOfMeasure')
-        t.int('calories')
+        t.nonNull.int('calories')
         t.nonNull.boolean('have')
         t.list.field('ingredients', {
             type: 'Ingredient',
@@ -35,7 +35,7 @@ export const createFoodInput = inputObjectType({
         t.nonNull.string('name'),
         t.nonNull.float('quantity')
         t.nonNull.string('unitOfMeasure')
-        t.int('calories')
+        t.nonNull.int('calories')
         t.nonNull.boolean('have')
     }
 });
@@ -47,13 +47,11 @@ export const CreateFoodMutation = extendType({
             type: Food, 
             args: { 
                 ingredientId: nonNull(intArg()),
-				newData: createFoodInput.asArg(),
+				newData: nonNull(createFoodInput.asArg()),
             }, 
             async resolve(_parent, { ingredientId, newData }, ctx) {
-                const newFood = await prisma.food.create({
-                    data: {
-                        ...newData
-                    }
+                const newFood = await ctx.prisma.food.create({
+                    data: newData
                 })
                 
                 await ctx.prisma.ingredient.update({

@@ -12,7 +12,7 @@ model food {
   name          String
   quantity      Decimal      @db.Decimal(5, 2)
   unitOfMeasure String
-  calories      Int
+  calories      Int?
   have          Boolean      @default(false)
   ingredients   ingredient[]
 }
