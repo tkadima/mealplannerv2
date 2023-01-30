@@ -1,14 +1,20 @@
 import { extendType, inputObjectType, intArg, nonNull, objectType } from 'nexus';
 import prisma from '../../lib/prisma';
 
-
 export const Food = objectType({
     name: 'Food',
     definition(t){
         t.nonNull.int('id'),
         t.nonNull.string('name'),
-        t.nonNull.float('quantity')
-        t.nonNull.string('unitOfMeasure')
+        t.nonNull.field('quantity', {
+			type: 'Float',
+			resolve: async(parent, _, ctx) => {
+				const ingredient = await ctx.prisma.ingredient.findUnique({
+					where: { id: parent.id }
+				});
+				return ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()) : null;
+			}
+		}),        t.nonNull.string('unitOfMeasure')
         t.int('calories')
         t.nonNull.boolean('have')
         t.list.field('ingredients', {
@@ -17,12 +23,7 @@ export const Food = objectType({
                 const ingredients = await ctx.prisma.food.findUnique({
                     where: { id: parent.id }
                 }).ingredients();
-                return ingredients.map(i => {
-					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
-					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
-
-					return ({...i, quantity, quantity2});
-				});
+                return ingredients;
             }
         })
     }
@@ -46,18 +47,17 @@ export const CreateFoodMutation = extendType({
             type: Food, 
             args: { 
                 ingredientId: nonNull(intArg()),
-				newData: nonNull(createFoodInput.asArg()),
+				newData: createFoodInput.asArg(),
             }, 
-            async resolve(_parent, args) {
+            async resolve(_parent, { ingredientId, newData }, ctx) {
                 const newFood = await prisma.food.create({
-					data: {...args.newData, 
-                        quantity: Number.parseFloat(args.newData.quantity.toString()), 
-					}, 
-                    
-				});
-
-                await prisma.ingredient.update({
-                    where: { id: args.ingredientId },
+                    data: {
+                        ...newData
+                    }
+                })
+                
+                await ctx.prisma.ingredient.update({
+                    where: { id: ingredientId },
                     data: {
                         foodId: newFood.id
                     }

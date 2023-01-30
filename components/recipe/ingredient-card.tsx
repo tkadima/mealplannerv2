@@ -32,6 +32,7 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
             onSaveIngredientToFood( ingredient.id, parseInt(formObject['foodId']),);
         }
      }
+     
 
     return (<Card className='ingredient-card'>
                 <Card.Title>{ingredient.description}</Card.Title>
@@ -58,7 +59,7 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                                     })}
                                 />
                                 <Form.Label htmlFor="quantity">Quantity</Form.Label>
-                                <Form.Control type="number" name="quantity" placeholder="Add quantity" {...register('quantity')}/>
+                                <Form.Control as="input" name="quantity" placeholder="Add quantity" {...register('quantity')}/>
                                 {/* Consider using select instead */}
                                 <Form.Label htmlFor="unit">Unit</Form.Label>
                                 <Form.Control type="text" name="unit" placeholder="Add unit" {...register('unitOfMeasure')}/>

@@ -23,9 +23,9 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
 			console.error('error creating food', JSON.stringify(err, null, 2));
 		},
         onCompleted(data) {
-            // const ingredientId = data.createFood.ingredients[0].id;
-            // const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== ingredientId);
-            // setIngredientList(updatedIngredients)
+            const ingredientId = data.createFood.ingredients[0].id;
+            const updatedIngredients = ingredientList.filter(ingredient => ingredient.id !== ingredientId);
+            setIngredientList(updatedIngredients)
         }
     })
 
@@ -53,7 +53,7 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
     }, [])
 
     const handleSubmitFood = (food: Food, ingredientId: number) => {
-        addFood({ variables: { newData: food, ingredientId}});
+        addFood({ variables: { newData: food, ingredientId }});
     }
 
     const handleSavingIngredientToFood = (ingredientId: number, foodId: number) => {

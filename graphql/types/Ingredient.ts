@@ -53,11 +53,7 @@ export const IngredientQuery = extendType({
 						OR: recipeObjIds
 					}
 				});
-				return ingredients.map(i => {
-					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
-					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
-					return ({...i, quantity, quantity2});
-				});
+				return ingredients;
 			}
 		});
 	},
@@ -74,14 +70,11 @@ export const UpdateIngredientFoodIdMutation = extendType({
 			},
 			async resolve(_parent, {ingredientId, foodId}, ctx) {
 				const ingredient = await ctx.prisma.ingredient.findUnique({ where: { id: ingredientId }})
-				const x = Number.parseFloat(ingredient.quantity.toString())
 				return await ctx.prisma.ingredient.update({
 					where: {
 						id: ingredientId
 					},
 					data: {...ingredient, 
-						quantity:  ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()): null,
-						quantity2: ingredient.quantity2 ? Number.parseFloat(ingredient.quantity2.toString()): null,
 						foodId: Number.parseInt(foodId.toString())
 					}
 				});
