@@ -2,7 +2,6 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { GetStaticPaths } from 'next';
 
-import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import prisma from '../../lib/prisma';
 import { Recipe } from '../../components/types';
@@ -29,13 +28,14 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 		updateRecipe({variables:{ recipeId, newData: recipeChanges} });
 	};
 
-	return <Layout>
+	return (
+	<>
 		<div className='recipe-form' >
 			<BackButton link="/recipes"/>
 			<h3>Edit Recipe</h3>
 			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />
 		</div>
-	</Layout>;
+	</>);
 };
 export default RecipePage;
 

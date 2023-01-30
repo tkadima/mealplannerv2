@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { GetStaticPaths } from 'next/types';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Layout from '../../../components/layout';
 import IngredientCard from '../../../components/recipe/ingredient-card';
 import { Food, Ingredient } from '../../../components/types';
 import { ADD_FOOD } from '../../../graphql/mutations/food-mutation';
@@ -63,7 +62,7 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
     }
 
     return (
-        <Layout>
+        <div>
             <h3>Save the Following Ingredients?</h3>
             { 
                 ingredientList.map((ingredient: Ingredient) => {
@@ -79,7 +78,7 @@ const HandleIngredients = ({ ingredients, foods }: PropTypes) => {
                 })
             }
             <Link href='/recipes'><Button size="lg">Finish</Button></Link>
-        </Layout>
+        </div>
     );
 }
 

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
 import prisma from '../../lib/prisma';
 import { Food } from '../../components/types';
-import Layout from '../../components/layout';
 import { BsFillTrashFill } from 'react-icons/bs';
 import Link from 'next/link';
 import { useMutation } from '@apollo/client';
@@ -35,7 +34,7 @@ const Food = ({foods}: PropTypes) => {
     }, [])
     
     return (
-    <Layout>
+    <div>
         <h3>Pantry</h3>
         <ListGroup>
         { 
@@ -51,7 +50,7 @@ const Food = ({foods}: PropTypes) => {
         }
         </ListGroup>
         <Button>Add New</Button>
-    </Layout>);
+    </div>);
 }
 
 export default Food; 

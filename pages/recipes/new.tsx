@@ -1,7 +1,6 @@
 import React from 'react';
 import { useMutation } from '@apollo/client';
 import { useRouter } from 'next/router';
-import Layout from '../../components/layout';
 import RecipeForm from '../../components/recipe/recipe-form';
 import { ADD_RECIPE } from '../../graphql/mutations/recipe-mutations';
 import { Recipe } from '../../components/types';
@@ -25,13 +24,13 @@ const NewRecipe = () => {
 	};
 
 	return (
-		<Layout>
+		<div>
 			<BackButton link="/recipes"/>
 			<h3>Create New Recipe</h3>
 			<div className=' recipe-form'>
 				<RecipeForm onSubmitRecipe={handleSubmitRecipe}/>
 			</div>
-		</Layout>
+		</div>
 	);
 };
 

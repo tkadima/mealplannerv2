@@ -2,7 +2,6 @@ import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/layout';
 import RecipeListItem from '../../components/recipe/recipe-list-item';
 import { Recipe } from '../../components/types';
 import { useMutation } from '@apollo/client';
@@ -38,7 +37,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 	};
 
 	return (
-		<Layout>
+		<div>
 			<h3>Recipes</h3>
 			{
 				recipeList.length > 0 && 
@@ -59,7 +58,7 @@ const Recipes = ({ recipes } : PropTypes) => {
 					<Button>Add New</Button>
 				</Link>
 			</div>
-		</Layout>
+		</div>
 
 	);
 };

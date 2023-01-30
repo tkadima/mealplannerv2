@@ -1,4 +1,3 @@
-import Layout from '../../components/layout';
 import React, { useEffect, useState } from 'react'; 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
@@ -104,7 +103,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	}, []);
 
 	return (
-		<Layout>
+		<>
 			<h3>Schedule</h3>
 			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
 				<ScheduleModal 
@@ -129,7 +128,7 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 					   onSelectCell={handleSelectCell} 
 			           onSelectHeaderCell={handleHeaderSelectCell}
 			/>
-		</Layout>
+		</>
 	);
 };
 

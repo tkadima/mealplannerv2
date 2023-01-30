@@ -1,13 +1,11 @@
 
 import React from 'react';
-import Layout from '../components/layout';
-
 
 const Home = () => {
 	return (
-		<Layout>
+		<div>
 			<h1>Welcome to Meal Planner</h1>
-		</Layout>
+		</div>
     
 	);
 };
