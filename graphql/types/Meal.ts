@@ -1,5 +1,4 @@
 import { enumType, extendType, intArg, list, nonNull, objectType } from 'nexus';
-import prisma from '../../lib/prisma';
 
 export const Meal = objectType({
 	name: 'Meal',
@@ -97,17 +96,3 @@ export const ClearMealRecipes = extendType({
 		});
 	}
 });
-
-// for (const meal of mealsWithRecipes) {
-// 	console.log('meal', meal);
-// 	const recipeIds = meal.recipes.map(recipe => ({id: recipe.id}));
-// 	//console.log('ids', recipeIds);
-// 	//console.log('rids', recipeIds);
-// 	return  await ctx.prisma.meal.update({
-// 		where: {id : meal.id}, 
-// 		data: {
-// 			recipes: {
-// 				disconnect: recipeIds
-// 			}
-// 		}
-// 	})

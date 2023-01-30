@@ -1,12 +1,29 @@
 import { extendType, intArg, list, nonNull, objectType } from 'nexus'; 
-import prisma from '../../lib/prisma';
 
 export const Ingredient =  objectType({
 	name: 'Ingredient',
 	definition(t) {
 		t.nonNull.int('id'), 
-		t.float('quantity'),
-		t.float('quantity2'),
+		t.field('quantity', {
+			type: 'Float',
+			resolve: async(parent, _, ctx) => {
+				const ingredient = await ctx.prisma.ingredient.findUnique({
+					where: { id: parent.id }
+				});
+
+				return ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()) : null;
+			}
+		}),
+		t.field('quantity2', {
+			type: 'Float',
+			resolve: async(parent, _, ctx) => {
+				const ingredient = await ctx.prisma.ingredient.findUnique({
+					where: { id: parent.id }
+				});
+
+				return ingredient.quantity2 ? Number.parseFloat(ingredient.quantity2.toString()) : null;
+			}
+		}),
 		t.string('unitOfMeasure'),
 		t.nonNull.string('description'),
 		t.nonNull.int('recipeId'),
@@ -29,7 +46,6 @@ export const IngredientQuery = extendType({
 		t.list.field('ingredient', {
 			type: Ingredient,
 			args: { recipeIds: nonNull(list(intArg()))},
-			// move into resolver 
 			resolve: async(_parent, args, ctx) => {
 				const recipeObjIds = args.recipeIds.map(rid => ({recipeId: rid}));
 				const ingredients =  await ctx.prisma.ingredient.findMany({
@@ -38,7 +54,6 @@ export const IngredientQuery = extendType({
 					}
 				});
 				return ingredients.map(i => {
-					// do this just once 
 					const quantity = i.quantity ? Number.parseFloat(i.quantity.toString()): null;
 					const quantity2 = i.quantity2 ? Number.parseFloat(i.quantity2.toString()): null;
 					return ({...i, quantity, quantity2});
@@ -59,8 +74,8 @@ export const UpdateIngredientFoodIdMutation = extendType({
 			},
 			async resolve(_parent, {ingredientId, foodId}, ctx) {
 				const ingredient = await ctx.prisma.ingredient.findUnique({ where: { id: ingredientId }})
-				
-				return await prisma.ingredient.update({
+				const x = Number.parseFloat(ingredient.quantity.toString())
+				return await ctx.prisma.ingredient.update({
 					where: {
 						id: ingredientId
 					},
