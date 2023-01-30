@@ -52,6 +52,7 @@ type Mutation {
   clearMealRecipes: Boolean
   createFood(ingredientId: Int, newData: createFoodInput!): Food!
   createRecipe(cookTime: Int, ingredients: [ingredientInput], instructions: String, name: String!, prepTime: Int, requiresOven: Boolean!, requiresStovetop: Boolean!, serves: Float): Recipe!
+  deleteFood(deleteFoodId: Int!): Food!
   deleteRecipe(deleteRecipeId: Int!): Recipe!
   updateIngredientFoodIdMutation(attach: Boolean!, foodId: Int!, ingredientId: Int!): Ingredient!
   updateMealRecipes(mealId: Int!, newRecipeIds: [Int]!, removeRecipeIds: [Int]!): Meal!

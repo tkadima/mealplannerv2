@@ -68,3 +68,23 @@ export const CreateFoodMutation = extendType({
     }
 });
 
+
+export const DeleteFoodMutation = extendType({ 
+	type: 'Mutation', 
+	definition(t) { 
+		t.nonNull.field('deleteFood', {
+			type: Food,
+			args: {
+				deleteFoodId: nonNull(intArg())
+			},
+			async resolve(_parent, {deleteFoodId}, ctx) {
+				return await ctx.prisma.food.delete({
+					where: {
+						id: deleteFoodId
+					}
+				});
+			}
+		});
+	}
+});
+
