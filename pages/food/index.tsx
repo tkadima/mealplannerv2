@@ -16,6 +16,9 @@ type PropTypes = {
 const Food = ({foods}: PropTypes) => {
     const [foodList, setFoodList] = useState([]); 
 
+    // createFood
+    // updateFood
+
     const [deleteFood] = useMutation(DELETE_FOOD, {
         onError(err) {
             console.error('error deleting food', JSON.stringify(err, null, 2))
