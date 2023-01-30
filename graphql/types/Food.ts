@@ -45,7 +45,7 @@ export const CreateFoodMutation = extendType({
         t.nonNull.field('createFood', {
             type: Food, 
             args: { 
-                ingredientId: nonNull(intArg()),
+                ingredientId: intArg(),
 				newData: nonNull(createFoodInput.asArg()),
             }, 
             async resolve(_parent, { ingredientId, newData }, ctx) {
@@ -53,12 +53,14 @@ export const CreateFoodMutation = extendType({
                     data: newData
                 })
                 
-                await ctx.prisma.ingredient.update({
-                    where: { id: ingredientId },
-                    data: {
-                        foodId: newFood.id
-                    }
-                })
+                if (ingredientId) {
+                    await ctx.prisma.ingredient.update({
+                        where: { id: ingredientId },
+                        data: {
+                            foodId: newFood.id
+                        }
+                    })
+                }
 
                 return newFood;
             }
