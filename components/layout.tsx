@@ -19,6 +19,7 @@ export default function Layout({ children }: PropTypes) {
 						<Nav.Link href="/">Home</Nav.Link>
 						<Nav.Link href="/recipes">Recipes</Nav.Link>
 						<Nav.Link href="/schedule">Schedule</Nav.Link>
+						<Nav.Link href="/food">Pantry</Nav.Link>
 					</Nav>
 				</Container>
 			</Navbar>

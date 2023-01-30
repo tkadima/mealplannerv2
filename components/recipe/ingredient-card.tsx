@@ -65,7 +65,7 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                                 />
                                 <Form.Label htmlFor="quantity">Quantity</Form.Label>
                                 <Form.Control as="input" name="quantity" placeholder="Add quantity" {...register('quantity')}/>
-                                {/* Consider using select instead */}
+                                {/* Consider using select instead, use convert-units */}
                                 <Form.Label htmlFor="unit">Unit</Form.Label>
                                 <Form.Control type="text" name="unit" placeholder="Add unit" {...register('unitOfMeasure')}/>
                                 <Form.Label htmlFor="calories">Calories</Form.Label>
@@ -102,7 +102,7 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                     </Form>
                     {
                         completed &&
-                        <Button style={{ float: 'right'}} onClick={() => handleReset(ingredient.id, ingredient.foodId)}>Reset</Button>
+                        <Button className="float-right" onClick={() => handleReset(ingredient.id, ingredient.foodId)}>Reset</Button>
                     }
 
                 </Card.Body>
