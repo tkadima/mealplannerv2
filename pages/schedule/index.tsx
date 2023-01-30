@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
 import ScheduleModal from '../../components/schedule/schedule-modal';
 import { GetServerSideProps } from 'next/types';
 import prisma from '../../lib/prisma';
@@ -8,6 +7,7 @@ import { DaysOfWeek, Ingredient, Meal, MealTypes, Recipe } from '../../component
 import { CLEAR_MEAL_RECIPES, EDIT_MEAL } from '../../graphql/mutations/meal-mutations';
 import { useMutation } from '@apollo/client';
 import MealTable from '../../components/schedule/meal-table';
+import ModalWrapper from '../../components/modal-wrapper';
 
 type PropTypes = {
 	recipes: Recipe[],
@@ -94,10 +94,6 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		setScheduleData(scheduleData);
 	};
 
-	const handleCloseModal = () => {
-		setShowModal(false);
-	};
-
 	useEffect(() => {
 		initializeScheduleData();		
 	}, []);
@@ -106,27 +102,19 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 		<>
 			<h3>Schedule</h3>
 			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
-				<ScheduleModal 
-					show={showModal} 
-					onCloseModal={handleCloseModal} 
-					mealData={selectedMeal ?? null} 
-					recipes={recipes}
-					onSaveMeal={handleSaveMeal}
-				/>
-				<Modal show={showDayModal}>
-					<Modal.Header closeButton>
-					{
-						selectedHeaderDay && 
-						<Modal.Title>{selectedHeaderDay}</Modal.Title>
-					}
-					</Modal.Header>
-					<Modal.Body>
-						Total Calories: 1300
-					</Modal.Body>
-				</Modal>
+			<ScheduleModal 
+				show={showModal} 
+				onCloseModal={() => setShowModal(false)} 
+				mealData={selectedMeal ?? null} 
+				recipes={recipes}
+				onSaveMeal={handleSaveMeal}
+			/>
+			<ModalWrapper show={showDayModal} title={selectedHeaderDay} onHide={() => setShowDayModal(false)}>
+				Hello - testing wrapper
+			</ModalWrapper>
 			<MealTable scheduleData={scheduleData} 
-					   onSelectCell={handleSelectCell} 
-			           onSelectHeaderCell={handleHeaderSelectCell}
+				onSelectCell={handleSelectCell} 
+			    onSelectHeaderCell={handleHeaderSelectCell}
 			/>
 		</>
 	);

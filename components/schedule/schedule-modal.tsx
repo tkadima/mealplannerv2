@@ -2,9 +2,9 @@ import React, {  useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
 import { Controller, useForm } from 'react-hook-form';
 import Select, { MultiValue } from 'react-select';
+import ModalWrapper from '../modal-wrapper';
 import { Meal, Recipe } from '../types';
 
 type PropTypes = {
@@ -34,7 +34,7 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSaveMeal } : P
 		onSaveMeal(recipeList, removedRecipes);
 
 		setRemovedRecipes([]);
-		handleClose();
+		onCloseModal();
 	};
 
 	const handleChange = (data: MultiValue<{ value: string; label: string; }>) => {
@@ -56,20 +56,9 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSaveMeal } : P
 		}
 	};
 
-	const handleClose = () => {
-		onCloseModal();
-	};
-
 	const recipeOptions = Object.keys(nameRecipeMap).map((name) => ({value: name, label: name}));
 
-	return (<Modal show={show} onHide={handleClose}>
-		<Modal.Header closeButton>
-			{
-				mealData && 
-				<Modal.Title>{mealData.day} {mealData.mealType}</Modal.Title>
-			}
-		</Modal.Header>
-		<Modal.Body>
+	return (<ModalWrapper show={show} title={`${mealData?.day} ${mealData?.mealType}`} onHide={() => onCloseModal()}>
 			<Form onSubmit={handleSubmit(handleSaveMeal)}>
 				<Form.Label htmlFor='recipes'>
                     Select recipes for this meal slot
@@ -94,13 +83,11 @@ const ScheduleModal = ({ show, onCloseModal, mealData, recipes, onSaveMeal } : P
 				/>
 				<ButtonGroup className="float-right modal-button-group">
 					<Button variant="secondary" 
-						onClick={handleClose}>Cancel</Button>
+						onClick={() => onCloseModal()}>Cancel</Button>
 					<Button variant="primary" type="submit">Save</Button> 
 				</ButtonGroup>
 			</Form>
-          
-		</Modal.Body>
-	</Modal>);
+			</ModalWrapper>);
 };
 
 export default ScheduleModal; 
