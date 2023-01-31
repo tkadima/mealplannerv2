@@ -1,28 +1,21 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 
 import { DaysOfWeek, Meal, MealTypes } from '../types';
 import Cell from './cell';
 
 type PropTypes = {
-    scheduleData: object; // create type ? 
+    scheduleData: object;
     onSelectCell: (mealData: Meal) => void;
-	onSelectHeaderCell: (day: string) => void;
+	onGenerateReport: (day: string) => void;
 }
-const MealTable = ({scheduleData, onSelectCell, onSelectHeaderCell}: PropTypes) => {
+const MealTable = ({scheduleData, onSelectCell, onGenerateReport}: PropTypes) => {
 	const dayKeys = Object.keys(DaysOfWeek);
 	const mealKeys = Object.keys(MealTypes); 
     
-	const selectHeaderCell = (value: string) => {
-		onSelectHeaderCell(value)
-	};
-
-	const hoverHeaderCell = (e: React.MouseEvent<HTMLDivElement>) => {
-		e.currentTarget.style.background = '#D3D3D3';
-	};
-
-	const unHoverHeaderCell = (e: React.MouseEvent<HTMLDivElement>) => {
-		e.currentTarget.style.background = '';
+	const generateReport = (value: string) => {
+		onGenerateReport(value)
 	};
 
 	return (
@@ -32,9 +25,7 @@ const MealTable = ({scheduleData, onSelectCell, onSelectHeaderCell}: PropTypes) 
 					<th></th>
 					{
 						dayKeys.map((day, i) => {
-							return <th key={i} onClick={() => selectHeaderCell(day)} 
-							onMouseOver={hoverHeaderCell} 
-							onMouseLeave={unHoverHeaderCell}>{day}</th>
+							return <th key={i}>{day}</th>
 					    })
 					}
 				</tr>
@@ -54,8 +45,22 @@ const MealTable = ({scheduleData, onSelectCell, onSelectHeaderCell}: PropTypes) 
 								})
 							}
 						</tr>;
-					})}
+					})
+					
+				}
+				{
+					<tr>
+						<td></td>
+						{dayKeys.map(day => {
+							return <td key={day} className="footer-padding">
+								<Button onClick={() => generateReport(day)}>Generate report for {day}</Button>
+							</td>
+						})}
+					</tr>
+				}
+					
 			</tbody>
+			
 		</Table>
 	);
 };

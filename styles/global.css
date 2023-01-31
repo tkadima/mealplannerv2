@@ -65,3 +65,7 @@ a:hover {
 .food-form { 
   width: 50%;
 }
+
+.footer-padding {
+  padding: 60px; 
+}

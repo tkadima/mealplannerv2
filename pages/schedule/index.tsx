@@ -20,10 +20,14 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 	const dayKeys = Object.keys(DaysOfWeek);
 	const mealKeys = Object.keys(MealTypes); 
 
-	const [showModal, setShowModal] = useState<boolean>(false); 
-	const [showDayModal, setShowDayModal] = useState<boolean>(false); 
+	enum ModalType {
+		Report,
+		Schedule 
+	}
+
+	const [showModal, setShowModal] = useState<ModalType>(null); 
 	const [selectedMeal, setSelectedMeal] = useState<Meal>(null); 
-	const [selectedHeaderDay, setSelectedHeaderDay] = useState<string>(null); 
+	const [selectedReportDay, setSelectedReportDay] = useState<string>(null)
 	const [scheduleData, setScheduleData] = useState({});
 
 	const [updateMealRecipes] = useMutation(EDIT_MEAL, {
@@ -67,12 +71,12 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 
 	const handleSelectCell = (mealData: Meal) => {
 		setSelectedMeal(mealData); 
-		setShowModal(true);
+		setShowModal(ModalType.Schedule);
 	};
 
-	const handleHeaderSelectCell = (selectedDay: string) => {
-		setSelectedHeaderDay(selectedDay)
-		setShowDayModal(true);
+	const handleGenerateReport = (selectedDay: string) => {
+		setSelectedReportDay(selectedDay)
+		setShowModal(ModalType.Report);
 	}
 
 	const handleSaveMeal = (newRecipes: Recipe[], deletedRecipes: Recipe[]) => {
@@ -103,18 +107,21 @@ const Schedule = ({recipes, meals}: PropTypes) => {
 			<h3>Schedule</h3>
 			<Button variant="primary" className="reset-button" onClick={() => clearMealRecipes()}>Reset Schedule</Button>
 			<ScheduleModal 
-				show={showModal} 
-				onCloseModal={() => setShowModal(false)} 
+				show={showModal === ModalType.Schedule} 
+				onCloseModal={() => setShowModal(null)} 
 				mealData={selectedMeal ?? null} 
 				recipes={recipes}
 				onSaveMeal={handleSaveMeal}
 			/>
-			<ModalWrapper show={showDayModal} title={selectedHeaderDay} onHide={() => setShowDayModal(false)}>
+			<ModalWrapper 
+				show={showModal === ModalType.Report} 
+				title={selectedReportDay} onHide={() => setShowModal(null)}
+			>
 				Hello - testing wrapper
 			</ModalWrapper>
 			<MealTable scheduleData={scheduleData} 
 				onSelectCell={handleSelectCell} 
-			    onSelectHeaderCell={handleHeaderSelectCell}
+			    onGenerateReport={handleGenerateReport}
 			/>
 		</>
 	);
