@@ -8,10 +8,10 @@ export const Food = objectType({
         t.nonNull.field('quantity', {
 			type: 'Float',
 			resolve: async(parent, _, ctx) => {
-				const ingredient = await ctx.prisma.ingredient.findUnique({
+				const food = await ctx.prisma.food.findUnique({
 					where: { id: parent.id }
 				});
-				return ingredient.quantity ? Number.parseFloat(ingredient.quantity.toString()) : null;
+				return food.quantity ? Number.parseFloat(food.quantity.toString()) : null;
 			}
 		}),        t.nonNull.string('unitOfMeasure')
         t.nonNull.int('calories')
@@ -28,8 +28,8 @@ export const Food = objectType({
     }
 })
 
-export const createFoodInput = inputObjectType({
-    name: 'createFoodInput',
+export const foodInput = inputObjectType({
+    name: 'foodInput',
     definition(t) {
         t.nonNull.string('name'),
         t.nonNull.float('quantity')
@@ -46,7 +46,7 @@ export const CreateFoodMutation = extendType({
             type: Food, 
             args: { 
                 ingredientId: intArg(),
-				newData: nonNull(createFoodInput.asArg()),
+				newData: nonNull(foodInput.asArg()),
             }, 
             async resolve(_parent, { ingredientId, newData }, ctx) {
                 const newFood = await ctx.prisma.food.create({
@@ -66,6 +66,28 @@ export const CreateFoodMutation = extendType({
             }
         })
     }
+});
+
+export const UpdateFoodMutation = extendType({
+    type: 'Mutation', 
+    definition(t) {
+        t.nonNull.field('updateFood', {
+            type: Food, 
+            args: {
+                foodId: nonNull(intArg()),
+                newData: nonNull(foodInput.asArg()),
+            }, 
+            async resolve(_parent, { foodId, newData }, ctx) {
+                console.log('newData', newData)
+                return await ctx.prisma.food.update({
+                    where: { id: foodId },
+                    data: {
+                        ...newData
+                    }
+                })
+            }
+        })
+    },
 });
 
 

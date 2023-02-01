@@ -10,6 +10,14 @@ export const ADD_FOOD = gql`
     }
 }`;
 
+export const UPDATE_FOOD = gql`
+    mutation Mutation($foodId: Int!, $newData: foodInput!) {
+        updateFood(foodId: $foodId, newData: $newData) {
+            id
+        }
+    }
+`;
+
 export const DELETE_FOOD = gql`
     mutation Mutation($deleteFoodId: Int!) {
     deleteFood(deleteFoodId: $deleteFoodId) {

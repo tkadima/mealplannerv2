@@ -5,7 +5,7 @@ import { Food } from '../types';
 import Button from 'react-bootstrap/Button';
 
 type PropTypes = {
-    onSubmit: (food: Food) => void; 
+    onSubmit: (food: Food, foodId: number) => void; 
     food?: Food
 }
 const FoodForm = ({  onSubmit, food }: PropTypes) => {
@@ -26,7 +26,7 @@ const FoodForm = ({  onSubmit, food }: PropTypes) => {
             quantity: parseFloat(formObject['quantity']),
             calories: parseInt(formObject['calories']) } as Food 
 
-        onSubmit(updatedFood);
+        onSubmit(updatedFood, food.id);
     }
     return (<>
         <Form className='food-form' onSubmit={handleSubmit(handleSubmitForm)}>
