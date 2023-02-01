@@ -32,7 +32,7 @@ const FoodPage = ({ food }: PropTypes) => {
         <div>
             <BackButton link='/food'/>
             <h1>Edit {food.name}</h1>
-            <FoodForm food={food} onSubmit={handleUpdateFood}/>
+            <FoodForm food={food} onSubmit={handleUpdateFood} onCancel={() => router.push('/food')}/>
         </div>
     )
 }

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'; 
-import  FormGroup  from 'react-bootstrap/FormGroup';
 import Button from 'react-bootstrap/Button';
 import  ButtonGroup  from 'react-bootstrap/ButtonGroup';
 import Card  from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import { Food, Ingredient } from '../types';
 import { useForm } from 'react-hook-form';
+import FoodForm from '../food/food-form';
 
 type PropTypes = {
     ingredient: Ingredient,
@@ -24,19 +24,19 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
     const { register, handleSubmit } = useForm({});
 
      const handleSubmitForm = (formObject: object) => {
-        if (addingToPantry) {
-            const food = {...formObject, quantity: parseFloat(formObject['quantity']),
-            calories: parseInt(formObject['calories']) } as Food 
-            onSubmitFood(food, ingredient.id);
-        }
-        else if(savingExisting) {
-            onSaveIngredientToFood( ingredient.id, parseInt(formObject['foodId']),);
-        }
+        onSubmitFood(formObject as Food, ingredient.id);
+     }
+
+     const handleSaveIngredient = (formObject: object) => {
+        onSaveIngredientToFood( ingredient.id, parseInt(formObject['foodId']),);
      }
 
      const handleReset = (ingredientId: number, foodId: number) => {
         onReset(ingredientId, foodId)
      }
+
+     const defaultFood = { id: null, name: ingredient.description, quantity: ingredient.quantity2 ?? 0,
+         unitOfMeasure: ingredient.unitOfMeasure, calories: 0, have: false, ingredients: [] as Ingredient[] };
      
 
     return (<Card className='ingredient-card'>
@@ -48,57 +48,26 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                             <Button  onClick={() => setSavingExisting(true)}>Already in Pantry</Button>
                         </ButtonGroup>
                     }
-                    <Form className='food-form' onSubmit={handleSubmit(handleSubmitForm)}>
-                        { 
-                            addingToPantry && <FormGroup>
-                                <Form.Label htmlFor="name">New Food Name (leave out adjectives from the recipe e.g. "diced", "creamy") </Form.Label>
-                                <Form.Control 
-                                    type="text" 
-                                    name="name" 
-                                    placeholder="Food Name" 
-                                    {...register('name', { 
-                                        required: {
-                                            value: true, 
-                                            message: 'Food name cannot be empty'
-                                        } 
-                                    })}
-                                />
-                                <Form.Label htmlFor="quantity">Quantity</Form.Label>
-                                <Form.Control as="input" name="quantity" placeholder="Add quantity" {...register('quantity')}/>
-                                {/* Consider using select instead, use convert-units */}
-                                <Form.Label htmlFor="unit">Unit</Form.Label>
-                                <Form.Control type="text" name="unit" placeholder="Add unit" {...register('unitOfMeasure')}/>
-                                <Form.Label htmlFor="calories">Calories</Form.Label>
-                                <Form.Control type="number" name="calories" placeholder="Add calorie count" {...register('calories')}/>
-                            </FormGroup>
-                        }
+                    {
+                        addingToPantry && !completed && <FoodForm food={defaultFood} onSubmit={handleSubmitForm} onCancel={() => {
+                            setAddingToPantry(false);
+                            setSavingExisting(false);
+                        }}/>
+                    }
 
-                        {
-                            savingExisting && !completed && <Form.Control as='select' {...register('foodId')}>
+                    {
+                        savingExisting && !completed && <Form onSubmit={handleSubmit(handleSaveIngredient)}>
+                            <Form.Control as='select' {...register('foodId')}>
                                 <option>Select food from pantry</option>
                                 { foodList.map(food => {
                                     return <option key={food.id} value={food.id}>{food.name}</option>
                                 })}
                             </Form.Control>
-                        }
-                        {
-                            savingExisting || addingToPantry &&
-                            <Form.Check {...register('have')} 
-                                label="I have currently this ingredient"
-                            />
-                        }
-                        {
-                        (addingToPantry || savingExisting) && !completed &&
-                            <ButtonGroup>
-                                <Button variant="secondary" onClick={() => {
-                                    setAddingToPantry(false);
-                                    setSavingExisting(false);
-                                }}>Cancel</Button>
-                                <Button type="submit">Save Food</Button>
-                            </ButtonGroup>
-                        }
+                            <Button type="submit">Save Food</Button>
+                        </Form>
+                    }
                     
-                    </Form>
+                    
                     {
                         completed &&
                         <Button className="float-right" onClick={() => handleReset(ingredient.id, ingredient.foodId)}>Reset</Button>

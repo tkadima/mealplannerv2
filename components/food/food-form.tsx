@@ -3,12 +3,14 @@ import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import { Food } from '../types';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 type PropTypes = {
     onSubmit: (food: Food, foodId: number) => void; 
+    onCancel: () => void; 
     food?: Food
 }
-const FoodForm = ({  onSubmit, food }: PropTypes) => {
+const FoodForm = ({  onSubmit, onCancel, food }: PropTypes) => {
     const { register, handleSubmit } = useForm(
         {
             defaultValues: { 
@@ -25,7 +27,6 @@ const FoodForm = ({  onSubmit, food }: PropTypes) => {
         const updatedFood = {...formObject,
             quantity: parseFloat(formObject['quantity']),
             calories: parseInt(formObject['calories']) } as Food 
-
         onSubmit(updatedFood, food.id);
     }
     return (<>
@@ -54,8 +55,11 @@ const FoodForm = ({  onSubmit, food }: PropTypes) => {
                 <Form.Control type="number" name="calories" placeholder="Add calorie count" {...register('calories')}/>
                 <Form.Check {...register('have')} 
                                 label="I have currently this ingredient"
-                            />
-                <Button type="submit">Save Food</Button>
+                />
+                <ButtonGroup>
+                    <Button type="submit">Save Food</Button>
+                    <Button variant="secondary" onClick={() => onCancel()}>Cancel</Button>
+                </ButtonGroup>
             </FormGroup>
         </Form>
 

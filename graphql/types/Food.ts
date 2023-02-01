@@ -78,7 +78,6 @@ export const UpdateFoodMutation = extendType({
                 newData: nonNull(foodInput.asArg()),
             }, 
             async resolve(_parent, { foodId, newData }, ctx) {
-                console.log('newData', newData)
                 return await ctx.prisma.food.update({
                     where: { id: foodId },
                     data: {
