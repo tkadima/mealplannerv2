@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import { Recipe } from '../types';
 import { convertIngredientToString, convertStringToIngredient, getChanges } from '../../helpers';
 import ErrorAlert from '../error-alert';

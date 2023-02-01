@@ -1,6 +1,8 @@
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
-import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import prisma from '../../lib/prisma';
 import { Food } from '../../components/types';
 import { BsFillTrashFill } from 'react-icons/bs';

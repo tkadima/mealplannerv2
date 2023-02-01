@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import Button  from 'react-bootstrap/Button';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 
 type PropTypes = {
