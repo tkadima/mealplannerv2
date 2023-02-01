@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 type PropTypes = {
     onSubmit: (food: Food) => void; 
-    food: Food
+    food?: Food
 }
 const FoodForm = ({  onSubmit, food }: PropTypes) => {
     const { register, handleSubmit } = useForm(

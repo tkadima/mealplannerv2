@@ -49,7 +49,9 @@ const Food = ({foods}: PropTypes) => {
             })
         }
         </ListGroup>
-        <Button>Add New</Button>
+        <Link href="/food/new">
+			<Button>Add New</Button>
+		</Link>
     </div>);
 }
 
