@@ -41,9 +41,9 @@ const Food = ({foods}: PropTypes) => {
             foodList.length > 0 &&
             foodList.map(food => {
                 return <ListGroupItem key={food.id} >
-                    <Link href={''}>{food.name}</Link>
+                    <Link href={`/food/${food.id}`}>{food.name}</Link>
                     <div className="float-right">
-				        <BsFillTrashFill onClick={() => deleteFood({variables: {deleteFoodId: food.id}})}></BsFillTrashFill>
+				        <BsFillTrashFill onClick={() => deleteFood({variables: {deleteFoodId: food.id}})}/>
 			        </div>
                 </ListGroupItem>
             })

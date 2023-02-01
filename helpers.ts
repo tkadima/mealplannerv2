@@ -1,5 +1,5 @@
 import { parseIngredient } from 'parse-ingredient';
-import { Ingredient } from './components/types';
+import { Ingredient, Recipe } from './components/types';
 
 export const convertStringToIngredient = (ingredientString: string) => {
 	const parsedIngredients = parseIngredient(ingredientString);
@@ -43,6 +43,28 @@ export const getChanges = (original: object, newObj: object) => {
 	});
 	return diff; 
 };
+
+const getReportForMeal = (recipes: Recipe[]) => {
+	const ingredients = recipes.flatMap(r => r.ingredients); 
+	let sum = 0;
+	for (const ingredient of ingredients) {
+		if (ingredient.food) {
+			sum += ingredient.food.calories; 
+		}
+		else {
+			return -1;
+		}
+	}
+	return sum;
+}
+/*
+loop through meals 
+{"Breakfast": [recipes], "Lunch": []...}
+ */
+export const getDailyReport = (dayMeals: {Breakfast: Recipe[], Lunch: Recipe[], Dinner: Recipe[]}) => {
+	const mealTypes = Object.keys(dayMeals); 
+	const mealResults = mealTypes.map(mealType => getReportForMeal(dayMeals[mealType]))
+} 
 
 
 

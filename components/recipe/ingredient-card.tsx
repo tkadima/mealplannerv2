@@ -84,7 +84,6 @@ const IngredientCard = ({ ingredient, foodList, onSubmitFood, onSaveIngredientTo
                         {
                             savingExisting || addingToPantry &&
                             <Form.Check {...register('have')} 
-                                defaultChecked={ingredient.have} 
                                 label="I have currently this ingredient"
                             />
                         }

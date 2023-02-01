@@ -8,6 +8,7 @@ export type Food = {
 	unitOfMeasure: string,
 	calories: number,
 	ingredients: Ingredient[]
+	have: boolean
 }
 export type Ingredient = { 
 	id: number,
@@ -17,8 +18,8 @@ export type Ingredient = {
 	unitOfMeasure: string
 	recipeId: number
 	isGroupHeader: boolean
-	have: boolean
 	foodId: number
+	food: Food 
 }
 
 export type Recipe = {
