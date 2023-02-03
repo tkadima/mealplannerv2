@@ -32,7 +32,7 @@ export const RecipePage = ({ recipe } : PropTypes) => {
 	<>
 		<div className='recipe-form' >
 			<BackButton link="/recipes"/>
-			<h3>Edit Recipe</h3>
+			<h3>Edit {recipe.name} </h3>
 			<RecipeForm currentRecipe={recipe} onSubmitRecipe={handleSubmitRecipe} />
 		</div>
 	</>);
